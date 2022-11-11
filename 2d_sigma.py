@@ -4,7 +4,6 @@
 - data.last gives the last datafile number as int
 '''
 
-from distutils.log import error
 import pluto
 import tools
 import numpy as np
@@ -16,7 +15,7 @@ import argparse as argp
 import os
 from celluloid import Camera
 
-quick_cbd_dir = '/Users/gabe/Documents/Physics/MSci/test_case/quick_cbd/'
+all_data_dir = '../Data/'
 
 datasets = [
     '1_Orbit',
@@ -30,10 +29,11 @@ for d_index, filename in enumerate(datasets):
 dataset_index = int(input("please choose a dataset to plot for \n"))
 data_name = datasets[dataset_index]
 
-data_dir = quick_cbd_dir + data_name
+data_parent_dir = all_data_dir + data_name
+out_dir = all_data_dir + data_name + '/out'
 
 def findMaxFileName(dataset: str) -> int:
-    files = os.listdir(data_dir)
+    files = os.listdir(out_dir)
     dataFiles = list(filter(lambda f: f[0:4]=='data', files))
     numbers = [int(d[5:9]) for d in dataFiles]
     maxFileNumber = max(numbers)
@@ -41,31 +41,19 @@ def findMaxFileName(dataset: str) -> int:
     return maxFileNumber
 
 def findNumBodies(dataset: str) -> int:
-    _, pid, _, _ = np.loadtxt( 'nbody.out'.format(data_dir), usecols=(0,1,3,4), unpack=True)
+    _, pid, _, _ = np.loadtxt( 'nbody.out'.format(out_dir), usecols=(0,1,3,4), unpack=True)
     return len(np.unique(pid))
 
-
-parser = argp.ArgumentParser(description = '2d surface density plot from file "--number"')
-parser.add_argument('--number', default = 0, type = int, help = 'File number')
-parser.add_argument('--cart', default = False, type = bool, help = 'cart grid')
-parser.add_argument('--log', default = False, type = bool, help = 'log scale')
-parser.add_argument('--nbody', default = False, type = bool, help = 'nbody integrater used')
-parser.add_argument('--size', default = 7.5, type = float, help = 'size of the plot')
-parser.add_argument('--time', default = 100, type = float, help = 'output time step')
-parser.add_argument('--var', default = 'rho', type = str, help = 'rho, vx1, vx2, prs')
-args = parser.parse_args()
-
 a_bin = 1
-size = args.size
+size = 7.5
 Rmax = 70
-# File number
 num_data_files = findMaxFileName(data_name)
-cart = args.cart
-logsc = args.log
-nbody = True
-nts   = args.time
-var   = args.var
-# Number of nbodies
+cart = False # 'cart grid'
+logsc = False # log scale
+nbody = True # nbody integrater used
+nts   = 100 # output time step
+var   = 'rho' # 'rho, vx1, vx2, prs'
+
 fs = 14 # font size
 
 C0, C1, C2 = 'k', 'b', 'y'
@@ -78,7 +66,7 @@ def plot(datafile: int):
                                                 ylim=[-size,size]
                                                 ))
 
-    data = pluto.Pluto(data_dir)
+    data = pluto.Pluto(out_dir)
     sigma = data.primitive_variable(var, n)[0,:,:] #* data.units['density']
     print(np.argwhere(np.isnan(sigma)))
     #sigma[np.isnan(sigma)] = 1.0
@@ -199,8 +187,8 @@ def plot(datafile: int):
 
     if nbody:
         # plot the planet evolution here
-        txn, pid, x, y = np.loadtxt('{}/nbody.out'.format(data_dir), usecols=(0,1,3,4), unpack=True)
-        tim, pid2, aa, ee, varpi = np.loadtxt('{}/nbody_orbital_elements.out'.format(data_dir), usecols=(0,1,2,3,6), unpack=True)
+        txn, pid, x, y = np.loadtxt('{}/nbody.out'.format(out_dir), usecols=(0,1,3,4), unpack=True)
+        tim, pid2, aa, ee, varpi = np.loadtxt('{}/nbody_orbital_elements.out'.format(out_dir), usecols=(0,1,2,3,6), unpack=True)
         # Plot Nbody particles
         N=len(np.unique(pid))
         ti = tim[pid2==1]
@@ -234,7 +222,7 @@ def plot(datafile: int):
                 
     fig.tight_layout() 
 
-    plots_dir = '/Users/gabe/Documents/Physics/MSci/test_case/Plots/'
+    plots_dir = data_parent_dir + '/Plots/'
 
     save_path = '{}{}_2d_sigma.png'.format(plots_dir, data_name)
     repeated_plots = 0
@@ -254,7 +242,7 @@ def animate():
                                                 ))
     camera = Camera(fig)
     for n in range(num_data_files):
-        data = pluto.Pluto(data_dir)
+        data = pluto.Pluto(out_dir)
         sigma = data.primitive_variable(var, n)[0,:,:] #* data.units['density']
         print(np.argwhere(np.isnan(sigma)))
         #sigma[np.isnan(sigma)] = 1.0
@@ -375,8 +363,8 @@ def animate():
 
         if nbody:
             # plot the planet evolution here
-            txn, pid, x, y = np.loadtxt('{}/nbody.out'.format(data_dir), usecols=(0,1,3,4), unpack=True)
-            tim, pid2, aa, ee, varpi = np.loadtxt('{}/nbody_orbital_elements.out'.format(data_dir), usecols=(0,1,2,3,6), unpack=True)
+            txn, pid, x, y = np.loadtxt('{}/nbody.out'.format(out_dir), usecols=(0,1,3,4), unpack=True)
+            tim, pid2, aa, ee, varpi = np.loadtxt('{}/nbody_orbital_elements.out'.format(out_dir), usecols=(0,1,2,3,6), unpack=True)
             # Plot Nbody particles
             N=len(np.unique(pid))
             ti = tim[pid2==1]
@@ -410,7 +398,7 @@ def animate():
                     
         fig.tight_layout() 
 
-        plots_dir = '/Users/gabe/Documents/Physics/MSci/test_case/Plots/'
+        plots_dir = data_parent_dir + '/Plots'
 
         save_path = '{}{}_2d_sigma.png'.format(plots_dir, data_name)
         repeated_plots = 0
@@ -426,6 +414,7 @@ def animate():
 
 
 if __name__ == '__main__':
+    plot(0)
     # for datafile in range(num_data_files):
     #     plot(datafile)
     
