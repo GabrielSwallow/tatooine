@@ -14,20 +14,11 @@ import matplotlib.colors as colors
 import argparse as argp
 import os
 from celluloid import Camera
+import UI_helper
 
 all_data_dir = '../Data/'
 
-datasets = [
-    '1_Orbit',
-    '10_Orbits',
-    '1000_Orbits',
-    '1000_Orbits_full'
-]
-
-for d_index, filename in enumerate(datasets):
-    print(d_index, ' : ', filename)
-dataset_index = int(input("please choose a dataset to plot for \n"))
-data_name = datasets[dataset_index]
+data_name = UI_helper.selectDataToPlot()
 
 data_parent_dir = all_data_dir + data_name
 out_dir = all_data_dir + data_name + '/out'
