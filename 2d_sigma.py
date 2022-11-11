@@ -13,7 +13,6 @@ import matplotlib as mpl
 import matplotlib.colors as colors
 import argparse as argp
 import os
-from celluloid import Camera
 import UI_helper
 import Navigation_helper
 
