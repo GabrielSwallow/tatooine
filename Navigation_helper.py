@@ -6,7 +6,6 @@ def findMaxFileName(out_dir: str) -> int:
     dataFiles = list(filter(lambda f: f[0:4]=='data', files))
     numbers = [int(d[5:9]) for d in dataFiles]
     maxFileNumber = max(numbers)
-    print('file to plot =', max(numbers))
     return maxFileNumber
 
 def findNumBodies(out_dir: str) -> int:

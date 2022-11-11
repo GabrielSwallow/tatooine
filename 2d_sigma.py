@@ -18,15 +18,11 @@ import Navigation_helper
 
 all_data_dir = '../Data/'
 
-data_name = UI_helper.selectDataToPlot()
 
-data_parent_dir = all_data_dir + data_name
-out_dir = all_data_dir + data_name + '/out'
 
 a_bin = 1
 size = 7.5
 Rmax = 70
-num_data_files = Navigation_helper.findMaxFileName(out_dir)
 cart = False # 'cart grid'
 logsc = False # log scale
 nbody = True # nbody integrater used
@@ -38,16 +34,29 @@ fs = 14 # font size
 C0, C1, C2 = 'k', 'b', 'y'
 
 size = size*a_bin
-def plot(datafile: int = None):
-    if not datafile:
-        n = num_data_files
-    else:
-        n = datafile
+
+def plot_many() -> None:
+    data_name = UI_helper.selectDataToPlot()
+    out_dir = all_data_dir + data_name + '/out'
+    many_data_files_to_plot = UI_helper.selectManyDataFilesToPlot(out_dir)
+    for data_file_to_plot in many_data_files_to_plot:
+        plot(data_name, data_file_to_plot)
+
+def plot_one() -> None:
+    data_name = UI_helper.selectDataToPlot()
+    out_dir = all_data_dir + data_name + '/out'
+    data_file_to_plot = UI_helper.selectDataFileToPlot(out_dir)
+    plot(data_name, data_file_to_plot)
+
+
+def plot(data_name: str, data_file_to_plot: int) -> None:
+    n = data_file_to_plot
     fig, ax = plt.subplots(1, 1, subplot_kw=dict(aspect='equal',
                                                 xlim=[-size,size],
                                                 ylim=[-size,size]
                                                 ))
-
+    data_parent_dir = all_data_dir + data_name
+    out_dir = all_data_dir + data_name + '/out'
     data = pluto.Pluto(out_dir)
     sigma = data.primitive_variable(var, n)[0,:,:] #* data.units['density']
     print(np.argwhere(np.isnan(sigma)))
@@ -206,10 +215,10 @@ def plot(datafile: int = None):
 
     plots_dir = data_parent_dir + '/Plots/'
 
-    save_path = '{}{}_2d_sigma.png'.format(plots_dir, data_name)
-    repeated_plots = 0
+    save_path = '{}{}_2d_sigma_{}.png'.format(plots_dir, data_name, n)
+    repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_2d_sigma_{}.png'.format(plots_dir, data_name, repeated_plots)
+        save_path = '{}{}_2d_sigma_{}({}).png'.format(plots_dir, data_name, n, repeated_plots)
         repeated_plots += 1
     # out_name = '2d_sigma_{}.png'.format(data_name)
     # outfig = out_path+out_name
@@ -218,10 +227,6 @@ def plot(datafile: int = None):
     plt.close(fig)
 
 if __name__ == '__main__':
-    plot()
-    # for datafile in range(num_data_files):
-    #     plot(datafile)
-    
-    # animate()
-    pass
-    
+    plotters = [plot_one, plot_many]
+    func_index = UI_helper.selectFunctionsToRun(plotters)
+    eval('{}()'.format(plotters[func_index].__name__))
