@@ -218,9 +218,6 @@ def plot(datafile: int = None):
     fig.savefig(save_path)
     plt.close(fig)
 
-
-
-
 if __name__ == '__main__':
     plot()
     # for datafile in range(num_data_files):

@@ -49,7 +49,7 @@ def animate():
     for n in range(num_data_files):
         data = pluto.Pluto(out_dir)
         sigma = data.primitive_variable(var, n)[0,:,:] #* data.units['density']
-        print(np.argwhere(np.isnan(sigma)))
+        # print(np.argwhere(np.isnan(sigma)))
         #sigma[np.isnan(sigma)] = 1.0
         '''
         data.grid is a dictionary of items
@@ -174,9 +174,7 @@ def animate():
             N=len(np.unique(pid))
             ti = tim[pid2==1]
             tx = txn[pid ==0]
-            print('number of bodies = ', N)
             for nn in range(N):
-                print(nn)
                 xp, yp = x[pid==nn], y[pid==nn]
                 ax.plot(xp[tx==n]*a_bin, yp[tx==n]*a_bin, '.b', ms=6.0)
                 if nn>0:
@@ -202,20 +200,19 @@ def animate():
                         transform=ax.transAxes)
                     
         fig.tight_layout() 
-
-        plots_dir = data_parent_dir + '/Plots'
-
-        save_path = '{}{}_2d_sigma.png'.format(plots_dir, data_name)
-        repeated_plots = 0
-        while(os.path.isfile(save_path)):
-            save_path = '{}{}_2d_sigma_{}.png'.format(plots_dir, data_name, repeated_plots)
-            repeated_plots += 1
-        # out_name = '2d_sigma_{}.png'.format(data_name)
-        # outfig = out_path+out_name
-        print(' finished plotting {0}'.format(data_name))
+        # print(' finished plotting {0}'.format(data_name))
         camera.snap()
+    
+    plots_dir = data_parent_dir + '/Plots/'
+
+    save_path = '{}{}_animation.gif'.format(plots_dir, data_name)
+    repeated_plots = 0
+    while(os.path.isfile(save_path)):
+        save_path = '{}{}_animation_{}.png'.format(plots_dir, data_name, repeated_plots)
+        repeated_plots += 1
+
     animation = camera.animate()
-    animation.save('animation.gif')
+    animation.save(save_path)
 
 if __name__ == '__main__':
     animate()
