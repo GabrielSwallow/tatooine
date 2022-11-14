@@ -18,6 +18,12 @@ import Navigation_helper
 from celluloid import Camera
 from Global_variables import *
 
+cart = False # 'cart grid'
+logsc = False # log scale
+nbody = True # nbody integrater used
+nts   = 100 # output time step
+var   = 'rho' # 'rho, vx1, vx2, prs'
+
 def plot_many() -> None:
     data_name = UI_helper.selectDataToPlot()
     out_dir = all_data_dir + data_name + '/out'
@@ -33,11 +39,6 @@ def plot_one() -> None:
 
 
 def plot(data_name: str, data_file_to_plot: int) -> None:
-    cart = False # 'cart grid'
-    logsc = False # log scale
-    nbody = True # nbody integrater used
-    nts   = 100 # output time step
-    var   = 'rho' # 'rho, vx1, vx2, prs'
 
     n = data_file_to_plot
     fig, ax = plt.subplots(1, 1, subplot_kw=dict(aspect='equal',
@@ -229,7 +230,7 @@ def animate():
                                                 ylim=[-size,size]
                                                 ))
     camera = Camera(fig)
-    for n in range(n_max):
+    for n in range(n_max+1):
         data = pluto.Pluto(out_dir)
         sigma = data.primitive_variable(var, n)[0,:,:] #* data.units['density']
         # print(np.argwhere(np.isnan(sigma)))
