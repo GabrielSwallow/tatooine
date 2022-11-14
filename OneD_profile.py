@@ -21,8 +21,8 @@ def plot_many():
     data_name = UI_helper.selectDataToPlot()
     out_dir = all_data_dir + data_name + '/out'
     many_data_files_to_plot = UI_helper.selectManyDataFilesToPlot(out_dir)
-    for d in many_data_files_to_plot:
-        plot(data_name, many_data_files_to_plot[d])
+    for data_file_to_plot in many_data_files_to_plot:
+        plot(data_name, data_file_to_plot)
 
 def animate():
     data_name = UI_helper.selectDataToPlot()
@@ -79,7 +79,7 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     fig = plt.figure()
     plt.figure()
     plt.plot(R[1,:-1], np.mean(sigma, axis=0)/ sig_r  )
-    plt.plot(R, R**-0.5, '-')
+    plt.plot(R[0], R[0]**-0.5, '-')
     #plt.ylim(0,0.1)
     print(np.max(np.mean(sigma, axis=0)/ data.units['density'] ))
     plt.xlim(0,20)
@@ -92,8 +92,8 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     while(os.path.isfile(save_path)):
         save_path = '{}{}_1d_profile_{}({}).png'.format(plots_dir, data_name, n, repeated_plots)
         repeated_plots += 1
-
-    fig.savefig(save_path)
+    plt.savefig(save_path)
+    plt.close(fig)
 
 
 if __name__ == '__main__':
