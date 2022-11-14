@@ -35,7 +35,10 @@ def selectManyDataFilesToPlot(out_dir: str) -> list[int]:
 
 def selectFunctionsToRun(functions: list) -> int:
     for index, func in enumerate(functions):
-        print(index, ' : ', func.__name__)
+        print('{} : {}.{}'.format(index, func.__module__, func.__name__))
     func_index = int(input("please choose a function to run \n"))
-    print(functions[func_index].__name__, 'selected to run \n')
+    print('{}.{} selected to run \n'.format(
+        functions[func_index].__module__,
+        functions[func_index].__name__,
+    ))
     return func_index
