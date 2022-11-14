@@ -216,7 +216,7 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     fig.savefig(save_path)
     plt.close(fig)
 
-def animate():
+def animate() -> None:
     data_name = UI_helper.selectDataToPlot()
     out_dir = all_data_dir + data_name + '/out'
     n_max = Navigation_helper.findMaxFileName(out_dir)

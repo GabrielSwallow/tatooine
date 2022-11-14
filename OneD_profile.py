@@ -11,20 +11,20 @@ from celluloid import Camera
 
 all_data_dir = '../Data/'
 
-def plot_one():
+def plot_one() -> None:
     data_name = UI_helper.selectDataToPlot()
     out_dir = all_data_dir + data_name + '/out'
     data_file_to_plot = UI_helper.selectDataFileToPlot(out_dir)
     plot(data_name, data_file_to_plot)
 
-def plot_many():
+def plot_many() -> None:
     data_name = UI_helper.selectDataToPlot()
     out_dir = all_data_dir + data_name + '/out'
     many_data_files_to_plot = UI_helper.selectManyDataFilesToPlot(out_dir)
     for data_file_to_plot in many_data_files_to_plot:
         plot(data_name, data_file_to_plot)
 
-def animate():
+def animate() -> None:
     data_name = UI_helper.selectDataToPlot()
     out_dir = all_data_dir + data_name + '/out'
     n_max = Navigation_helper.findMaxFileName(out_dir)
