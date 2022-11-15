@@ -10,9 +10,12 @@ import os
 import UI_helper
 import Navigation_helper
 from celluloid import Camera
+
+from Global_variables import *
+
 import TwoD_sigma
 import OneD_profile
-from Global_variables import *
+import Nbody_Characteristics
 
 if __name__ == '__main__':
     plotters = [
@@ -22,6 +25,7 @@ if __name__ == '__main__':
         OneD_profile.plot_one, 
         OneD_profile.plot_many, 
         OneD_profile.animate,
+        Nbody_Characteristics.plot_one,
         ]
     func_index = UI_helper.selectFunctionsToRun(plotters)
     eval('{}.{}()'.format(plotters[func_index].__module__, plotters[func_index].__name__))
