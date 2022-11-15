@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import pluto
 import tools
 import numpy as np

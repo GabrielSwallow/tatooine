@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-'''
-- data.time gives the info about the times - good for iterating over
-- data.last gives the last datafile number as int
-'''
-
 import pluto
 import tools
 import numpy as np

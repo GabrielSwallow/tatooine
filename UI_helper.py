@@ -44,6 +44,6 @@ def selectFunctionsToRun(functions: list) -> int:
     return func_index
 
 def selectObjectToPlot() -> str:
-    print("Objects: \n Smaller Stellar Object : 1 \n Specific Planet : 2, ...")
+    print("\nObjects: \n Smaller Stellar Object : 1 \n Specific Planet : 2, ...")
     obj = int(input("please Select Which Object to Plot \n"))
     return obj
