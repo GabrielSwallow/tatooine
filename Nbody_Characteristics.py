@@ -17,19 +17,8 @@ import os
 import UI_helper
 import Navigation_helper
 import re
+import Global_variables
 
-a_bin = 1 #units of binary separation
-size = 7.5 #limits of graph
-Rmax = 70 #unused
-
-cart = False # 'cart grid'
-logsc = False # log scale
-nbody = True # nbody integrater used
-nts   = 100 # output time step
-var   = 'rho' # 'rho, vx1, vx2, prs'
-
-name = 'Kep-47' #name of the simulation
-fs = 14 #font size
 
 def plot_one() -> None:
     data_name = UI_helper.selectDataToPlot()
@@ -98,6 +87,10 @@ def plot(data_name: str):
     fig.tight_layout()
     
     save_path = '{}{}_obj{}_orbital_elements.png'.format(plots_dir, data_name, obj)
+    repeated_plots = 0
+    while(os.path.isfile(save_path)):
+        save_path = '{}{}_obj{}_orbital_elements({}).png'.format(plots_dir, data_name, obj, repeated_plots)
+        repeated_plots += 1
     
     print('Saving plot in {0}'.format(save_path))
     fig.savefig(save_path)
