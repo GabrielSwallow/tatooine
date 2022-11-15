@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Nov  7 15:42:15 2022
-
-@author: epick
-"""
-
 import pluto
 import tools
 import numpy as np
@@ -17,59 +10,69 @@ import os
 import UI_helper
 import Navigation_helper
 import re
-import Global_variables
+from Global_variables import *
 
 
 def plot_one() -> None:
     data_name = UI_helper.selectDataToPlot()
     plot(data_name)
 
-def plot(data_name: str):
+def plot(data_name: str) -> None:
     obj = UI_helper.selectObjectToPlot()
-    
-    if obj ==1:
-        obj_des = 'B'
-    elif obj ==2:
-        obj_des = 'b'
-    elif obj ==3:
-        obj_des = 'c'
-    elif obj ==4:
-        obj_des = 'd'
-        
-    all_data_dir = '../Data/'
-    
-    data_parent_dir = all_data_dir + data_name
-    out_dir = all_data_dir + data_name + '/out'
-    
-    fig, axs = plt.subplots(4,1, sharex= 'all')
     data_parent_dir = all_data_dir + data_name
     out_dir = all_data_dir + data_name + '/out'
     plots_dir = data_parent_dir + '/Plots/'
-    nbody_elements = out_dir + '/nbody_orbital_elements.out'
-    plutolog = out_dir + '/pluto.log'
+
+    nbody_elements_filename = out_dir + '/nbody_orbital_elements.out'
+    pluto_log_filename = out_dir + '/pluto.log'
     
-    dbl_txt = open(plutolog)
+    if obj == 0:
+        print('\nCannot select obj = 0 for Nbody characteristics. Try again.')
+        # raise Exception('Cannot select obj = 0 for Nbody characteristics')
+        plot(data_name)
+        return
+    if obj == 1:
+        obj_des = 'B'
+    elif obj == 2:
+        obj_des = 'b'
+    elif obj == 3:
+        obj_des = 'c'
+    elif obj == 4:
+        obj_des = 'd' 
+    
+    
+
+    dbl_txt = open(pluto_log_filename)
     dbl_strs = dbl_txt.readlines()
     dbl_str = dbl_strs[79]
     dbl_list = list(map(int, re.findall('\d+', dbl_str)))
     dbl_time = dbl_list[3]
     dbl_txt.close()
     
-    (unfiltered_time,
-    object_id,
-    unfiltered_a,
-    unfiltered_e,
-    unfiltered_omega,
-    unfiltered_anomaly) = np.loadtxt(nbody_elements,
-                                     usecols=(0,1,2,3,6,7),
-                                     unpack = True)
+    (
+        unfiltered_time,
+        object_id,
+        unfiltered_a,
+        unfiltered_e,
+        unfiltered_omega,
+        unfiltered_anomaly,
+    ) = np.loadtxt(
+        nbody_elements_filename, usecols=(0,1,2,3,6,7), unpack = True
+        )
+
     time = unfiltered_time[object_id == obj]
+    if len(time) == 0: 
+        print('\nMax object_id = {}. You selected {}. Try again'.format(int(max(object_id)), obj))
+        plot(data_name)
+        return
     time *= dbl_time
     a = unfiltered_a[object_id == obj]
     e = unfiltered_e[object_id == obj]
     omega = unfiltered_omega[object_id == obj]
     anomaly = unfiltered_anomaly[object_id == obj]
     
+    fig, axs = plt.subplots(4,1, sharex= 'all')
+
     axs[0].plot(time, a)
     axs[0].set_title('Semi-Major Axis [$\mathrm{a_{bin}}$]')
     
