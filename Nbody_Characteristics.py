@@ -63,7 +63,7 @@ def plot(data_name: str):
     dbl_strs = dbl_txt.readlines()
     dbl_str = dbl_strs[79]
     dbl_list = list(map(int, re.findall('\d+', dbl_str)))
-    dbl_time = (dbl_list[0] + (dbl_list[1] * 1e-14) )* 10**dbl_list[2]
+    dbl_time = dbl_list[3]
     dbl_txt.close()
     
     (unfiltered_time,
