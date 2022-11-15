@@ -23,7 +23,7 @@ def selectDataFileToPlot(out_dir: str) -> int:
         data_file_to_plot = max_file_num
     return int(data_file_to_plot)
 
-def selectManyDataFilesToPlot(out_dir: str) -> list[int]:
+def selectManyDataFilesToPlot(out_dir: str):
     max_file_num = Navigation_helper.findMaxFileName(out_dir)
     print(
         '\nmax file number = {} \nSelect which files to plot \neg 1,5,10' # \neg 20-25'
@@ -42,3 +42,8 @@ def selectFunctionsToRun(functions: list) -> int:
         functions[func_index].__name__,
     ))
     return func_index
+
+def selectObjectToPlot() -> str:
+    print("Objects: \n Smaller Stellar Object : 1 \n Specific Planet : 2, ...")
+    obj = int(input("please Select Which Object to Plot \n"))
+    return obj
