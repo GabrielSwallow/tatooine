@@ -11,6 +11,7 @@ import UI_helper
 import Navigation_helper
 import re
 from Global_variables import *
+import Data_parser_helper
 
 
 def plot_one() -> None:
@@ -22,9 +23,6 @@ def plot(data_name: str) -> None:
     data_parent_dir = all_data_dir + data_name
     out_dir = all_data_dir + data_name + '/out'
     plots_dir = data_parent_dir + '/Plots/'
-
-    nbody_elements_filename = out_dir + '/nbody_orbital_elements.out'
-    pluto_log_filename = out_dir + '/pluto.log'
     
     if obj == 0:
         print('\nCannot select obj = 0 for Nbody characteristics. Try again.')
@@ -40,36 +38,13 @@ def plot(data_name: str) -> None:
     elif obj == 4:
         obj_des = 'd' 
     
-    
-
-    dbl_txt = open(pluto_log_filename)
-    dbl_strs = dbl_txt.readlines()
-    dbl_str = dbl_strs[79]
-    dbl_list = list(map(int, re.findall('\d+', dbl_str)))
-    dbl_time = dbl_list[3]
-    dbl_txt.close()
-    
     (
-        unfiltered_time,
-        object_id,
-        unfiltered_a,
-        unfiltered_e,
-        unfiltered_omega,
-        unfiltered_anomaly,
-    ) = np.loadtxt(
-        nbody_elements_filename, usecols=(0,1,2,3,6,7), unpack = True
-        )
-
-    time = unfiltered_time[object_id == obj]
-    if len(time) == 0: 
-        print('\nMax object_id = {}. You selected {}. Try again'.format(int(max(object_id)), obj))
-        plot(data_name)
-        return
-    time *= dbl_time
-    a = unfiltered_a[object_id == obj]
-    e = unfiltered_e[object_id == obj]
-    omega = unfiltered_omega[object_id == obj]
-    anomaly = unfiltered_anomaly[object_id == obj]
+        time,
+        a,
+        e,
+        omega,
+        anomaly,
+    ) = Data_parser_helper.getNbodyInformation(out_dir, obj) 
     
     fig, axs = plt.subplots(4,1, sharex= 'all')
 
