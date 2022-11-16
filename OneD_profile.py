@@ -2,12 +2,13 @@ import pluto
 import tools
 import numpy as np
 import matplotlib.pyplot as plt
+from celluloid import Camera
+import os 
+
 import UI_helper
 import Navigation_helper
-import os 
-from celluloid import Camera
-
-all_data_dir = '../Data/'
+import Data_parser_helper
+from Global_variables import *
 
 def plot_one() -> None:
     data_name = UI_helper.selectDataToPlot()
@@ -21,6 +22,19 @@ def plot_many() -> None:
     many_data_files_to_plot = UI_helper.selectManyDataFilesToPlot(out_dir)
     for data_file_to_plot in many_data_files_to_plot:
         plot(data_name, data_file_to_plot)
+    
+def plot_n_bodies(out_dir: str, data_file_to_plot: int) -> None:
+    n = data_file_to_plot
+    num_bodies = Data_parser_helper.findNumBodies(out_dir)
+    for body_id in range(2, num_bodies):
+        (
+            time,
+            a,
+            e,
+            omega,
+            anomoly,
+        ) = Data_parser_helper.getNbodyInformation(out_dir, body_id) 
+        plt.plot([a[n], a[n]], [0., 1.], color='red')
 
 def animate() -> None:
     data_name = UI_helper.selectDataToPlot()
@@ -36,12 +50,13 @@ def animate() -> None:
     camera = Camera(fig)
 
     for n in range(n_max):  
-        
         sigma = data.primitive_variable('rho', n)[0,:,:] #* data.units['density']
         print(np.argwhere(np.isnan(sigma)))
         #sigma[np.isnan(sigma)] = 1.0
         R, Phi = np.meshgrid(data.grid['faces'][0], data.grid['faces'][1])
         sig_r = data.user_def_parameters['SIGMA_REF']
+
+        plot_n_bodies(out_dir, n)
 
         plt.plot(R[1,:-1], np.mean(sigma, axis=0)/ sig_r, color='orange')
         plt.plot(R[0], R[0]**-0.5, '-', color='blue')
@@ -75,7 +90,9 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     sig_r = data.user_def_parameters['SIGMA_REF']
 
     fig = plt.figure()
-    plt.figure()
+
+    plot_n_bodies(out_dir, data_file_to_plot)
+
     plt.plot(R[1,:-1], np.mean(sigma, axis=0)/ sig_r  )
     plt.plot(R[0], R[0]**-0.5, '-')
     #plt.ylim(0,0.1)
