@@ -379,7 +379,7 @@ def animate() -> None:
     save_path = '{}{}_2d_sigma_ANIMATION.gif'.format(plots_dir, data_name)
     repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_2d_sigma_ANIMATION({}).png'.format(plots_dir, data_name, repeated_plots)
+        save_path = '{}{}_2d_sigma_ANIMATION({}).gif'.format(plots_dir, data_name, repeated_plots)
         repeated_plots += 1
 
     animation = camera.animate()
