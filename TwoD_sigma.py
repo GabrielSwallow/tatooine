@@ -1,3 +1,5 @@
+# TODO: add pericentre to the legend plot, phi_0
+
 import pluto
 import tools
 import numpy as np
