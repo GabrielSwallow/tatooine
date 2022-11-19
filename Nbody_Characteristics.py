@@ -26,7 +26,6 @@ def plot(data_name: str) -> None:
     
     if obj == 0:
         print('\nCannot select obj = 0 for Nbody characteristics. Try again.')
-        # raise Exception('Cannot select obj = 0 for Nbody characteristics')
         plot(data_name)
         return
     if obj == 1:
