@@ -55,11 +55,12 @@ def animate() -> None:
         #sigma[np.isnan(sigma)] = 1.0
         R, Phi = np.meshgrid(data.grid['faces'][0], data.grid['faces'][1])
         sig_r = data.user_def_parameters['SIGMA_REF']
+        alpha_sigma = data.user_def_parameters['ALPHA_SIGMA']
 
         plot_n_bodies(out_dir, n)
 
         plt.plot(R[1,:-1], np.mean(sigma, axis=0)/ sig_r, color='orange')
-        plt.plot(R[0], R[0]**-0.5, '-', color='blue')
+        plt.plot(R[0], (R[0]**-alpha_sigma), '-', color='blue') 
         #plt.ylim(0,0.1)
         print(np.max(np.mean(sigma, axis=0)/ data.units['density'] ))
         plt.xlim(0,20)
@@ -80,7 +81,7 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     n = data_file_to_plot
     data_parent_dir = all_data_dir + data_name
     out_dir = all_data_dir + data_name + '/out' 
-    plots_dir = data_parent_dir + '/Plots/'   
+    plots_dir = data_parent_dir + '/Plots/'
 
     data = pluto.Pluto(out_dir)
     sigma = data.primitive_variable('rho', n)[0,:,:] #* data.units['density']
@@ -88,13 +89,14 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     #sigma[np.isnan(sigma)] = 1.0
     R, Phi = np.meshgrid(data.grid['faces'][0], data.grid['faces'][1])
     sig_r = data.user_def_parameters['SIGMA_REF']
+    alpha_sigma = data.user_def_parameters['ALPHA_SIGMA']
 
-    fig = plt.figure()
+    
 
-    plot_n_bodies(out_dir, data_file_to_plot)
+    plot_n_bodies(out_dir, n)
 
-    plt.plot(R[1,:-1], np.mean(sigma, axis=0)/ sig_r  )
-    plt.plot(R[0], R[0]**-0.5, '-')
+    plt.plot(R[1,:-1], np.mean(sigma, axis=0)/ sig_r, color='orange')
+    plt.plot(R[0], (R[0]**-alpha_sigma), '-', color='blue') 
     #plt.ylim(0,0.1)
     print(np.max(np.mean(sigma, axis=0)/ data.units['density'] ))
     plt.xlim(0,20)
@@ -108,8 +110,6 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
         save_path = '{}{}_1d_profile_{}({}).png'.format(plots_dir, data_name, n, repeated_plots)
         repeated_plots += 1
     plt.savefig(save_path)
-    plt.close(fig)
-
 
 if __name__ == '__main__':
     plotters = [plot_one, plot_many, animate]
