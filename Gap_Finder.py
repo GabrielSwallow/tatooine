@@ -19,68 +19,56 @@ import Navigation_helper
 import re
 import scipy.optimize as opt
 
-#%%
+def ellipse(phi, a, e, phi0):
+    return a*(1-e**2)/(1+e*np.cos(phi - phi0))
 
-def ellipse(phang, a, e):
-    return a*(1-e**2)/(1+e*np.cos(phang))
+def x_coord(r, phi):
+    return r*np.cos(phi)
 
-var = 'rho'
+def y_coord(r, phi):
+    return r*np.sin(phi)
 
-n = 19
+def r_coord(x, y):
+    return np.sqrt(x**2 + y**2)
 
-datafile = '../Data/141122_0/out'
-
-data = pluto.Pluto(datafile)
-
-R, Phi = np.meshgrid(data.grid['faces'][0], data.grid['faces'][1])
-Sigma = data.primitive_variable(var, n)[0,:,:]
-
-r = R[1,:]
-
-dimensions = np.shape(R)
-
-phirange = dimensions[0]
-
-radii = []
-angles = []
-
-for i in range(0,phirange-1):
-    phi = Phi[i,0]
-    sigma = Sigma[i,:]
-    r = R[i,:]
-    smax = np.amax(sigma)
-    index = np.where(sigma==smax)
-    radii.append(r[index[0]])
-    angles.append(phi)
+def ellipse_find(R, Phi, Sigma):
+    dimensions = np.shape(R)
+    phi_range = dimensions[0]
+    r_range = dimensions[1]
     
-radii_ideal = ellipse(angles, 5.18, 0.39)
-
-#%%
-
-x=[]
-y=[]
-xid = []
-yid = []
-for i in range(0,phirange-1):
-    x.append(radii[i]*np.cos(angles[i]))
-    y.append(radii[i]*np.sin(angles[i]))
-    xid.append(radii_ideal[i]*np.cos(angles[i]))
-    yid.append(radii_ideal[i]*np.sin(angles[i]))
-
-#%%
-
-fig = plt.figure()
-ax = fig.add_subplot()
-plt.plot(x,y)
-plt.plot(xid,yid)
-plt.xlim([-8,8])
-plt.ylim([-8,8])
-ax.set_aspect('equal', adjustable='box')
-plt.show()
-
-#%%
-
-radii = np.array(radii)
-angles = np.array(angles)
-
-popt, _ = opt.curve_fit(ellipse, angles, radii, p0 = np.array([5.18,0.39]))
+    radii = []
+    phis = []
+    
+    for i in range(0, phi_range - 1):
+        phi = Phi[i,0]
+        phis.append(phi)
+        sigma = Sigma[i,:]
+        r = R[i,:]
+        sigma_max = np.amax(sigma)
+        for j in range(0, r_range - 1):
+            if sigma[j] < 0.1 * sigma_max:
+                continue
+            else:
+                break
+        radii.append(r[j])
+    
+    radii = np.array(radii)
+    phis = np.array(phis)
+    x = x_coord(radii, phis)
+    y = y_coord(radii, phis)
+    
+    x0 = np.mean(x)
+    y0 = np.mean(y)
+    
+    x_fix = x - x0
+    y_fix = y - y0
+    
+    r_fix = r_coord(x_fix, y_fix)
+    
+    popt, _ = opt.curve_fit(ellipse, phis, r_fix, p0= [5.0, 0.3, 0.1])
+    
+    a = popt[0]
+    e = popt[1]
+    omega = popt[2]
+    
+    return a, e, omega, x0, y0
