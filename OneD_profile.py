@@ -109,6 +109,7 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
         save_path = '{}{}_1d_profile_{}({}).png'.format(plots_dir, data_name, n, repeated_plots)
         repeated_plots += 1
     plt.savefig(save_path)
+    plt.close()
 
 if __name__ == '__main__':
     plotters = [plot_one, plot_many, animate]
