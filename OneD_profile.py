@@ -63,7 +63,6 @@ def animate() -> None:
         plt.plot(R[0], (R[0]**-alpha_sigma), '-', color='blue') 
         #plt.ylim(0,0.1)
         print(np.max(np.mean(sigma, axis=0)/ data.units['density'] ))
-        plt.xlim(0,20)
         plt.xlabel(r'radius [a_bin]')
         plt.ylabel(r'$\Sigma \, [g/cm^2]$')
         plt.title('Kep 47')
