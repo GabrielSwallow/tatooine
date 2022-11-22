@@ -1,7 +1,8 @@
 import re
 import numpy as np
+import UI_helper
 
-def getNbodyInformation(out_dir: str, obj: int):
+def getNbodyInformation_out(out_dir: str, obj: int):
     '''
     returns 
     (
@@ -34,9 +35,10 @@ def getNbodyInformation(out_dir: str, obj: int):
     time = dbl_time * unfiltered_time[object_id == obj]
 
     if len(time) == 0: 
-        max_object_id = findNumBodies(out_dir)
+        max_object_id = findNumBodies(out_dir) - 1
         print('\nMax object_id = {}. You selected {}. Try again'.format(max_object_id, obj))
-        getNbodyInformation(out_dir, obj)
+        obj, obj_des = UI_helper.selectObjectToPlot()
+        getNbodyInformation_out(out_dir, obj)
         return
     
     return (
@@ -45,6 +47,42 @@ def getNbodyInformation(out_dir: str, obj: int):
         unfiltered_e[object_id == obj],
         unfiltered_omega[object_id == obj],
         unfiltered_anomaly[object_id == obj]
+    )
+
+def getNbodyInformation_dat(out_dir: str, obj: int):
+    '''
+    returns 
+    (
+        time (T_bin),
+        a (a_bin),
+        e,
+        period
+    )
+    '''
+    nbody_elements_data_filename = out_dir + '/nbody_orbital_elements.dat'
+
+    (
+        object_id,
+        unfiltered_time,
+        unfiltered_a,
+        unfiltered_e,
+        unfiltered_period,
+    ) = np.loadtxt(nbody_elements_data_filename, skiprows=12, usecols=(0,1,2,3,8), unpack = True)
+
+    # TODO: make this 10 be the number of out measurements per orbit
+    time = unfiltered_time[object_id == obj] / (2*np.pi)
+
+    if len(time) == 0: 
+        max_object_id = findNumBodies(out_dir)
+        print('\nMax object_id = {}. You selected {}. Try again'.format(max_object_id, obj))
+        getNbodyInformation_dat(out_dir, obj)
+        return
+    
+    return (
+        time,
+        unfiltered_a[object_id == obj],
+        unfiltered_e[object_id == obj],
+        unfiltered_period[object_id == obj],
     )
 
 def findNumBodies(out_dir: str) -> int:

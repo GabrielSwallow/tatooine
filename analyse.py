@@ -24,7 +24,8 @@ plotters = [
     OneD_profile.plot_one, 
     OneD_profile.plot_many, 
     OneD_profile.animate,
-    Nbody_Characteristics.plot_one,
+    Nbody_Characteristics.plot_one_using_dat,
+    Nbody_Characteristics.plot_one_using_out,
 ]
 
 if __name__ == '__main__':

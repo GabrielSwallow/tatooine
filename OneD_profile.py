@@ -33,7 +33,7 @@ def plot_n_bodies(out_dir: str, data_file_to_plot: int) -> None:
             e,
             omega,
             anomoly,
-        ) = Data_parser_helper.getNbodyInformation(out_dir, body_id) 
+        ) = Data_parser_helper.getNbodyInformation_out(out_dir, body_id) 
         plt.plot([a[n], a[n]], [0., 1.], color='red')
 
 def animate() -> None:
