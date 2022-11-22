@@ -28,9 +28,7 @@ def plot_one() -> None:
     data_file_to_plot = UI_helper.selectDataFileToPlot(out_dir)
     plot(data_name, data_file_to_plot)
 
-
 def plot(data_name: str, data_file_to_plot: int) -> None:
-
     n = data_file_to_plot
     fig, ax = plt.subplots(1, 1, subplot_kw=dict(aspect='equal',
                                                 xlim=[-size,size],
@@ -386,6 +384,7 @@ def animate() -> None:
 
     animation = camera.animate()
     animation.save(save_path)
+    plt.close(fig)
 
 if __name__ == '__main__':
     plotters = [plot_one, plot_many, animate]
