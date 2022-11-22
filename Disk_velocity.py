@@ -59,14 +59,20 @@ def animate() -> None:
 
     for n in range(max_file+1):
         data = pluto.Pluto(out_dir)
-        vx1 = data.primitive_variable('vx1', n)[0,:,:] #* data.units['density']
+        vx1 = data.primitive_variable('vx2', n)[0,:,:] #* data.units['density']
         print(np.argwhere(np.isnan(vx1)))
         #sigma[np.isnan(sigma)] = 1.0
         R, Phi = np.meshgrid(data.grid['faces'][0], data.grid['faces'][1])
         # sig_r = data.user_def_parameters['SIGMA_REF']
         # alpha_sigma = data.user_def_parameters['ALPHA_SIGMA']
 
-        plt.plot(R[1,:-1], np.mean(vx1, axis=0), color='orange')
+        a_max = 40
+        R_cells = 684
+        a_to_plot = 15
+        R_cell_to_plot = int(a_to_plot * (R_cells/a_max))
+        # plt.plot(R[1,:-1], np.mean(vx1, axis=0), color='orange')
+        # plt.plot(R[1,:-1], vx1[0], color='orange')
+        plt.plot(Phi[:-1, R_cell_to_plot], vx1[:, R_cell_to_plot], color='orange')
         plt.xlabel(r'radius [a_bin]')
         plt.ylabel(r'$ Vx1 \, [g/cm^2]$')
         plt.title('Kep 47')
