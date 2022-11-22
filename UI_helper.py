@@ -1,7 +1,8 @@
 import os
+from typing import Tuple
 import Navigation_helper
-
-all_data_dir = '../Data/'
+import Data_parser_helper
+from Global_variables import *
 
 def selectDataToPlot(datasets = None) -> str:
     if not datasets:
@@ -10,7 +11,9 @@ def selectDataToPlot(datasets = None) -> str:
         print(d_index, ' : ', filename)
     
     dataset_index = int(input("please choose a dataset to plot for \n"))
-    return datasets[dataset_index]
+    data_name = datasets[dataset_index]
+    Navigation_helper.createPlotsFolderIfAbsent(data_name)
+    return data_name
 
 def selectDataFileToPlot(out_dir: str) -> int:
     max_file_num = Navigation_helper.findMaxFileName(out_dir)
@@ -46,7 +49,29 @@ def selectFunctionsToRun(functions: list) -> int:
     ))
     return func_index
 
-def selectObjectToPlot() -> str:
+def selectObjectToPlot(out_dir: str) -> Tuple[int, str]:
     print("\nObjects: \n Smaller Stellar Object : 1 \n Specific Planet : 2, ...")
     obj = int(input("please Select Which Object to Plot \n"))
-    return obj
+
+    num_bodies = Data_parser_helper.findNumBodies(out_dir)
+    if obj > num_bodies-1:
+        print('\nMax object_id = {}. You selected {}. Try again'.format(num_bodies-1, obj))
+        obj, obj_des = selectObjectToPlot(out_dir)
+
+    if obj == 0:
+        print('\nCannot select obj = 0 for Nbody characteristics. Try again.')
+        obj, obj_des = selectObjectToPlot(out_dir)
+    if obj == 1:
+        obj_des = 'B'
+    elif obj == 2:
+        obj_des = 'b'
+    elif obj == 3:
+        obj_des = 'c'
+    elif obj == 4:
+        obj_des = 'd'
+    else:
+        print('\nInvalid obj int entered. Try again.')
+        selectObjectToPlot()
+        return 
+
+    return obj, obj_des

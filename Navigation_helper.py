@@ -1,5 +1,6 @@
 import os
 import numpy as np
+from Global_variables import *
 
 def findMaxFileName(out_dir: str) -> int:
     files = os.listdir(out_dir)
@@ -8,6 +9,7 @@ def findMaxFileName(out_dir: str) -> int:
     maxFileNumber = max(numbers)
     return maxFileNumber
 
-def createPlotsFolderIfAbsent(data_parent_dir: str) -> None:
-    os.path.isfile('/Plots'.format(data_parent_dir))
-    # TODO: not really necessary, but might be nice
+def createPlotsFolderIfAbsent(data_name: str) -> None:
+    data_parent_dir = all_data_dir + data_name
+    if not os.path.isfile('{}/Plots'.format(data_parent_dir)):
+        os.mkdir('{}/Plots'.format(data_parent_dir))
