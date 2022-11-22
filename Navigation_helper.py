@@ -11,5 +11,5 @@ def findMaxFileName(out_dir: str) -> int:
 
 def createPlotsFolderIfAbsent(data_name: str) -> None:
     data_parent_dir = all_data_dir + data_name
-    if not os.path.isfile('{}/Plots'.format(data_parent_dir)):
+    if not os.path.isdir('{}/Plots'.format(data_parent_dir)):
         os.mkdir('{}/Plots'.format(data_parent_dir))
