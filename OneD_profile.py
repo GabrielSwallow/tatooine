@@ -39,7 +39,7 @@ def plot_n_bodies(out_dir: str, data_file_to_plot: int) -> None:
 def animate() -> None:
     data_name = UI_helper.selectDataToPlot()
     out_dir = all_data_dir + data_name + '/out'
-    n_max = Navigation_helper.findMaxFileName(out_dir)
+    n_min, n_max = UI_helper.selectAnimateRange(out_dir)
 
     data_parent_dir = all_data_dir + data_name
     out_dir = all_data_dir + data_name + '/out' 
@@ -49,7 +49,7 @@ def animate() -> None:
     fig = plt.figure()
     camera = Camera(fig)
 
-    for n in range(n_max):  
+    for n in range(n_min, n_max+1):  
         sigma = data.primitive_variable('rho', n)[0,:,:] #* data.units['density']
         print(np.argwhere(np.isnan(sigma)))
         #sigma[np.isnan(sigma)] = 1.0
@@ -68,10 +68,10 @@ def animate() -> None:
         plt.title('Kep 47')
         camera.snap()
 
-    save_path = '{}{}_1d_profile_ANIMATION.gif'.format(plots_dir, data_name)
+    save_path = '{}{}_1d_profile_ANIMATION{}-{}.gif'.format(plots_dir, data_name, n_min, n_max)
     repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_1d_profile_ANIMATION({}).gif'.format(plots_dir, data_name, repeated_plots)
+        save_path = '{}{}_1d_profile_ANIMATION{}-{}({}).gif'.format(plots_dir, data_name, n_min, n_max, repeated_plots)
         repeated_plots += 1
     animation = camera.animate()
     animation.save(save_path)
