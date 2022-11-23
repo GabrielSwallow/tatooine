@@ -75,3 +75,14 @@ def selectObjectToPlot(out_dir: str) -> Tuple[int, str]:
         return 
 
     return obj, obj_des
+
+def selectAnimateRange(out_dir: str):
+    max_file_num = Navigation_helper.findMaxFileName(out_dir)
+    print(
+        '\nmax file number: {} \nSelect range of animation \neg 0,50 \nDefault is 0,{}'.format(max_file_num,max_file_num)
+    )
+    data_range_raw = input()
+    if data_range_raw == '':
+        data_range_raw = '0,{}'.format(max_file_num)
+    data_range = data_range_raw.rsplit(',')
+    return [int(f) for f in data_range]
