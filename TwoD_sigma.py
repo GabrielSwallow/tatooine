@@ -42,10 +42,12 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
                 
     fig.tight_layout() 
 
-    save_path = '{}{}_2d_sigma_{}.png'.format(plots_dir, data_name, n)
+    if logsc: log_str = '_LOG'
+    else: log_str = ''
+    save_path = '{}{}{}_2d_{}_{}.png'.format(plots_dir, data_name, log_str, var, n)
     repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_2d_sigma_{}({}).png'.format(plots_dir, data_name, n, repeated_plots)
+        save_path = '{}{}{}_2d_{}_{}({}).png'.format(plots_dir, data_name, log_str, var, n, repeated_plots)
         repeated_plots += 1
     print('Saving plot in {0}'.format(save_path))
     fig.savefig(save_path)
@@ -54,7 +56,7 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
 def animate() -> None:
     data_name = UI_helper.selectDataToPlot()
     out_dir = all_data_dir + data_name + '/out'
-    n_max = Navigation_helper.findMaxFileName(out_dir)
+    n_min, n_max = UI_helper.selectAnimateRange(out_dir)
 
     data_parent_dir = all_data_dir + data_name
     out_dir = all_data_dir + data_name + '/out' 
@@ -69,16 +71,19 @@ def animate() -> None:
 
     # animate = plt_anim.FuncAnimation(fig, partial(plot_the_data, out_dir=out_dir, ax=ax), n_max)
 
-    for n in range(n_max+1):
+    for n in range(n_min, n_max+1):
         plot_the_data(n, out_dir, ax, plot_colorbars=False)
         fig.tight_layout() 
         camera.snap()
         # cb.remove()
 
-    save_path = '{}{}_2d_sigma_ANIMATION.gif'.format(plots_dir, data_name)
+    if logsc: log_str = '_LOG'
+    else: log_str = ''
+    save_path = '{}{}{}_2d_{}_ANIMATION_{}-{}.gif'.format(plots_dir, data_name, log_str, var, n_min, n_max)
+
     repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_2d_sigma_ANIMATION({}).gif'.format(plots_dir, data_name, repeated_plots)
+        save_path = '{}{}{}_2d_{}_ANIMATION_{}-{}({}).gif'.format(plots_dir, data_name, log_str, var, repeated_plots, n_min, n_max)
         repeated_plots += 1
 
     # animate.save(save_path)
@@ -154,24 +159,41 @@ def plot_the_data(n: int, out_dir: str, ax: plt.Axes, plot_colorbars: bool = Tru
     '''
     corr = np.sqrt(1+(-1.0-0.5)*0.05*0.05)
     # 2D-Plot
-    if logsc:
-        if var=='rho':
+    if var=='vx1' or var=='vx2':
+        if logsc: print('\nWarning: logsc==True, but vx can be -ve. \nplotting not log\n')
+        plot = ax.pcolor(X*a_bin, Y*a_bin, var_data*np.sqrt(R[:-1,:-1])/corr, cmap='bwr', vmin=-0.05, vmax=0.05)
+        colourbar_label = 'velocity'
+    elif var=='rho':
+        if logsc:
             plot = ax.pcolor(X*a_bin, Y*a_bin, np.log10(var_data/np.max(var_data)), cmap='gist_heat')#, vmin=-2)
             colourbar_label = r'$log\Sigma\;\left[\mathrm{g}\,/\mathrm{cm}^{-2}\right]$'
-        elif var=='vx1' or var=='vx2':
-            print('\nwarning: plotting velocity, which may be -ve, with log scale\n')
-            plot = ax.pcolor(X*a_bin, Y*a_bin, np.log10(var_data*np.sqrt(R[:-1,:-1])/corr), cmap='bwr', vmin=-0.05, vmax=0.05)
-            colourbar_label = 'log(velocity)'
         else:
-            plot = ax.pcolor(X*a_bin, Y*a_bin, var_data, cmap='bwr', vmin=-0.05, vmax=0.05)
-            colourbar_label = 'unknown?'
-    else:
-        if var=='rho':
             plot = ax.pcolor(X*a_bin, Y*a_bin, var_data/np.max(var_data), cmap='viridis')#, vmin=0.0, vmax=0.1)#, vmin=0.01, vmax=2000)#,
             colourbar_label = r'$log\Sigma\;\left[\mathrm{g}\,/\mathrm{cm}^{-2}\right]$'
-        elif var=='vx1' or var=='vx2':
-            plot = ax.pcolor(X*a_bin, Y*a_bin, var_data*np.sqrt(R[:-1,:-1])/corr, cmap='bwr', vmin=-0.05, vmax=0.05)
-            colourbar_label = 'velocity'
+    else:
+        raise Exception('invalid var chosen')
+
+    # if logsc:
+    #     if var=='rho':
+    #         plot = ax.pcolor(X*a_bin, Y*a_bin, np.log10(var_data/np.max(var_data)), cmap='gist_heat')#, vmin=-2)
+    #         colourbar_label = r'$log\Sigma\;\left[\mathrm{g}\,/\mathrm{cm}^{-2}\right]$'
+    #     elif var=='vx1' or var=='vx2':
+    #         print('\nwarning: plotting velocity, which may be -ve, with log scale\n')
+    #         plot = ax.pcolor(X*a_bin, Y*a_bin, np.log10(var_data*np.sqrt(R[:-1,:-1])/corr), cmap='bwr', vmin=-0.05, vmax=0.05)
+    #         colourbar_label = 'log(velocity)'
+    #     else:
+    #         raise Exception('invalid var chosen')
+    #         # plot = ax.pcolor(X*a_bin, Y*a_bin, var_data, cmap='bwr', vmin=-0.05, vmax=0.05)
+    #         # colourbar_label = 'unknown?'
+    # else:
+    #     if var=='rho':
+    #         plot = ax.pcolor(X*a_bin, Y*a_bin, var_data/np.max(var_data), cmap='viridis')#, vmin=0.0, vmax=0.1)#, vmin=0.01, vmax=2000)#,
+    #         colourbar_label = r'$log\Sigma\;\left[\mathrm{g}\,/\mathrm{cm}^{-2}\right]$'
+    #     elif var=='vx1' or var=='vx2':
+    #         plot = ax.pcolor(X*a_bin, Y*a_bin, var_data*np.sqrt(R[:-1,:-1])/corr, cmap='bwr', vmin=-0.05, vmax=0.05)
+    #         colourbar_label = 'velocity'
+    #     else:
+    #         raise Exception('invalid var chosen')
 
     #plot = ax.pcolor(R, phi, sigma, cmap='magma', vmin=1.0, vmax=100.)#, norm=colors.LogNorm(vmin=sigma.min(), vmax=sigma.max()))
 
