@@ -23,18 +23,16 @@ def plot_one_using_out() -> None:
     plot_using_out(data_name)
 
 def plot_using_dat(data_name: str) -> None:
-    data_parent_dir = all_data_dir + data_name
-    out_dir = all_data_dir + data_name + '/out'
-    plots_dir = data_parent_dir + '/Plots/'
+    directories = Navigation_helper.Directories(data_name)
     
-    obj, obj_des = UI_helper.selectObjectToPlot(out_dir)
+    obj, obj_des = UI_helper.selectObjectToPlot(directories.out_dir)
     
     (
         time,
         a,
         e,
         period,
-    ) = Data_parser_helper.getNbodyInformation_dat(out_dir, obj) 
+    ) = Data_parser_helper.getNbodyInformation_dat(directories.out_dir, obj) 
 
     fig, axs = plt.subplots(2,1, sharex= 'all')
 
@@ -52,10 +50,10 @@ def plot_using_dat(data_name: str) -> None:
     
     fig.tight_layout()
     
-    save_path = '{}{}_obj{}_orbital_elements_dat.png'.format(plots_dir, data_name, obj)
+    save_path = '{}{}_obj{}_orbital_elements_dat.png'.format(directories.plots_dir, data_name, obj)
     repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_obj{}_orbital_elements_dat({}).png'.format(plots_dir, data_name, obj, repeated_plots)
+        save_path = '{}{}_obj{}_orbital_elements_dat({}).png'.format(directories.plots_dir, data_name, obj, repeated_plots)
         repeated_plots += 1
     
     print('Saving plot in {0}'.format(save_path))
@@ -63,11 +61,9 @@ def plot_using_dat(data_name: str) -> None:
     plt.close(fig)
 
 def plot_using_out(data_name: str) -> None:
-    data_parent_dir = all_data_dir + data_name
-    out_dir = all_data_dir + data_name + '/out'
-    plots_dir = data_parent_dir + '/Plots/'
-    
-    obj, obj_des = UI_helper.selectObjectToPlot(out_dir)
+    directories = Navigation_helper.Directories(data_name)
+
+    obj, obj_des = UI_helper.selectObjectToPlot(directories.out_dir)
     
     (
         time,
@@ -75,7 +71,7 @@ def plot_using_out(data_name: str) -> None:
         e,
         omega,
         anomaly,
-    ) = Data_parser_helper.getNbodyInformation_out(out_dir, obj) 
+    ) = Data_parser_helper.getNbodyInformation_out(directories.out_dir, obj) 
     
     fig, axs = plt.subplots(4,1, sharex= 'all')
 
@@ -95,10 +91,10 @@ def plot_using_out(data_name: str) -> None:
     
     fig.tight_layout()
     
-    save_path = '{}{}_obj{}_orbital_elements.png'.format(plots_dir, data_name, obj)
+    save_path = '{}{}_obj{}_orbital_elements.png'.format(directories.plots_dir, data_name, obj)
     repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_obj{}_orbital_elements({}).png'.format(plots_dir, data_name, obj, repeated_plots)
+        save_path = '{}{}_obj{}_orbital_elements({}).png'.format(directories.plots_dir, data_name, obj, repeated_plots)
         repeated_plots += 1
     
     print('Saving plot in {0}'.format(save_path))

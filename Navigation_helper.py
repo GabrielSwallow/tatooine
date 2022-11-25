@@ -13,3 +13,14 @@ def createPlotsFolderIfAbsent(data_name: str) -> None:
     data_parent_dir = all_data_dir + data_name
     if not os.path.isdir('{}/Plots'.format(data_parent_dir)):
         os.mkdir('{}/Plots'.format(data_parent_dir))
+
+class Directories():
+    def __init__(self, data_name: str | None) -> None:
+        self.all_data_dir = '../Data/'
+        self.data_name = data_name
+        self.out_dir = all_data_dir + data_name + '/out'
+        self.data_parent_dir = all_data_dir + data_name
+        self.plots_dir = self.data_parent_dir + '/Plots/'
+    
+    def set_data_name(self, new_data_name: str):
+        self.data_name = new_data_name
