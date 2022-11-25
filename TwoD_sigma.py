@@ -28,26 +28,66 @@ def plot_one() -> None:
     data_file_to_plot = UI_helper.selectDataFileToPlot(out_dir)
     plot(data_name, data_file_to_plot)
 
+def plot_one_velocities() -> None:
+    data_name = UI_helper.selectDataToPlot()
+    out_dir = all_data_dir + data_name + '/out'
+    data_file_to_plot = UI_helper.selectDataFileToPlot(out_dir)
+    plot_velocities(data_name, data_file_to_plot)
+
+def plot_velocities(data_name: str, data_file_to_plot: int):
+    n = data_file_to_plot
+    fig, ax = plt.subplots(1, 2, subplot_kw=dict(aspect='equal',
+                                                xlim=[-size,size],
+                                                ylim=[-size,size]
+                                                ))
+    directories = Navigation_helper.Directories(data_name)
+
+    global logsc
+    global var
+
+    logsc_temp = logsc
+    var_temp = var
+
+    logsc = False
+    var   = "vx1"
+    plot_the_data(n, directories.out_dir, ax[0])
+    var  = "vx2"
+    plot_the_data(n, directories.out_dir, ax[1])
+                
+    fig.tight_layout() 
+
+    log_str = ''
+    save_path = '{}{}{}_2d_{}_{}.png'.format(directories.plots_dir, data_name, log_str, var, n)
+    repeated_plots = 1
+    while(os.path.isfile(save_path)):
+        save_path = '{}{}{}_2d_{}_{}({}).png'.format(directories.plots_dir, data_name, log_str, var, n, repeated_plots)
+        repeated_plots += 1
+    print('Saving plot in {0}'.format(save_path))
+    fig.savefig(save_path)
+    plt.close(fig)
+
+    logsc = logsc_temp
+    var = var_temp
+
 def plot(data_name: str, data_file_to_plot: int) -> None:
     n = data_file_to_plot
     fig, ax = plt.subplots(1, 1, subplot_kw=dict(aspect='equal',
                                                 xlim=[-size,size],
                                                 ylim=[-size,size]
                                                 ))
-    data_parent_dir = all_data_dir + data_name
-    out_dir = all_data_dir + data_name + '/out'
-    plots_dir = data_parent_dir + '/Plots/'
 
-    plot_the_data(n, out_dir, ax)
+    directories = Navigation_helper.Directories(data_name)
+
+    plot_the_data(n, directories.out_dir, ax)
                 
     fig.tight_layout() 
 
     if logsc: log_str = '_LOG'
     else: log_str = ''
-    save_path = '{}{}{}_2d_{}_{}.png'.format(plots_dir, data_name, log_str, var, n)
+    save_path = '{}{}{}_2d_{}_{}.png'.format(directories.plots_dir, data_name, log_str, var, n)
     repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}{}{}_2d_{}_{}({}).png'.format(plots_dir, data_name, log_str, var, n, repeated_plots)
+        save_path = '{}{}{}_2d_{}_{}({}).png'.format(directories.plots_dir, data_name, log_str, var, n, repeated_plots)
         repeated_plots += 1
     print('Saving plot in {0}'.format(save_path))
     fig.savefig(save_path)
@@ -55,12 +95,8 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
 
 def animate() -> None:
     data_name = UI_helper.selectDataToPlot()
-    out_dir = all_data_dir + data_name + '/out'
-    n_min, n_max = UI_helper.selectAnimateRange(out_dir)
-
-    data_parent_dir = all_data_dir + data_name
-    out_dir = all_data_dir + data_name + '/out' 
-    plots_dir = data_parent_dir + '/Plots/'
+    directories = Navigation_helper.Directories(data_name)
+    n_min, n_max = UI_helper.selectAnimateRange(directories.out_dir)
 
     fig, ax = plt.subplots(1, 1, subplot_kw=dict(aspect='equal',
                                                 xlim=[-size,size],
@@ -72,18 +108,18 @@ def animate() -> None:
     # animate = plt_anim.FuncAnimation(fig, partial(plot_the_data, out_dir=out_dir, ax=ax), n_max)
 
     for n in range(n_min, n_max+1):
-        plot_the_data(n, out_dir, ax, plot_colorbars=False)
+        plot_the_data(n, directories.out_dir, ax, plot_colorbars=False)
         fig.tight_layout() 
         camera.snap()
         # cb.remove()
 
     if logsc: log_str = '_LOG'
     else: log_str = ''
-    save_path = '{}{}{}_2d_{}_ANIMATION_{}-{}.gif'.format(plots_dir, data_name, log_str, var, n_min, n_max)
+    save_path = '{}{}{}_2d_{}_ANIMATION_{}-{}.gif'.format(directories.plots_dir, data_name, log_str, var, n_min, n_max)
 
     repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}{}{}_2d_{}_ANIMATION_{}-{}({}).gif'.format(plots_dir, data_name, log_str, var, repeated_plots, n_min, n_max)
+        save_path = '{}{}{}_2d_{}_ANIMATION_{}-{}({}).gif'.format(directories.plots_dir, data_name, log_str, var, repeated_plots, n_min, n_max)
         repeated_plots += 1
 
     # animate.save(save_path)
@@ -161,7 +197,7 @@ def plot_the_data(n: int, out_dir: str, ax: plt.Axes, plot_colorbars: bool = Tru
     # 2D-Plot
     if var=='vx1' or var=='vx2':
         if logsc: print('\nWarning: logsc==True, but vx can be -ve. \nplotting not log\n')
-        plot = ax.pcolor(X*a_bin, Y*a_bin, var_data*np.sqrt(R[:-1,:-1])/corr, cmap='bwr', vmin=-0.05, vmax=0.05)
+        plot = ax.pcolor(X*a_bin, Y*a_bin, var_data*np.sqrt(R[:-1,:-1])/corr, cmap='bwr') #, vmin=-0.05, vmax=0.05)
         colourbar_label = 'velocity'
     elif var=='rho':
         if logsc:
@@ -296,6 +332,6 @@ def plot_the_data(n: int, out_dir: str, ax: plt.Axes, plot_colorbars: bool = Tru
 
 
 if __name__ == '__main__':
-    plotters = [plot_one, plot_many, animate]
+    plotters = [plot_one, plot_many, plot_one_velocities, animate]
     func_index = UI_helper.selectFunctionsToRun(plotters)
     eval('{}()'.format(plotters[func_index].__name__))
