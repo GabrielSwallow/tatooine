@@ -195,7 +195,12 @@ def plot_the_data(n: int, out_dir: str, ax: plt.Axes, plot_colorbars: bool = Tru
     '''
     corr = np.sqrt(1+(-1.0-0.5)*0.05*0.05)
     # 2D-Plot
-    if var=='vx1' or var=='vx2':
+    if var=='vx1':
+        # TODO: change so the radial velocity isn't scaled to kepler velocity
+        if logsc: print('\nWarning: logsc==True, but vx can be -ve. \nplotting not log\n')
+        plot = ax.pcolor(X*a_bin, Y*a_bin, var_data, cmap='bwr') #, vmin=-0.05, vmax=0.05)
+        colourbar_label = var
+    elif var=='vx2':
         if logsc: print('\nWarning: logsc==True, but vx can be -ve. \nplotting not log\n')
         plot = ax.pcolor(X*a_bin, Y*a_bin, var_data*np.sqrt(R[:-1,:-1])/corr, cmap='bwr') #, vmin=-0.05, vmax=0.05)
         colourbar_label = var
