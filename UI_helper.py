@@ -4,8 +4,8 @@ import Navigation_helper
 import Data_parser_helper
 from Global_variables import *
 
-from menu import Menu
-import simple_term_menu as stm
+# from menu import Menu
+# import simple_term_menu as stm
 
 def selectDataToPlot(datasets = None) -> str:
     if not datasets:
@@ -90,64 +90,64 @@ def selectAnimateRange(out_dir: str):
     data_range = data_range_raw.rsplit(',')
     return [int(f) for f in data_range]
     
-def select_global_vars():
-    print('would you like to update global variables? \n(y/n)')
-    inp = input()
-    if inp == 'y':
-        cart_options = [False, True] # 'cart grid'
-        cart_index = 0
-        logsc_options = [False, True] # log scale
-        logsc_index = 0
-        nbody_options = [False, True] # nbody integrater used
-        nbody_index = 1
-        var_options   = ['rho', 'vx1', 'vx2', 'prs']
-        var_index = 0
+# def select_global_vars():
+#     print('would you like to update global variables? \n(y/n)')
+#     inp = input()
+#     if inp == 'y':
+#         cart_options = [False, True] # 'cart grid'
+#         cart_index = 0
+#         logsc_options = [False, True] # log scale
+#         logsc_index = 0
+#         nbody_options = [False, True] # nbody integrater used
+#         nbody_index = 1
+#         var_options   = ['rho', 'vx1', 'vx2', 'prs']
+#         var_index = 0
 
-        variables = [
-            '[q] close',
-            '[cart] {}'.format(cart_options[cart_index]),
-            '[logsc] {}'.format(logsc_options[logsc_index]),
-            '[nbody] {}'.format(nbody_options[nbody_index]),
-            '[var] {}'.format(var_options[var_index]),
-            ]
+#         variables = [
+#             '[q] close',
+#             '[cart] {}'.format(cart_options[cart_index]),
+#             '[logsc] {}'.format(logsc_options[logsc_index]),
+#             '[nbody] {}'.format(nbody_options[nbody_index]),
+#             '[var] {}'.format(var_options[var_index]),
+#             ]
         
-        quitting = False
-        while not quitting:
-            main_menu = stm.TerminalMenu(variables)
-            index = main_menu.show() 
-            optionSelected = variables[index]   
-            if optionSelected == '[q] close':
-                quitting = True
-            elif optionSelected == '[cart] {}'.format(cart_options[cart_index]):
-                cart_index = cylce_selection_index(cart_options, cart_index)
-                variables[index] = '[cart] {}'.format(cart_options[cart_index])
-            elif optionSelected == '[logsc] {}'.format(logsc_options[logsc_index]):
-                logsc_index = cylce_selection_index(logsc_options, logsc_index)
-                variables[index] = '[logsc] {}'.format(logsc_options[logsc_index])
-            elif optionSelected == '[nbody] {}'.format(nbody_options[nbody_index]):
-                nbody_index = cylce_selection_index(nbody_options, nbody_index)
-                variables[index] = '[nbody] {}'.format(nbody_options[nbody_index])
-            elif optionSelected == '[var] {}'.format(var_options[var_index]):
-                var_index = cylce_selection_index(var_options, var_index)
-                variables[index] = '[var] {}'.format(var_options[var_index])
+#         quitting = False
+#         while not quitting:
+#             main_menu = stm.TerminalMenu(variables)
+#             index = main_menu.show() 
+#             optionSelected = variables[index]   
+#             if optionSelected == '[q] close':
+#                 quitting = True
+#             elif optionSelected == '[cart] {}'.format(cart_options[cart_index]):
+#                 cart_index = cylce_selection_index(cart_options, cart_index)
+#                 variables[index] = '[cart] {}'.format(cart_options[cart_index])
+#             elif optionSelected == '[logsc] {}'.format(logsc_options[logsc_index]):
+#                 logsc_index = cylce_selection_index(logsc_options, logsc_index)
+#                 variables[index] = '[logsc] {}'.format(logsc_options[logsc_index])
+#             elif optionSelected == '[nbody] {}'.format(nbody_options[nbody_index]):
+#                 nbody_index = cylce_selection_index(nbody_options, nbody_index)
+#                 variables[index] = '[nbody] {}'.format(nbody_options[nbody_index])
+#             elif optionSelected == '[var] {}'.format(var_options[var_index]):
+#                 var_index = cylce_selection_index(var_options, var_index)
+#                 variables[index] = '[var] {}'.format(var_options[var_index])
 
-        with open('Global_variables.py', 'r') as file:
-            string_list = file.readlines()
-        string_list[0] = 'cart = {}\n'.format(cart_options[cart_index])
-        string_list[1] = 'logsc = {}\n'.format(logsc_options[logsc_index])
-        string_list[2] = 'nbody = {}\n'.format(nbody_options[nbody_index])
-        string_list[3] = 'var   = "{}"\n'.format(var_options[var_index])
+#         with open('Global_variables.py', 'r') as file:
+#             string_list = file.readlines()
+#         string_list[0] = 'cart = {}\n'.format(cart_options[cart_index])
+#         string_list[1] = 'logsc = {}\n'.format(logsc_options[logsc_index])
+#         string_list[2] = 'nbody = {}\n'.format(nbody_options[nbody_index])
+#         string_list[3] = 'var   = "{}"\n'.format(var_options[var_index])
 
-        with open('Global_variables.py', 'w') as file:
-            new_file_contents = "".join(string_list)
-            file.write(new_file_contents)
+#         with open('Global_variables.py', 'w') as file:
+#             new_file_contents = "".join(string_list)
+#             file.write(new_file_contents)
 
-        return [
-            cart_options[cart_index],
-            logsc_options[logsc_index],
-            nbody_options[nbody_index],
-            var_options[var_index],
-        ]
+#         return [
+#             cart_options[cart_index],
+#             logsc_options[logsc_index],
+#             nbody_options[nbody_index],
+#             var_options[var_index],
+#         ]
 
 def cylce_selection_index(options: list, current_index: int) -> int:
     length = len(options)
@@ -156,5 +156,5 @@ def cylce_selection_index(options: list, current_index: int) -> int:
     else: 
         return current_index + 1
 
-if __name__ == '__main__':
-    select_global_vars()
+# if __name__ == '__main__':
+#     select_global_vars()
