@@ -198,7 +198,7 @@ def plot_the_data(n: int, out_dir: str, ax: plt.Axes, plot_colorbars: bool = Tru
     if var=='vx1' or var=='vx2':
         if logsc: print('\nWarning: logsc==True, but vx can be -ve. \nplotting not log\n')
         plot = ax.pcolor(X*a_bin, Y*a_bin, var_data*np.sqrt(R[:-1,:-1])/corr, cmap='bwr') #, vmin=-0.05, vmax=0.05)
-        colourbar_label = 'velocity'
+        colourbar_label = var
     elif var=='rho':
         if logsc:
             plot = ax.pcolor(X*a_bin, Y*a_bin, np.log10(var_data/np.max(var_data)), cmap='gist_heat')#, vmin=-2)
