@@ -47,28 +47,13 @@ def animate() -> None:
     camera = Camera(fig)
 
     for n in range(n_min, n_max+1):  
-        sigma = data.primitive_variable('rho', n)[0,:,:] #* data.units['density']
-        print(np.argwhere(np.isnan(sigma)))
-        #sigma[np.isnan(sigma)] = 1.0
-        R, Phi = np.meshgrid(data.grid['faces'][0], data.grid['faces'][1])
-        sig_r = data.user_def_parameters['SIGMA_REF']
-        alpha_sigma = data.user_def_parameters['ALPHA_SIGMA']
-
-        plot_n_bodies(directories.out_dir, n)
-
-        plt.plot(R[1,:-1], np.mean(sigma, axis=0)/ sig_r, color='orange')
-        plt.plot(R[0], (R[0]**-alpha_sigma), '-', color='blue') 
-        #plt.ylim(0,0.1)
-        print(np.max(np.mean(sigma, axis=0)/ data.units['density'] ))
-        plt.xlabel(r'radius [a_bin]')
-        plt.ylabel(r'$\Sigma \, [g/cm^2]$')
-        plt.title('Kep 47')
+        plot_the_data(fig, n, data_name)
         camera.snap()
 
-    save_path = '{}{}_1d_profile_ANIMATION{}-{}.gif'.format(directories.plots_dir, data_name, n_min, n_max)
+    save_path = '{}{}_1d_profile_{}_ANIMATION{}-{}.gif'.format(directories.plots_dir, data_name, var, n_min, n_max)
     repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_1d_profile_ANIMATION{}-{}({}).gif'.format(directories.plots_dir, data_name, n_min, n_max, repeated_plots)
+        save_path = '{}{}_1d_profile_{}_ANIMATION{}-{}({}).gif'.format(directories.plots_dir, data_name, var, n_min, n_max, repeated_plots)
         repeated_plots += 1
     animation = camera.animate()
     animation.save(save_path)
@@ -77,9 +62,22 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     n = data_file_to_plot
     directories = Navigation_helper.Directories(data_name)
 
+    fig = plt.figure()
+    plot_the_data(fig, n, data_name)
+
+    save_path = '{}{}_1d_profile_{}_{}.png'.format(directories.plots_dir, data_name, var, n)
+    repeated_plots = 1
+    while(os.path.isfile(save_path)):
+        save_path = '{}{}_1d_profile_{}_{}({}).png'.format(directories.plots_dir, data_name, var, n, repeated_plots)
+        repeated_plots += 1
+    plt.savefig(save_path)
+    plt.close()
+
+def plot_the_data(fig: plt.Figure, n: int, data_name: str):
+    directories = Navigation_helper.Directories(data_name)
     data = pluto.Pluto(directories.out_dir)
-    sigma = data.primitive_variable('rho', n)[0,:,:] #* data.units['density']
-    print(np.argwhere(np.isnan(sigma)))
+    var_data = data.primitive_variable(var, n)[0,:,:] #* data.units['density']
+    print(np.argwhere(np.isnan(var_data)))
     #sigma[np.isnan(sigma)] = 1.0
     R, Phi = np.meshgrid(data.grid['faces'][0], data.grid['faces'][1])
     sig_r = data.user_def_parameters['SIGMA_REF']
@@ -87,22 +85,15 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
 
     plot_n_bodies(directories.out_dir, n)
 
-    plt.plot(R[1,:-1], np.mean(sigma, axis=0)/ sig_r, color='orange')
-    plt.plot(R[0], (R[0]**-alpha_sigma), '-', color='blue') 
-    #plt.ylim(0,0.1)
-    print(np.max(np.mean(sigma, axis=0)/ data.units['density'] ))
-    plt.xlim(0,20)
+    if var == 'rho':
+        plt.plot(R[1,:-1], np.mean(var_data, axis=0)/ sig_r, color='orange')
+        plt.plot(R[0], (R[0]**-alpha_sigma), '-', color='blue') 
+        plt.ylabel(r'$\Sigma \, [g/cm^2]$')
+    elif var == 'vx1' or var == 'vx2':
+        plt.plot(R[1,:-1], np.mean(var_data, axis=0), color='orange')
+    plt.ylabel(var)
     plt.xlabel(r'radius [a_bin]')
-    plt.ylabel(r'$\Sigma \, [g/cm^2]$')
     plt.title('Kep 47')
-
-    save_path = '{}{}_1d_profile_{}.png'.format(directories.plots_dir, data_name, n)
-    repeated_plots = 1
-    while(os.path.isfile(save_path)):
-        save_path = '{}{}_1d_profile_{}({}).png'.format(directories.plots_dir, data_name, n, repeated_plots)
-        repeated_plots += 1
-    plt.savefig(save_path)
-    plt.close()
 
 if __name__ == '__main__':
     plotters = [plot_one, plot_many, animate]
