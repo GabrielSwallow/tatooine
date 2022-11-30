@@ -50,10 +50,10 @@ def animate() -> None:
         plot_the_data(fig, n, data_name)
         camera.snap()
 
-    save_path = '{}{}_1d_profile_{}_ANIMATION{}-{}.gif'.format(directories.plots_dir, data_name, var, n_min, n_max)
+    save_path = '{}{}_1d_profile_{}_ANIMATION_{}-{}.gif'.format(directories.plots_dir, data_name, var, n_min, n_max)
     repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_1d_profile_{}_ANIMATION{}-{}({}).gif'.format(directories.plots_dir, data_name, var, n_min, n_max, repeated_plots)
+        save_path = '{}{}_1d_profile_{}_ANIMATION_{}-{}({}).gif'.format(directories.plots_dir, data_name, var, n_min, n_max, repeated_plots)
         repeated_plots += 1
     animation = camera.animate()
     animation.save(save_path)
@@ -89,8 +89,14 @@ def plot_the_data(fig: plt.Figure, n: int, data_name: str):
         plt.plot(R[1,:-1], np.mean(var_data, axis=0)/ sig_r, color='orange')
         plt.plot(R[0], (R[0]**-alpha_sigma), '-', color='blue') 
         plt.ylabel(r'$\Sigma \, [g/cm^2]$')
-    elif var == 'vx1' or var == 'vx2':
+    elif var == 'vx1':
         plt.plot(R[1,:-1], np.mean(var_data, axis=0), color='orange')
+    elif var == 'vx2':
+        #TODO: figure out the units here to do this properly
+        Kep_vel = 0 # tools.kepler_velocity(R[:-1,:-1][0], data) * data.read_units()['velocity']
+        Kep_ang_vel = Kep_vel / R[:-1,:-1][0]
+        plt.plot(R[1,:-1], np.mean(var_data, axis=0) - Kep_vel, color='orange')
+    plt.grid()
     plt.ylabel(var)
     plt.xlabel(r'radius [a_bin]')
     plt.title('Kep 47')
