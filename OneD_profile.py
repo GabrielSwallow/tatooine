@@ -23,9 +23,9 @@ def plot_many() -> None:
     for data_file_to_plot in many_data_files_to_plot:
         plot(data_name, data_file_to_plot)
     
-def plot_n_bodies(out_dir: str, data_file_to_plot: int) -> None:
+def plot_n_bodies(data_name: str, data_file_to_plot: int) -> None:
     n = data_file_to_plot
-    num_bodies = Data_parser_helper.findNumBodies(out_dir)
+    num_bodies = Data_parser_helper.findNumBodies(data_name)
     for body_id in range(2, num_bodies):
         (
             time,
@@ -33,7 +33,7 @@ def plot_n_bodies(out_dir: str, data_file_to_plot: int) -> None:
             e,
             omega,
             anomoly,
-        ) = Data_parser_helper.getNbodyInformation_out(out_dir, body_id) 
+        ) = Data_parser_helper.getNbodyInformation_out(data_name, body_id) 
         plt.plot([a[n], a[n]], [0., 1.], color='red')
 
 def animate() -> None:
@@ -83,7 +83,7 @@ def plot_the_data(fig: plt.Figure, n: int, data_name: str):
     sig_r = data.user_def_parameters['SIGMA_REF']
     alpha_sigma = data.user_def_parameters['ALPHA_SIGMA']
 
-    plot_n_bodies(directories.out_dir, n)
+    plot_n_bodies(data_name, n)
 
     if var == 'rho':
         plt.plot(R[1,:-1], np.mean(var_data, axis=0)/ sig_r, color='orange')

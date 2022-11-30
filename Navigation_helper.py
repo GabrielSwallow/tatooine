@@ -18,9 +18,15 @@ class Directories():
     def __init__(self, data_name: str | None) -> None:
         self.all_data_dir = '../Data/'
         self.data_name = data_name
-        self.out_dir = all_data_dir + data_name + '/out'
         self.data_parent_dir = all_data_dir + data_name
         self.plots_dir = self.data_parent_dir + '/Plots/'
+        self.out_dir = self.data_parent_dir + '/out'
+
+        self.pluto_log_filename = self.out_dir + '/pluto.log'
+        self.nbody_elements_filename = self.out_dir + '/nbody_orbital_elements.out'
+        self.nbody_elements_data_filename = self.out_dir + '/nbody_orbital_elements.dat'
+        self.planet_ini = self.data_parent_dir + '/planet.ini'
+
     
     def set_data_name(self, new_data_name: str):
         self.data_name = new_data_name

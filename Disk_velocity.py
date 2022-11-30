@@ -18,11 +18,12 @@ def plot_one() -> None:
 
 def plot(data_name: str, data_file_to_plot: int) -> None:  
     n = data_file_to_plot
-    data_parent_dir = all_data_dir + data_name
-    out_dir = all_data_dir + data_name + '/out' 
-    plots_dir = data_parent_dir + '/Plots/'
+    directories = Navigation_helper.Directories(data_name)
+    # data_parent_dir = all_data_dir + data_name
+    # out_dir = all_data_dir + data_name + '/out' 
+    # plots_dir = data_parent_dir + '/Plots/'
 
-    data = pluto.Pluto(out_dir)
+    data = pluto.Pluto(directories.out_dir)
     vx1 = data.primitive_variable('vx2', n)[0,:,:] #* data.units['density']
     print(np.argwhere(np.isnan(vx1)))
     #sigma[np.isnan(sigma)] = 1.0
@@ -41,30 +42,26 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     plt.ylabel(r'$ Vx1 \, [g/cm^2]$')
     plt.title('Kep 47')
 
-    save_path = '{}{}_vx1_profile_{}.png'.format(plots_dir, data_name, n)
+    save_path = '{}{}_vx1_profile_{}.png'.format(directories.plots_dir, data_name, n)
     repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_vx1_profile_{}({}).png'.format(plots_dir, data_name, n, repeated_plots)
+        save_path = '{}{}_vx1_profile_{}({}).png'.format(directories.plots_dir, data_name, n, repeated_plots)
         repeated_plots += 1
     plt.savefig(save_path)
     plt.close()
 
 def animate() -> None:
     data_name = UI_helper.selectDataToPlot()
-    out_dir = all_data_dir + data_name + '/out'
-    n_max = Navigation_helper.findMaxFileName(out_dir)
+    directories = Navigation_helper.Directories(data_name)
+    n_max = Navigation_helper.findMaxFileName(directories.out_dir)
 
-    data_parent_dir = all_data_dir + data_name
-    out_dir = all_data_dir + data_name + '/out' 
-    plots_dir = data_parent_dir + '/Plots/'
-
-    max_file = Navigation_helper.findMaxFileName(out_dir)
+    max_file = Navigation_helper.findMaxFileName(directories.out_dir)
 
     fig = plt.figure()
     camera = Camera(fig)
 
     for n in range(max_file+1):
-        data = pluto.Pluto(out_dir)
+        data = pluto.Pluto(directories.out_dir)
         vx1 = data.primitive_variable('vx2', n)[0,:,:] #* data.units['density']
         print(np.argwhere(np.isnan(vx1)))
         #sigma[np.isnan(sigma)] = 1.0
@@ -84,10 +81,10 @@ def animate() -> None:
         plt.title('Kep 47')
         camera.snap()
 
-    save_path = '{}{}_vx1_profile_{}.gif'.format(plots_dir, data_name, n)
+    save_path = '{}{}_vx1_profile_{}.gif'.format(directories.plots_dir, data_name, n)
     repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_vx1_profile_{}({}).gif'.format(plots_dir, data_name, n, repeated_plots)
+        save_path = '{}{}_vx1_profile_{}({}).gif'.format(directories.plots_dir, data_name, n, repeated_plots)
         repeated_plots += 1
     animation = camera.animate()
     animation.save(save_path)
