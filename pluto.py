@@ -406,7 +406,7 @@ class Pluto:
         """
 
         if self.time['format'] == 'single_file':
-            binaryfile = "{0}data.{1:04d}.dbl".format(self.path, number)
+            binaryfile = "{0}/data.{1:04d}.dbl".format(self.path, number)
         else:
             raise NotImplementedError
 
