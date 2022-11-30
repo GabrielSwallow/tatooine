@@ -20,6 +20,13 @@ constants = {
     'KB': 1.3806505e-16, #Boltzmann constant in erg / K         
 }
 
+Kepler_47_constants = {
+    'a_b_AU': 0.08145,
+    'a_b_cm': 0.08145 * 1.496e+13,
+    'period_days': 7.4483648,
+    'period_s': 7.4483648 * 86400,
+}
+
 # binary = {'a': 1.0, 'e': 0.5, 'q': 0.1, 'm1': 2.4, 'm2': 0.24}
 binary = {
     'a': 1.0,
@@ -94,7 +101,6 @@ def kepler_orbit(binary):
     r = binary['a'] * (1.0 - binary['e']**2) / (1.0 + binary['e']*np.cos(phi))
 
     return r, phi
-
 
 def binary_position(binary, r, phi):
     q = binary['q']
@@ -336,3 +342,16 @@ def get_ellipse_points(x0, y0, phi0, a, b):
     y_ell = y0 + a*np.cos(phi)*np.sin(phi0) + b*np.sin(phi)*np.cos(phi0)
 
     return x_ell, y_ell
+
+def kepler_velocity(radius: float, data) -> float: 
+    # cm_per_a_b = Kepler_47_constants['a_b_cm']
+    # s_per_period = Kepler_47_constants['period_s']
+    length_scale = data.read_units()['length']
+    mass_scale = data.read_units()['length']
+
+    central_mass = binary['m1'] + binary['m2']
+    speed_in_cm_per_s = np.sqrt(constants['G']*(central_mass*mass_scale)/ (radius*length_scale))
+    return speed_in_cm_per_s
+    # speed = speed_in_a_b_per_period * (cm_per_a_b) * (1/s_per_period)
+    # angular_velocity = speed / radius
+    # return angular_velocity
