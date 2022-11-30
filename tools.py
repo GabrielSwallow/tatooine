@@ -355,3 +355,12 @@ def kepler_velocity(radius: float, data) -> float:
     # speed = speed_in_a_b_per_period * (cm_per_a_b) * (1/s_per_period)
     # angular_velocity = speed / radius
     # return angular_velocity
+
+def x_coord(r: float, phi: float) -> float:
+    return r*np.cos(phi)
+
+def y_coord(r: float, phi: float) -> float:
+    return r*np.sin(phi)
+
+def r_coord(x: float, y: float) -> float:
+    return np.sqrt(x**2 + y**2)

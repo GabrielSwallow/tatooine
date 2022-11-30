@@ -22,15 +22,6 @@ import scipy.optimize as opt
 def ellipse(phi, a, e, phi0):
     return a*(1-e**2)/(1+e*np.cos(phi - phi0))
 
-def x_coord(r, phi):
-    return r*np.cos(phi)
-
-def y_coord(r, phi):
-    return r*np.sin(phi)
-
-def r_coord(x, y):
-    return np.sqrt(x**2 + y**2)
-
 def ellipse_find(R, Phi, Sigma):
     dimensions = np.shape(R)
     phi_range = dimensions[0]
@@ -54,8 +45,8 @@ def ellipse_find(R, Phi, Sigma):
     
     radii = np.array(radii)
     phis = np.array(phis)
-    x = x_coord(radii, phis)
-    y = y_coord(radii, phis)
+    x = tools.x_coord(radii, phis)
+    y = tools.y_coord(radii, phis)
     
     x0 = np.mean(x)
     y0 = np.mean(y)
@@ -63,7 +54,7 @@ def ellipse_find(R, Phi, Sigma):
     x_fix = x - x0
     y_fix = y - y0
     
-    r_fix = r_coord(x_fix, y_fix)
+    r_fix = tools.r_coord(x_fix, y_fix)
     
     popt, _ = opt.curve_fit(ellipse, phis, r_fix, p0= [5.0, 0.3, 0.1])
     
