@@ -47,7 +47,7 @@ def getNbodyInformation_out(data_name: str, obj: int):
         max_object_id = findNumBodies(directories.out_dir) - 1
         print('\nMax object_id = {}. You selected {}. Try again'.format(max_object_id, obj))
         obj, obj_des = UI_helper.selectObjectToPlot()
-        getNbodyInformation_out(directories.out_dir, obj)
+        getNbodyInformation_out(data_name, obj)
         return
     
     return (

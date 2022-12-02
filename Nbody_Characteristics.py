@@ -71,7 +71,7 @@ def plot_using_out(data_name: str) -> None:
         e,
         omega,
         anomaly,
-    ) = Data_parser_helper.getNbodyInformation_out(directories.out_dir, obj) 
+    ) = Data_parser_helper.getNbodyInformation_out(directories.data_name, obj) 
     
     fig, axs = plt.subplots(4,1, sharex= 'all')
 
