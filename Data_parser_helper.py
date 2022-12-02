@@ -68,7 +68,7 @@ def getNbodyInformation_dat(data_name: str, obj: int):
         anomoly,
     )
     '''
-    directories = Navigation_helper.Directories()
+    directories = Navigation_helper.Directories(data_name)
 
     (
         object_id,
