@@ -3,12 +3,13 @@ import numpy as np
 import UI_helper
 import Navigation_helper
 
-def get_planet_mass(data_name: str, obj: int):
+def get_planet_masses(data_name: str):
     directories = Navigation_helper.Directories(data_name)
     with open(directories.planet_ini) as f:
         lines = f.readlines()
-        nbodies = lines[22:]
-        masses = [float(n[0]) for n in nbodies]
+        nbodies = lines[21:]
+        masses = [1e-4]
+        # masses = [float(nbody_data.split()[0]) for nbody_data in nbodies]
     return masses
     
 def getNbodyInformation_out(data_name: str, obj: int):
@@ -93,7 +94,7 @@ def getNbodyInformation_dat(data_name: str, obj: int):
         unfiltered_anomoly[object_id == obj],
     )
 
-def findNumBodies(data_name: str) -> int:
-    directories = Navigation_helper.Directories(data_name)
-    _, pid, _, _ = np.loadtxt('{}/nbody.out'.format(directories.out_dir), usecols=(0,1,3,4), unpack=True)
+def findNumBodies(out_dir: str) -> int:
+    # directories = Navigation_helper.Directories(data_name)
+    _, pid, _, _ = np.loadtxt('{}/nbody.out'.format(out_dir), usecols=(0,1,3,4), unpack=True)
     return len(np.unique(pid))
