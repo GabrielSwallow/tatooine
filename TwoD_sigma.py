@@ -119,7 +119,7 @@ def animate() -> None:
 
     repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}{}{}_2d_{}_ANIMATION_{}-{}({}).gif'.format(directories.plots_dir, data_name, log_str, var, repeated_plots, n_min, n_max)
+        save_path = '{}{}{}_2d_{}_ANIMATION_{}-{}({}).gif'.format(directories.plots_dir, data_name, log_str, var, n_min, n_max, repeated_plots)
         repeated_plots += 1
 
     # animate.save(save_path)
