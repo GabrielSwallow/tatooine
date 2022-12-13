@@ -1,7 +1,7 @@
 cart  = False
 logsc = True
 nbody = True
-var   = "vx2" # rho, vx1, vx2
+var   = "rho" # rho, vx1, vx2
 
 nts   = 100 # output time step
 all_data_dir = '../Data/'

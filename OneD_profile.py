@@ -25,7 +25,8 @@ def plot_many() -> None:
     
 def plot_n_bodies(data_name: str, data_file_to_plot: int) -> None:
     n = data_file_to_plot
-    num_bodies = Data_parser_helper.findNumBodies(data_name)
+    directories = Navigation_helper.Directories(data_name)
+    num_bodies = Data_parser_helper.findNumBodies(directories.out_dir)
     for body_id in range(2, num_bodies):
         (
             time,
