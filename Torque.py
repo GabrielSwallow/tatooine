@@ -30,23 +30,21 @@ def calculate_Torque(data_name: str, data_index: int, obj_index: int = 2):
     y = tools.y_coord(R, Phi)[:-1, :-1]
     dV = data.grid['dV']
 
+    # TODO: not yet finished. Need to find a particular time for coords to calculate for
     (
         _,
-        a_nbody_list,
-        _,
-        _,
-        anomoly_nbody_list,
-    ) = Data_parser_helper.getNbodyInformation_out(data_name, obj_index)
-    # TODO: use nbody_coordinates.dat instead for exact pos
-
-    a_nbody = a_nbody_list[n]
-    anomoly_nbody = anomoly_nbody_list[n]
-    x_nbody = tools.x_coord(a_nbody, anomoly_nbody)
-    y_nbody = tools.y_coord(a_nbody, anomoly_nbody)
+        x_nbody,
+        y_nbody,
+        z,
+        vx,
+        vy,
+        vz,
+    ) = Data_parser_helper.getNbodyCoordinates(data_name, obj_index)
+    r_nbody = tools.r_coord(x_nbody, y_nbody)
 
     nbody_mass = Data_parser_helper.get_planet_masses(data_name)[obj_index-2]
 
-    norm = (sigma*volume_grid_R*nbody_mass) / ((R[:-1, :-1] - a_nbody)**2)
+    norm = (sigma*volume_grid_R*nbody_mass) / ((R[:-1, :-1] - r_nbody)**2)
     t1 = y * (x - x_nbody)
     t2 = x * (y - y_nbody)
     torque_grid = norm * (t1 + t2)
@@ -55,7 +53,7 @@ def calculate_Torque(data_name: str, data_index: int, obj_index: int = 2):
     inner_torque = 0.
     for i, torque_row in enumerate(torque_grid):
         for j, torque_cell in enumerate(torque_row):
-            if R[i][j] < a_nbody:
+            if R[i][j] < r_nbody:
                 inner_torque += torque_cell
             else:
                 outer_torque += torque_cell

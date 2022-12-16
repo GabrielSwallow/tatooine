@@ -25,8 +25,8 @@ class Directories():
         self.pluto_log_filename = self.out_dir + '/pluto.log'
         self.nbody_elements_filename = self.out_dir + '/nbody_orbital_elements.out'
         self.nbody_elements_data_filename = self.out_dir + '/nbody_orbital_elements.dat'
+        self.nbody_elements_coordinates_filename = self.out_dir + '/nbody_coordinates.dat'
         self.planet_ini = self.data_parent_dir + '/planet.ini'
-
     
     def set_data_name(self, new_data_name: str):
         self.data_name = new_data_name

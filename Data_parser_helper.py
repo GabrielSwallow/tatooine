@@ -11,6 +11,36 @@ def get_planet_masses(data_name: str):
         masses = [1e-4]
         # masses = [float(nbody_data.split()[0]) for nbody_data in nbodies]
     return masses
+
+def getAnalysisOutMetaInfo(data_name: str):
+    '''
+    returns 
+    (
+        dbl_num_orbits_per_out,
+        dbl_num_azimuthal_angle_per_out,
+        analysis_num_azimuthal_angle_per_out,
+    )
+    '''
+    directories = Navigation_helper.Directories(data_name)
+    with open(directories.pluto_log_filename) as dbl_txt:
+        lines = dbl_txt.readlines()
+
+        dbl_str = lines[79]
+        dbl_list = list(map(int, re.findall('\d+', dbl_str)))
+        dbl_num_orbits_per_out = dbl_list[3]
+        dbl_num_azimuthal_angle_per_out = dbl_list[2]
+
+        analysis_str = lines[86]
+        analysis_list = list(map(int, re.findall('\d+', analysis_str)))
+        analysis_num_azimuthal_angle_per_out = analysis_list[2]
+    
+    return (
+        dbl_num_orbits_per_out,
+        dbl_num_azimuthal_angle_per_out,
+        analysis_num_azimuthal_angle_per_out,
+    )
+
+
     
 def getNbodyInformation_out(data_name: str, obj: int):
     '''
@@ -25,12 +55,7 @@ def getNbodyInformation_out(data_name: str, obj: int):
     '''
     directories = Navigation_helper.Directories(data_name)
 
-    dbl_txt = open(directories.pluto_log_filename)
-    dbl_strs = dbl_txt.readlines()
-    dbl_str = dbl_strs[79]
-    dbl_list = list(map(int, re.findall('\d+', dbl_str)))
-    dbl_time = dbl_list[3]
-    dbl_txt.close()
+    dbl_num_orbits_per_out, _, _ = getAnalysisOutMetaInfo(data_name)
 
     (
         unfiltered_time,
@@ -41,7 +66,7 @@ def getNbodyInformation_out(data_name: str, obj: int):
         unfiltered_anomaly,
     ) = np.loadtxt(directories.nbody_elements_filename, usecols=(0,1,2,3,6,7), unpack = True)
 
-    time = dbl_time * unfiltered_time[object_id == obj]
+    time = dbl_num_orbits_per_out * unfiltered_time[object_id == obj]
 
     if len(time) == 0: 
         max_object_id = findNumBodies(directories.out_dir) - 1
@@ -84,7 +109,7 @@ def getNbodyInformation_dat(data_name: str, obj: int):
     if len(time) == 0: 
         max_object_id = findNumBodies(directories.out_dir)
         print('\nMax object_id = {}. You selected {}. Try again'.format(max_object_id, obj))
-        getNbodyInformation_dat(directories.out_dir, obj)
+        getNbodyInformation_dat(directories.data_name, obj)
         return
     
     return (
@@ -92,6 +117,50 @@ def getNbodyInformation_dat(data_name: str, obj: int):
         unfiltered_a[object_id == obj],
         unfiltered_e[object_id == obj],
         unfiltered_anomoly[object_id == obj],
+    )
+
+def getNbodyCoordinates(data_name: str, obj: int):
+    '''
+    returns 
+    (
+        time,
+        x,
+        y,
+        z,
+        vx,
+        vy,
+        vz,
+    )
+    '''
+    directories = Navigation_helper.Directories(data_name)
+
+    (
+        object_id,
+        unfiltered_time,
+        unfiltered_x,
+        unfiltered_y,
+        unfiltered_z,
+        unfiltered_vx,
+        unfiltered_vy,
+        unfiltered_vz,
+    ) = np.loadtxt(directories.nbody_elements_coordinates_filename, skiprows=9, unpack = True)
+
+    time = unfiltered_time[object_id == obj] / (2*np.pi)
+
+    if len(time) == 0: 
+        max_object_id = findNumBodies(directories.out_dir)
+        print('\nMax object_id = {}. You selected {}. Try again'.format(max_object_id, obj))
+        getNbodyCoordinates(directories.data_name, obj)
+        return
+    
+    return (
+        time,
+        unfiltered_x[object_id == obj],
+        unfiltered_y[object_id == obj],
+        unfiltered_z[object_id == obj],
+        unfiltered_vx[object_id == obj],
+        unfiltered_vy[object_id == obj],
+        unfiltered_vz[object_id == obj],
     )
 
 def findNumBodies(out_dir: str) -> int:
