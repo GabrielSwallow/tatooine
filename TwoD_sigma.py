@@ -9,6 +9,7 @@ import matplotlib as mpl
 import matplotlib.colors as colors
 import argparse as argp
 import os
+import Gap_Finder as gap
 
 import UI_helper
 import Navigation_helper
@@ -184,8 +185,7 @@ def plot_the_data(n: int, out_dir: str, ax: plt.Axes, plot_colorbars: bool = Tru
     else:
         X = np.multiply(R, np.cos(Phi))
         Y = np.multiply(R, np.sin(Phi))
-        x_0, y_0, phi_0, a, b, num_e = tools.calc_gap_ellipse(var_data, r, phi, fraction=0.1)
-        x_ell, y_ell = tools.get_ellipse_points(x_0, y_0, phi_0, a, b)
+        a, num_e, phi_0, x_0, y_0, x_ell, y_ell = gap.ellipse_find(R, Phi, var_data)
     '''
     vr = data.primitive_variable('vx1', n)[0,:,:]
     vphi = data.primitive_variable('vx2', n)[0,:,:]
