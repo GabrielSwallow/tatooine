@@ -343,15 +343,16 @@ def get_ellipse_points(x0, y0, phi0, a, b):
 
     return x_ell, y_ell
 
-def kepler_velocity(radius: float, data) -> float: 
+def kepler_velocity(radius: float) -> float: 
     # cm_per_a_b = Kepler_47_constants['a_b_cm']
     # s_per_period = Kepler_47_constants['period_s']
-    length_scale = data.read_units()['length']
-    mass_scale = data.read_units()['length']
+    # length_scale = data.read_units()['length']
+    # mass_scale = data.read_units()['length']
 
     central_mass = binary['m1'] + binary['m2']
-    speed_in_cm_per_s = np.sqrt(constants['G']*(central_mass*mass_scale)/ (radius*length_scale))
-    return speed_in_cm_per_s
+    # speed_in_cm_per_s = np.sqrt(constants['G']*(central_mass*mass_scale)/ (radius*length_scale))
+    speed = np.sqrt(central_mass/ radius)
+    return speed
     # speed = speed_in_a_b_per_period * (cm_per_a_b) * (1/s_per_period)
     # angular_velocity = speed / radius
     # return angular_velocity

@@ -37,6 +37,7 @@ def calculate_Torque(data_name: str, data_index: int, obj_index: int = 2):
         _,
         anomoly_nbody_list,
     ) = Data_parser_helper.getNbodyInformation_out(data_name, obj_index)
+    # TODO: use nbody_coordinates.dat instead for exact pos
 
     a_nbody = a_nbody_list[n]
     anomoly_nbody = anomoly_nbody_list[n]
