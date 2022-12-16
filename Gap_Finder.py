@@ -62,4 +62,4 @@ def ellipse_find(R, Phi, Sigma):
     e = popt[1]
     omega = popt[2]
     
-    return a, e, omega, x0, y0
+    return a, e, omega, x0, y0, x, y
