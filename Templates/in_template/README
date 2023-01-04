@@ -1,0 +1,13 @@
+To insert a planet into a converged circumbinary disc follow the steps here. 
+
+* Add a "data.xxxx.dbl" file of the converged disc and the "grid.out" to the "in" folder.
+* Rename the "data.xxxx.dbl" as "disc.dbl"
+* Check that you have a physically similar or intentionally changed setup in pluto.ini
+    (Eg. change the output frequency or something like that but not the binary mass ratio.)
+* Initialize the planet(s) in definitions.h by changing the "NO_OF_PLANETS"
+* Add the planet into the "planet.ini" 
+* Compile the code
+* Run the code "./pluto" or a job script on the hpc
+
+Info:
+If you go into init.c you can see in the "Init" function how the data is pulled from the initial input. You can change the input file name there or add floor condition etc.

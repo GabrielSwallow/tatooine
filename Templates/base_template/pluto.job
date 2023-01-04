@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#PBS -N 47_a-1
+
+#PBS -o ${PBS_JOBNAME}.log
+#PBS -e ${PBS_JOBNAME}.err
+
+#PBS -m bae
+#PBS -M anna.penzlin@uni-tuebingen.de
+
+#PBS -l walltime=128:0:0
+#PBS -l nodes=1:ppn=4:gpus=4:exclusive_process
+#PBS -q gpu
+
+cd $PBS_O_WORKDIR
+
+module load compiler/gnu/8.3
+module load mpi/openmpi/3.1-gnu-8.3
+module load devel/cuda/10.1
+
+unset CUDA_VISIBLE_DEVICES
+
+mpirun --bind-to core --map-by core -report-bindings ./pluto -dec 2 2
