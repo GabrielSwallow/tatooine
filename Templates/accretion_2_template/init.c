@@ -71,15 +71,16 @@ void Analysis (const Data *d, Grid *grid)
 {
     double analysisValues[NUMBER_OF_ANALYSIS_VALUES] = {0.0};
     analysisValues[AN_SIGMA_MIN] = DBL_MAX;
-    Operators reductionOperators[NUMBER_OF_ANALYSIS_VALUES] = {OP_SUM, 
-                                                               OP_SUM, 
-                                                               OP_SUM, 
-                                                               OP_SUM, 
-                                                               OP_SUM, 
-                                                               OP_SUM, 
-                                                               OP_MIN,
-                                                               // accretion analysis values
-                                                               OP_SUM};
+    Operators reductionOperators[NUMBER_OF_ANALYSIS_VALUES] = {
+        OP_SUM, 
+        OP_SUM, 
+        OP_SUM, 
+        OP_SUM, 
+        OP_SUM, 
+        OP_SUM, 
+        OP_MIN,
+        OP_SUM, // AN_ACC
+    };
 
     #if USE_CUDA_ANALYSIS == YES
     callAnalysisReductionKernel(analysisValues, reductionOperators);

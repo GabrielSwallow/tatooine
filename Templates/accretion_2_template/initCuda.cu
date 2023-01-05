@@ -42,6 +42,12 @@ __device__ void cudaUserDefBoundary (int side, uint3 dataIdx, dim3 dataDim)
 
     if (side == 0)
     {   
+        /* Density floor */
+        if (cudaV.rho[idx] < cudaSmallDensity)
+        {
+            cudaV.rho[idx] = cudaSmallDensity;
+        }
+
         ////////////////////////////////////
         /* Accretion by N-bodies */
         for (int l = 0; l < NB_N; l++)
@@ -56,16 +62,11 @@ __device__ void cudaUserDefBoundary (int side, uint3 dataIdx, dim3 dataDim)
             if (delta_x*delta_x + delta_y*delta_y <= hill_radius * hill_radius)
             {
                 double acc = cudaV.rho[idx] * cuda_dt / accretion_time_scale;
-                cudaV.rho[idx] -= acc;
+                cudaV.rho[idx] -= 0 ; // acc;
             }
         }
         ////////////////////////////////////
-
-        /* Density floor */
-        if (cudaV.rho[idx] < cudaSmallDensity)
-        {
-            cudaV.rho[idx] = cudaSmallDensity;
-        }
+        
         
         /* Wave damping */
         real Rmax = cudaDomEnd[IDIR];
@@ -282,7 +283,7 @@ __device__ void calcAnalysisValues(real *values, uint3 dataIdx, dim3 dataDim)
             if (delta_x*delta_x + delta_y*delta_y <= hill_radius * hill_radius)
             {
                 double acc = cudaV.rho[idx] * cuda_dt / accretion_time_scale;
-                values[AN_ACC] = acc * dV/cuda_dt;
+                values[AN_ACC] = 0; // acc * dV/cuda_dt;
             }
         }
     ////////////////////////////////////

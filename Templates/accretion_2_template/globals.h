@@ -162,5 +162,5 @@ double g_inputParam[32]; /**< Array containing the user-defined parameters.
 
 ////////////////////////////////////
 // double g_dm_planet1 = 0.0;
-// double g_dm_planet2 = 0.0
+// double g_dm_planet2 = 0.0;
 ////////////////////////////////////
