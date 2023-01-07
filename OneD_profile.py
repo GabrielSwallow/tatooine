@@ -22,20 +22,6 @@ def plot_many() -> None:
     many_data_files_to_plot = UI_helper.selectManyDataFilesToPlot(directories.out_dir)
     for data_file_to_plot in many_data_files_to_plot:
         plot(data_name, data_file_to_plot)
-    
-def plot_n_bodies(data_name: str, data_file_to_plot: int) -> None:
-    n = data_file_to_plot
-    directories = Navigation_helper.Directories(data_name)
-    num_bodies = Data_parser_helper.findNumBodies(directories.out_dir)
-    for body_id in range(2, num_bodies):
-        (
-            time,
-            a,
-            e,
-            omega,
-            anomoly,
-        ) = Data_parser_helper.getNbodyInformation_out(data_name, body_id) 
-        plt.plot([a[n], a[n]], [0., 1.], color='red')
 
 def animate() -> None:
     data_name = UI_helper.selectDataToPlot()
@@ -74,6 +60,20 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     plt.savefig(save_path)
     plt.close()
 
+def plot_n_bodies(data_name: str, data_file_to_plot: int) -> None:
+    n = data_file_to_plot
+    directories = Navigation_helper.Directories(data_name)
+    num_bodies = Data_parser_helper.findNumBodies(directories.out_dir)
+    for body_id in range(2, num_bodies):
+        (
+            time,
+            a,
+            e,
+            omega,
+            anomoly,
+        ) = Data_parser_helper.getNbodyInformation_out(data_name, body_id) 
+        plt.plot([a[n], a[n]], [0., 1.], color='red')
+
 def plot_the_data(fig: plt.Figure, n: int, data_name: str):
     directories = Navigation_helper.Directories(data_name)
     data = pluto.Pluto(directories.out_dir)
@@ -81,13 +81,13 @@ def plot_the_data(fig: plt.Figure, n: int, data_name: str):
     print(np.argwhere(np.isnan(var_data)))
     #sigma[np.isnan(sigma)] = 1.0
     R, Phi = np.meshgrid(data.grid['faces'][0], data.grid['faces'][1])
-    sig_r = data.user_def_parameters['SIGMA_REF']
+    sig_ref = data.user_def_parameters['SIGMA_REF']
     alpha_sigma = data.user_def_parameters['ALPHA_SIGMA']
 
     plot_n_bodies(data_name, n)
 
     if var == 'rho':
-        plt.plot(R[1,:-1], np.mean(var_data, axis=0)/ sig_r, color='orange')
+        plt.plot(R[1,:-1], np.mean(var_data, axis=0)/ sig_ref, color='orange')
         plt.plot(R[0], (R[0]**-alpha_sigma), '-', color='blue') 
         plt.ylabel(r'$\Sigma \, [g/cm^2]$')
     elif var == 'vx1':
