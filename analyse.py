@@ -16,6 +16,7 @@ from Global_variables import *
 import TwoD_sigma
 import OneD_profile
 import Nbody_Characteristics
+import Accretion
 
 plotters = [
     TwoD_sigma.plot_one, 
@@ -26,6 +27,7 @@ plotters = [
     OneD_profile.animate,
     Nbody_Characteristics.plot_one_using_dat,
     Nbody_Characteristics.plot_one_using_out,
+    Accretion.plot_one,
 ]
 
 if __name__ == '__main__':

@@ -183,5 +183,7 @@ def get_averages_data(data_name: str):
         accretion
     )
     '''
+    # TODO: once we add accretion of multiple planets, the last few columns will be optional 
+    # depending on how many objects we have. Make this general
     directories = Navigation_helper.Directories(data_name)
     return np.loadtxt(directories.averages, skiprows=9, unpack = True)
