@@ -167,3 +167,21 @@ def findNumBodies(out_dir: str) -> int:
     # directories = Navigation_helper.Directories(data_name)
     _, pid, _, _ = np.loadtxt('{}/nbody.out'.format(out_dir), usecols=(0,1,3,4), unpack=True)
     return len(np.unique(pid))
+
+def get_averages_data(data_name: str):
+    '''
+    returns
+    (
+        time,
+        disk_mass,
+        disk_eccentricity,
+        disk_periapsis,
+        inner_disk_eccentricity,
+        inner_disk_periapsis,
+        sigma_min,
+        iter,
+        accretion
+    )
+    '''
+    directories = Navigation_helper.Directories(data_name)
+    return np.loadtxt(directories.averages, skiprows=9, unpack = True)
