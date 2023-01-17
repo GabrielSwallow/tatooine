@@ -54,7 +54,9 @@ void nbodyCalcAccelerations()
     for (int l = 0; l < NB_N; l++)
     {
         /* Disk accretion */
-	    g_nb.m[l] += 1e-8;
+	    g_nb.m[l] += g_dm_planet1; //  1e-8; //
+        g_cumulative_planet1 += g_dm_planet1;
+        g_dm_planet1 = 0.0;
         /* Disk feedback */
         EXPAND(g_nb.ax[l] += g_nb.axdisk[l];,
                g_nb.ay[l] += g_nb.aydisk[l];,

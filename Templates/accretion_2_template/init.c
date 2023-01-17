@@ -231,7 +231,7 @@ void Analysis (const Data *d, Grid *grid)
 
         if (g_time > tpos)
         {
-            fprintf(fp, "%-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12ld\n", 
+            fprintf(fp, "%-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12ld  %-12.6e\n", 
                     g_time, 
                     analysisValues[AN_MASS],
                     analysisValues[AN_E],

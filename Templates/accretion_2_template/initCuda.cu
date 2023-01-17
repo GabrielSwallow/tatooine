@@ -62,7 +62,8 @@ __device__ void cudaUserDefBoundary (int side, uint3 dataIdx, dim3 dataDim)
             if (delta_x*delta_x + delta_y*delta_y <= hill_radius * hill_radius)
             {
                 double acc = cudaV.rho[idx] * cuda_dt / accretion_time_scale;
-                cudaV.rho[idx] -= 0 ; // acc;
+                // g_dm_planet1 += acc;
+                cudaV.rho[idx] -= acc;
             }
         }
         ////////////////////////////////////
@@ -273,8 +274,9 @@ __device__ void calcAnalysisValues(real *values, uint3 dataIdx, dim3 dataDim)
     ////////////////////////////////////
     // output the change in mass
     // TODO: make this more physical
+    values[AN_ACC] = 0.0;
     real accretion_time_scale = 1/0.069;
-    for (int l = 0; l < NB_N; l++)
+    for (int l = 2; l < NB_N; l++)
         {
             real delta_x = xgrid - cudaNb.x[l];
             real delta_y = ygrid - cudaNb.y[l];
@@ -283,7 +285,8 @@ __device__ void calcAnalysisValues(real *values, uint3 dataIdx, dim3 dataDim)
             if (delta_x*delta_x + delta_y*delta_y <= hill_radius * hill_radius)
             {
                 double acc = cudaV.rho[idx] * cuda_dt / accretion_time_scale;
-                values[AN_ACC] = 0; // acc * dV/cuda_dt;
+                // this will be total accretion
+                values[AN_ACC] = acc * dV/cuda_dt;
             }
         }
     ////////////////////////////////////

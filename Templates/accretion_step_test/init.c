@@ -11,6 +11,8 @@
 #define AN_SIGMA_MIN              6
 #define AN_ACC                    7
 
+// double g_dm_planet1 = 0.0;
+
 /* ********************************************************************* */
 void Init (double *v, double x1, double x2, double x3)
 /*! 
@@ -125,6 +127,8 @@ void Analysis (const Data *d, Grid *grid)
             
                 analysisValues[AN_SIGMA_MIN] = MIN(analysisValues[AN_SIGMA_MIN],
                                                    sigma);
+                
+                analysisValues[AN_ACC] = 1.0;
             }
         }
     }
@@ -177,6 +181,12 @@ void Analysis (const Data *d, Grid *grid)
 
     analysisValues[AN_E_INNER]  /= analysisValues[AN_MASS_INNER];
     analysisValues[AN_PERI_INNER]  /= analysisValues[AN_MASS_INNER];
+
+    // #if g_stepNumber == 0
+    // g_dm_planet1 = 1e-8;
+    // #endif
+    printf("g_dm_planet1 = %-12.6e", g_dm_planet1);
+    printf("analysisValues[AN_ACC] = %-12.6e \n", analysisValues[AN_ACC]);
     
     /* Write ascii file "averages.dat" to disk */
     if (prank == 0)

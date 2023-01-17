@@ -65,7 +65,7 @@ void nbodyCalcAccelerations()
 
     g_nb.m[2] += add_mp1; // if a mass
     // g_nb.m[2] += add_mp1*g_dt // if a mass rate
-    g_nb.m[3] += add_mp2;
+    // g_nb.m[3] += add_mp2;
     ////////////////////////////////////
 
 }

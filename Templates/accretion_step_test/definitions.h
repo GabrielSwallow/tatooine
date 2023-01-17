@@ -64,3 +64,6 @@
 #define  SHOCK_FLATTENING    NO
 #define  CHAR_LIMITING       YES
 #define  LIMITER             VANLEER_LIM
+
+extern double g_dm_planet1;
+extern double g_cumulative_planet1;

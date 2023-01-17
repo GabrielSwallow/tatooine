@@ -1,5 +1,4 @@
 extern "C" {
-
 #include "pluto.h"
 #include "plutoCuda.cuh"
 
@@ -29,6 +28,8 @@ __device__ void cudaUserDefBoundary (int side, uint3 dataIdx, dim3 dataDim)
  *      x3 coordinate: cudaGrid.x3[dataIdx.z];
  *
  *********************************************************************************** */
+
+
 {
     int idx = gpu1D(dataIdx, dataDim);
     real R = cudaGrid.x1[dataIdx.x];
@@ -51,9 +52,11 @@ __device__ void cudaUserDefBoundary (int side, uint3 dataIdx, dim3 dataDim)
             real time_scale = 1/0.069;
 
             if (dx*dx + dy*dy <= hill_radius*hill_radius)
-            {
+            {   
                 double acc = cudaV.rho[idx] * cuda_dt/time_scale;
-                cudaV.rho[idx] -= acc;
+                values[AN]
+                g_dm_planet1 += acc;
+                cudaV.rho[idx] -= acc;  
             }
         }
 
@@ -264,20 +267,24 @@ __device__ void calcAnalysisValues(real *values, uint3 dataIdx, dim3 dataDim)
     double xgrid = R * cos(phi);
     double ygrid = R * sin(phi);
 
-    for (int l = 0; l < NB_N; l++)
-        {
-            real dx = xgrid - cudaNb.x[l];
-            real dy = ygrid - cudaNb.y[l];
-            // real r2 = dx*dx + dy*dy;
-            real hill_radius = 0.075;
-            real time_scale = 1/0.069;
+    values[AN_ACC] = g_cumulative_planet1;
+    g_cumulative_planet1 = 0.0;
 
-            if (dx*dx + dy*dy <= hill_radius*hill_radius)
-            {
-                double acc = cudaV.rho[idx] * cuda_dt / accretion_time_scale;
-                values[AN_ACC] = acc * dV/cuda_dt;
-            }
-        }
+    // for (int l = 0; l < NB_N; l++)
+    //     {
+    //         real dx = xgrid - cudaNb.x[l];
+    //         real dy = ygrid - cudaNb.y[l];
+    //         // real r2 = dx*dx + dy*dy;
+    //         real hill_radius = 0.075;
+    //         real time_scale = 1/0.069;
+
+    //         if (dx*dx + dy*dy <= hill_radius*hill_radius)
+    //         {
+    //             double acc = cudaV.rho[idx] * cuda_dt / time_scale;
+    //             printf("%-12.6e", acc);
+    //             values[AN_ACC] = acc * dV/cuda_dt;
+    //         }
+    //     }
 }
 #endif
 
