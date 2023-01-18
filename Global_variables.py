@@ -1,3 +1,5 @@
+import plot_params
+
 cart  = False
 logsc = True
 nbody = True
@@ -13,3 +15,5 @@ C0, C1, C2 = 'k', 'b', 'y'
 size = size*a_bin
 
 name = 'Kep-47' #name of the simulation
+
+plot_params.square()

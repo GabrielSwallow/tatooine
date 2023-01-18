@@ -15,8 +15,10 @@ import UI_helper
 import Navigation_helper
 from celluloid import Camera
 from Global_variables import *
+import plot_params
 
 def plot_many() -> None:
+    plot_params.default()
     data_name = UI_helper.selectDataToPlot()
     out_dir = all_data_dir + data_name + '/out'
     many_data_files_to_plot = UI_helper.selectManyDataFilesToPlot(out_dir)
@@ -24,6 +26,7 @@ def plot_many() -> None:
         plot(data_name, data_file_to_plot)
 
 def plot_one() -> None:
+    plot_params.default()
     data_name = UI_helper.selectDataToPlot()
     out_dir = all_data_dir + data_name + '/out'
     data_file_to_plot = UI_helper.selectDataFileToPlot(out_dir)
