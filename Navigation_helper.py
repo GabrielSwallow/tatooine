@@ -16,7 +16,7 @@ def createPlotsFolderIfAbsent(data_name: str) -> None:
 
 class Directories():
     def __init__(self, data_name):
-        self.all_data_dir = '../Data/'
+        self.all_data_dir = all_data_dir
         self.data_name = data_name
         self.data_parent_dir = all_data_dir + data_name
         self.plots_dir = self.data_parent_dir + '/Plots/'

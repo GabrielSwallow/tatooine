@@ -32,6 +32,7 @@ def plot_using_dat(data_name: str) -> None:
         a,
         e,
         period,
+        mass,
     ) = Data_parser_helper.getNbodyInformation_dat(data_name, obj) 
 
     fig, axs = plt.subplots(2,1, sharex= 'all')

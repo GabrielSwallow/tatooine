@@ -27,7 +27,8 @@ plotters = [
     OneD_profile.animate,
     Nbody_Characteristics.plot_one_using_dat,
     Nbody_Characteristics.plot_one_using_out,
-    Accretion.plot_one,
+    Accretion.plot_one_disk_accretion,
+    Accretion.plot_one_planet_accretion,
 ]
 
 if __name__ == '__main__':

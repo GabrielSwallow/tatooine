@@ -91,6 +91,7 @@ def getNbodyInformation_dat(data_name: str, obj: int):
         a (a_bin),
         e,
         anomoly,
+        mass
     )
     '''
     directories = Navigation_helper.Directories(data_name)
@@ -101,7 +102,8 @@ def getNbodyInformation_dat(data_name: str, obj: int):
         unfiltered_a,
         unfiltered_e,
         unfiltered_anomoly,
-    ) = np.loadtxt(directories.nbody_elements_data_filename, skiprows=12, usecols=(0,1,2,3,7), unpack = True)
+        unfiltered_mass,
+    ) = np.loadtxt(directories.nbody_elements_data_filename, skiprows=12, usecols=(0,1,2,3,7,11), unpack = True)
 
     # TODO: make this 10 be the number of out measurements per orbit
     time = unfiltered_time[object_id == obj] / (2*np.pi)
@@ -117,6 +119,7 @@ def getNbodyInformation_dat(data_name: str, obj: int):
         unfiltered_a[object_id == obj],
         unfiltered_e[object_id == obj],
         unfiltered_anomoly[object_id == obj],
+        unfiltered_mass[object_id == obj],
     )
 
 def getNbodyCoordinates(data_name: str, obj: int):
@@ -172,7 +175,7 @@ def get_averages_data(data_name: str):
     '''
     returns
     (
-        time,
+        time, # in binary orbits
         disk_mass,
         disk_eccentricity,
         disk_periapsis,
@@ -186,4 +189,26 @@ def get_averages_data(data_name: str):
     # TODO: once we add accretion of multiple planets, the last few columns will be optional 
     # depending on how many objects we have. Make this general
     directories = Navigation_helper.Directories(data_name)
-    return np.loadtxt(directories.averages, skiprows=9, unpack = True)
+    (
+        time,
+        disk_mass,
+        disk_eccentricity,
+        disk_periapsis,
+        inner_disk_eccentricity,
+        inner_disk_periapsis,
+        sigma_min,
+        iter,
+        accretion
+    ) = np.loadtxt(directories.averages, skiprows=9, unpack = True)
+
+    return (
+        time/(2*np.pi),
+        disk_mass,
+        disk_eccentricity,
+        disk_periapsis,
+        inner_disk_eccentricity,
+        inner_disk_periapsis,
+        sigma_min,
+        iter,
+        accretion
+    )
