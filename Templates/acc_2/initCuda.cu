@@ -279,13 +279,12 @@ __device__ void calcAnalysisValues(real *values, uint3 dataIdx, dim3 dataDim)
         {
             real delta_x = xgrid - cudaNb.x[l];
             real delta_y = ygrid - cudaNb.y[l];
-            real hill_radius = 0.75;
+            // use real hill radius
+            // take d_phi*r as minimum, so always one cell at least being accreted
+            real hill_radius = 0.75; 
 
             if (delta_x*delta_x + delta_y*delta_y <= hill_radius * hill_radius) {
                 double acc = cudaV.rho[idx] * cuda_dt / accretion_time_scale;
-                
-                    // printf("acc = %-11s \n", foo);
-                    // this will be total accretion
                 if (acc != NULL) {
                     values[AN_ACC] = acc * dV/cuda_dt;
             }

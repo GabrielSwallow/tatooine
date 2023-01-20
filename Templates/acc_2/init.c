@@ -187,7 +187,7 @@ void Analysis (const Data *d, Grid *grid)
     analysisValues[AN_PERI_INNER]  /= analysisValues[AN_MASS_INNER];
 
     ////////////////////////////////////
-    g_dm_planet1 = analysisValues[AN_ACC]; // this needs to be a mass, or mass rate
+    g_dm_planet1 = analysisValues[AN_ACC]*g_dt; // this needs to be a mass, or mass rate
     ////////////////////////////////////
     
     /* Write ascii file "averages.dat" to disk */
