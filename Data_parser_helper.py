@@ -3,22 +3,21 @@ import numpy as np
 import UI_helper
 import Navigation_helper
 
-def get_planet_masses(data_name: str):
+def get_initial_planet_masses(data_name: str):
     directories = Navigation_helper.Directories(data_name)
     with open(directories.planet_ini) as f:
         lines = f.readlines()
         nbodies = lines[21:]
         masses = [1e-4]
         # masses = [float(nbody_data.split()[0]) for nbody_data in nbodies]
-    return masses
+    return masses    
 
 def getAnalysisOutMetaInfo(data_name: str):
     '''
     returns 
     (
         dbl_num_orbits_per_out,
-        dbl_num_azimuthal_angle_per_out,
-        analysis_num_azimuthal_angle_per_out,
+        analysis_num_orbits_per_log,
     )
     '''
     directories = Navigation_helper.Directories(data_name)
@@ -26,18 +25,20 @@ def getAnalysisOutMetaInfo(data_name: str):
         lines = dbl_txt.readlines()
 
         dbl_str = lines[79]
-        dbl_list = list(map(int, re.findall('\d+', dbl_str)))
-        dbl_num_orbits_per_out = dbl_list[3]
-        dbl_num_azimuthal_angle_per_out = dbl_list[2]
+        # dbl_list = list(map(int, re.findall('\d+', dbl_str)))
+        # dbl_num_azimuthal_angle_per_out = dbl_list[2]
+        dbl_num_azimuthal_angle_per_out = float(dbl_str.split()[2])
+        dbl_num_orbits_per_out = dbl_num_azimuthal_angle_per_out / (2*np.pi)
 
         analysis_str = lines[86]
-        analysis_list = list(map(int, re.findall('\d+', analysis_str)))
-        analysis_num_azimuthal_angle_per_out = analysis_list[2]
+        # analysis_list = list(map(int, re.findall('\d+', analysis_str)))
+        # analysis_num_azimuthal_angle_per_out = analysis_list[2]
+        analysis_num_azimuthal_angle_per_out = float(analysis_str.split()[2])
+        analysis_num_orbits_per_log = analysis_num_azimuthal_angle_per_out / (2*np.pi)
     
     return (
         dbl_num_orbits_per_out,
-        dbl_num_azimuthal_angle_per_out,
-        analysis_num_azimuthal_angle_per_out,
+        analysis_num_orbits_per_log,
     )
 
 
@@ -55,7 +56,7 @@ def getNbodyInformation_out(data_name: str, obj: int):
     '''
     directories = Navigation_helper.Directories(data_name)
 
-    dbl_num_orbits_per_out, _, _ = getAnalysisOutMetaInfo(data_name)
+    dbl_num_orbits_per_out, _ = getAnalysisOutMetaInfo(data_name)
 
     (
         unfiltered_time,
@@ -95,32 +96,57 @@ def getNbodyInformation_dat(data_name: str, obj: int):
     )
     '''
     directories = Navigation_helper.Directories(data_name)
+    try:
+        (
+            object_id,
+            unfiltered_time,
+            unfiltered_a,
+            unfiltered_e,
+            unfiltered_anomoly,
+            unfiltered_mass,
+        ) = np.loadtxt(directories.nbody_elements_data_filename, skiprows=12, usecols=(0,1,2,3,7,11), unpack = True)
 
-    (
-        object_id,
-        unfiltered_time,
-        unfiltered_a,
-        unfiltered_e,
-        unfiltered_anomoly,
-        unfiltered_mass,
-    ) = np.loadtxt(directories.nbody_elements_data_filename, skiprows=12, usecols=(0,1,2,3,7,11), unpack = True)
+        time = unfiltered_time[object_id == obj] / (2*np.pi)
 
-    # TODO: make this 10 be the number of out measurements per orbit
-    time = unfiltered_time[object_id == obj] / (2*np.pi)
-
-    if len(time) == 0: 
-        max_object_id = findNumBodies(directories.out_dir)
-        print('\nMax object_id = {}. You selected {}. Try again'.format(max_object_id, obj))
-        getNbodyInformation_dat(directories.data_name, obj)
-        return
+        if len(time) == 0: 
+            max_object_id = findNumBodies(directories.out_dir)
+            print('\nMax object_id = {}. You selected {}. Try again'.format(max_object_id, obj))
+            getNbodyInformation_dat(directories.data_name, obj)
+            return
+        
+        return (
+            time,
+            unfiltered_a[object_id == obj],
+            unfiltered_e[object_id == obj],
+            unfiltered_anomoly[object_id == obj],
+            unfiltered_mass[object_id == obj],
+        )
     
-    return (
-        time,
-        unfiltered_a[object_id == obj],
-        unfiltered_e[object_id == obj],
-        unfiltered_anomoly[object_id == obj],
-        unfiltered_mass[object_id == obj],
-    )
+    except:
+        print('WARNING: no mass column in nbody_orbital_elements.dat')
+        (
+            object_id,
+            unfiltered_time,
+            unfiltered_a,
+            unfiltered_e,
+            unfiltered_anomoly,
+        ) = np.loadtxt(directories.nbody_elements_data_filename, skiprows=12, usecols=(0,1,2,3,7), unpack = True)
+
+        time = unfiltered_time[object_id == obj] / (2*np.pi)
+
+        if len(time) == 0: 
+            max_object_id = findNumBodies(directories.out_dir)
+            print('\nMax object_id = {}. You selected {}. Try again'.format(max_object_id, obj))
+            getNbodyInformation_dat(directories.data_name, obj)
+            return
+        
+        return (
+            time,
+            unfiltered_a[object_id == obj],
+            unfiltered_e[object_id == obj],
+            unfiltered_anomoly[object_id == obj],
+            None
+        )
 
 def getNbodyCoordinates(data_name: str, obj: int):
     '''

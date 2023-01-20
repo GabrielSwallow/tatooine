@@ -2,63 +2,109 @@ import pluto
 import tools
 import numpy as np
 import os 
+import matplotlib.pyplot as plt
 
 import UI_helper
 import Navigation_helper
 import Data_parser_helper
 from Global_variables import *
 
-def torque_from_data():
+def get_torque_from_out_file():
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
     data_file_to_plot = UI_helper.selectDataFileToPlot(directories.out_dir)
     obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
-    return calculate_Torque(data_name, data_file_to_plot, obj_index)
+    return calculate_torque(data_name, data_file_to_plot, obj_index)
 
-def calculate_Torque(data_name: str, data_index: int, obj_index: int = 2):
+def plot_torque():
+    data_name = UI_helper.selectDataToPlot()
+    directories = Navigation_helper.Directories(data_name)
+    obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
+
+    inter_torque_list = []
+    outer_torque_list = []
+    time_list = []
+    for n in range(Navigation_helper.findMaxFileNumber(directories.out_dir)):
+        inner_torque, outer_torque, time = calculate_torque(data_name, n, obj_index)
+        inter_torque_list.append(inner_torque)
+        outer_torque_list.append(outer_torque)
+        time_list.append(time)
+    fig = plt.figure()
+    plt.plot(time_list, inter_torque_list, label='inner torque')
+    plt.plot(time_list, outer_torque_list, label='outer torque')
+    plt.xlabel('Time (binary orbits)')
+    plt.ylabel('Torque (unknown units)')
+    plt.legend()
+    plt.show()
+
+    save_path = '{}{}_torque.png'.format(directories.plots_dir, data_name)
+    repeated_plots = 1
+    while(os.path.isfile(save_path)):
+        save_path = '{}{}_torque({}).png'.format(directories.plots_dir, data_name, repeated_plots)
+        repeated_plots += 1
+    print('Saving plot in {0}'.format(save_path))
+    fig.savefig(save_path)
+    plt.close(fig)
+
+def calculate_torque(data_name: str, data_index: int, obj_index: int = 2):
     directories = Navigation_helper.Directories(data_name)
     data = pluto.Pluto(directories.out_dir)
     n = data_index
 
     sigma = data.primitive_variable('rho', n)[0,:,:] #* data.units['density']
-    sig_r = data.user_def_parameters['SIGMA_REF']
-    alpha_sigma = data.user_def_parameters['ALPHA_SIGMA']
+    # sig_r = data.user_def_parameters['SIGMA_REF']
+    # alpha_sigma = data.user_def_parameters['ALPHA_SIGMA']
 
     R, Phi = np.meshgrid(data.grid['faces'][0], data.grid['faces'][1])
     volume_grid_R, volume_grid_phi = np.meshgrid(data.grid['dV'][0], data.grid['dV'][1])
     x = tools.x_coord(R, Phi)[:-1, :-1]
     y = tools.y_coord(R, Phi)[:-1, :-1]
-    dV = data.grid['dV']
 
-    # TODO: not yet finished. Need to find a particular time for coords to calculate for
     (
         _,
-        x_nbody,
-        y_nbody,
+        x_nbody_list,
+        y_nbody_list,
         z,
         vx,
         vy,
         vz,
     ) = Data_parser_helper.getNbodyCoordinates(data_name, obj_index)
+
+    (
+        dbl_num_orbits_per_out, 
+        analysis_num_orbits_per_log,
+    ) = Data_parser_helper.getAnalysisOutMetaInfo(data_name)
+    analysis_logs_per_dbl_out = int(dbl_num_orbits_per_out / analysis_num_orbits_per_log)
+    time = dbl_num_orbits_per_out * n
+
+    x_nbody = x_nbody_list[analysis_logs_per_dbl_out * n]
+    y_nbody = y_nbody_list[analysis_logs_per_dbl_out * n]
     r_nbody = tools.r_coord(x_nbody, y_nbody)
 
-    nbody_mass = Data_parser_helper.get_planet_masses(data_name)[obj_index-2]
+    (_, _, _, _, nbody_mass_list)  = Data_parser_helper.getNbodyInformation_dat(data_name, obj_index)
+    if nbody_mass_list == None:
+        print("\nWARNING: No mass column in nbody_orbital_elements.dat: using planet's initial mass\n")
+        nbody_mass = Data_parser_helper.get_initial_planet_masses(data_name)[obj_index-2]
+    else:
+        nbody_mass = nbody_mass_list[analysis_logs_per_dbl_out * n]
+
 
     norm = (sigma*volume_grid_R*nbody_mass) / ((R[:-1, :-1] - r_nbody)**2)
     t1 = y * (x - x_nbody)
     t2 = x * (y - y_nbody)
     torque_grid = norm * (t1 + t2)
 
-    outer_torque = 0.
-    inner_torque = 0.
+    outer_torque = 0.0
+    inner_torque = 0.0
     for i, torque_row in enumerate(torque_grid):
         for j, torque_cell in enumerate(torque_row):
             if R[i][j] < r_nbody:
                 inner_torque += torque_cell
             else:
                 outer_torque += torque_cell
-    return inner_torque, outer_torque
+    return inner_torque, outer_torque, time
 
 if __name__ == '__main__':
-    inner_torque, outer_torque = torque_from_data()
-    print(inner_torque, outer_torque)
+    # inner_torque, outer_torque, time = get_torque_from_out_file()
+    # print(inner_torque, outer_torque, time)
+    plot_torque()

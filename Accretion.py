@@ -50,7 +50,7 @@ def plot_planet_accretion(data_name: str) -> None:
         period,
         mass,
     ) = Data_parser_helper.getNbodyInformation_dat(data_name, obj) 
-
+    if mass==None: raise Exception('no mass data available')
     fig = plt.figure()
     plt.plot(time, mass)
     fig.tight_layout()
