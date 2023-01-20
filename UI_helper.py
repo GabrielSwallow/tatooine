@@ -19,7 +19,7 @@ def selectDataToPlot(datasets = None) -> str:
     return data_name
 
 def selectDataFileToPlot(out_dir: str) -> int:
-    max_file_num = Navigation_helper.findMaxFileName(out_dir)
+    max_file_num = Navigation_helper.findMaxFileNumber(out_dir)
     print(
         '\nmax file number = {} \nSelect which file to plot (or none to plot {})'
         .format(max_file_num, max_file_num)
@@ -30,7 +30,7 @@ def selectDataFileToPlot(out_dir: str) -> int:
     return int(data_file_to_plot)
 
 def selectManyDataFilesToPlot(out_dir: str):
-    max_file_num = Navigation_helper.findMaxFileName(out_dir)
+    max_file_num = Navigation_helper.findMaxFileNumber(out_dir)
     print(
         '\nmax file number = {} \nSelect which files to plot \neg 1,5,10' # \neg 20-25'
         .format(max_file_num, max_file_num)
@@ -80,7 +80,7 @@ def selectObjectToPlot(out_dir: str) -> Tuple[int, str]:
     return obj, obj_des
 
 def selectAnimateRange(out_dir: str):
-    max_file_num = Navigation_helper.findMaxFileName(out_dir)
+    max_file_num = Navigation_helper.findMaxFileNumber(out_dir)
     print(
         '\nmax file number: {} \nSelect range of animation \neg 0,50 \nDefault is 0,{}'.format(max_file_num,max_file_num)
     )

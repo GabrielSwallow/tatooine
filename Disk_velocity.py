@@ -53,9 +53,9 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
 def animate() -> None:
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
-    n_max = Navigation_helper.findMaxFileName(directories.out_dir)
+    n_max = Navigation_helper.findMaxFileNumber(directories.out_dir)
 
-    max_file = Navigation_helper.findMaxFileName(directories.out_dir)
+    max_file = Navigation_helper.findMaxFileNumber(directories.out_dir)
 
     fig = plt.figure()
     camera = Camera(fig)

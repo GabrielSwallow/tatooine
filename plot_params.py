@@ -5,12 +5,12 @@ import matplotlib.pyplot as plt
 
 def square():
     params = {
-        "axes.labelsize":25,
-        "font.size":26,
-        "legend.fontsize":20,
-        "xtick.labelsize":20,
-        "ytick.labelsize":20,
-        "figure.figsize": [10,10],
+        "axes.labelsize":20,
+        "font.size":20,
+        "legend.fontsize":16,
+        "xtick.labelsize":16,
+        "ytick.labelsize":16,
+        "figure.figsize": [9,8],
     }
     plt.rcParams.update(params)
 

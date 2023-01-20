@@ -2,7 +2,8 @@ import os
 import numpy as np
 from Global_variables import *
 
-def findMaxFileName(out_dir: str) -> int:
+def findMaxFileNumber(out_dir: str) -> int:
+    #TODO: change this to take in data_name
     files = os.listdir(out_dir)
     dataFiles = list(filter(lambda f: f[0:4]=='data', files))
     numbers = [int(d[5:9]) for d in dataFiles]
