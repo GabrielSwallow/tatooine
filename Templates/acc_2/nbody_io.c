@@ -171,9 +171,9 @@ void nbodyWriteOrbitalElements()
             fprintf(fp, "# P: period in code units\n");
             fprintf(fp, "# E: eccentric anomaly in rad [0, 2pi]\n");
             fprintf(fp, "# M: mean anomaly in rad [0, 2pi]\n");
-            fprintf(fp, "# m: planet mass\n");
-            fprintf(fp, "#%-2s   %-12s   %-12s   %-12s   %-12s   %-12s   %-12s   %-12s   %-12s   %-12s   %-12s\n",
-                    "id", "t", "a", "e", "i", "Omega", "omega", "f", "P", "E", "M", "m");
+            fprintf(fp, "# mass: planet mass\n");
+            fprintf(fp, "#%-2s   %-12s   %-12s   %-12s   %-12s   %-12s   %-12s   %-12s   %-12s   %-12s  %-12s  %-12s\n",
+                    "id", "t", "a", "e", "i", "Omega", "omega", "f", "P", "E", "M", "mass");
         }
         else
         {
