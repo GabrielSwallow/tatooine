@@ -35,13 +35,14 @@ def plot_torque():
     plt.xlabel('Time (binary orbits)')
     plt.ylabel('Torque (unknown units)')
     plt.legend()
-    plt.show()
+    plt.grid()
 
-    save_path = '{}{}_torque.png'.format(directories.plots_dir, data_name)
-    repeated_plots = 1
+    save_path = '{}{}_obj{}_torque.png'.format(directories.plots_dir, data_name, obj_index)
+    repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_torque({}).png'.format(directories.plots_dir, data_name, repeated_plots)
+        save_path = '{}{}_obj{}_torque({}).png'.format(directories.plots_dir, data_name, obj_index, repeated_plots)
         repeated_plots += 1
+    
     print('Saving plot in {0}'.format(save_path))
     fig.savefig(save_path)
     plt.close(fig)
@@ -82,7 +83,7 @@ def calculate_torque(data_name: str, data_index: int, obj_index: int = 2):
     r_nbody = tools.r_coord(x_nbody, y_nbody)
 
     (_, _, _, _, nbody_mass_list)  = Data_parser_helper.getNbodyInformation_dat(data_name, obj_index)
-    if nbody_mass_list == None:
+    if not isinstance(nbody_mass_list, np.ndarray):
         print("\nWARNING: No mass column in nbody_orbital_elements.dat: using planet's initial mass\n")
         nbody_mass = Data_parser_helper.get_initial_planet_masses(data_name)[obj_index-2]
     else:

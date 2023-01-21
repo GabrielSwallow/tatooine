@@ -50,15 +50,20 @@ def plot_planet_accretion(data_name: str) -> None:
         period,
         mass,
     ) = Data_parser_helper.getNbodyInformation_dat(data_name, obj) 
-    if mass==None: raise Exception('no mass data available')
+    if not isinstance(mass, np.ndarray): raise Exception('no mass data available')
+    delta_mass = []
     fig = plt.figure()
     plt.plot(time, mass)
+    plt.xlabel('Time (binary orbits)')
+    plt.ylabel('Planet mass')
+    plt.legend()
+    plt.grid()
     fig.tight_layout()
     
     save_path = '{}{}_obj{}_accretion.png'.format(directories.plots_dir, data_name, obj)
     repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_obj{}__accretion({}).png'.format(directories.plots_dir, data_name, obj, repeated_plots)
+        save_path = '{}{}_obj{}_accretion({}).png'.format(directories.plots_dir, data_name, obj, repeated_plots)
         repeated_plots += 1
     
     print('Saving plot in {0}'.format(save_path))
