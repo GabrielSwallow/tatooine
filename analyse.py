@@ -38,3 +38,8 @@ if __name__ == '__main__':
     elif ui_input == 'all':
         for f in plotters:
             eval('{}.{}()'.format(f.__module__, f.__name__))
+    else:
+        str_id_of_funcs = ui_input.rsplit(',')
+        int_id_of_funcs = [int(f) for f in str_id_of_funcs]
+        for i in int_id_of_funcs:
+            eval('{}.{}()'.format(plotters[i].__module__, plotters[i].__name__))
