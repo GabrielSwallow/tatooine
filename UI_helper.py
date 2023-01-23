@@ -19,6 +19,7 @@ def selectDataToPlot(datasets = None) -> str:
     return data_name
 
 def selectDataFileToPlot(out_dir: str) -> int:
+    # TODO: change this to be data)name not out_dir
     max_file_num = Navigation_helper.findMaxFileNumber(out_dir)
     print(
         '\nmax file number = {} \nSelect which file to plot (or none to plot {})'
@@ -30,6 +31,7 @@ def selectDataFileToPlot(out_dir: str) -> int:
     return int(data_file_to_plot)
 
 def selectManyDataFilesToPlot(out_dir: str):
+    # TODO: change this to be data)name not out_dir
     max_file_num = Navigation_helper.findMaxFileNumber(out_dir)
     print(
         '\nmax file number = {} \nSelect which files to plot \neg 1,5,10' # \neg 20-25'
@@ -53,6 +55,7 @@ def selectFunctionsToRun(functions: list) -> int:
     return func_index
 
 def selectObjectToPlot(out_dir: str) -> Tuple[int, str]:
+    # TODO: change this to be data)name not out_dir
     print("\nObjects: \n Smaller Stellar Object : 1 \n Specific Planet : 2, ...")
     obj = int(input("please Select Which Object to Plot \n"))
 
@@ -80,6 +83,7 @@ def selectObjectToPlot(out_dir: str) -> Tuple[int, str]:
     return obj, obj_des
 
 def selectAnimateRange(out_dir: str):
+    # TODO: change this to be data)name not out_dir
     max_file_num = Navigation_helper.findMaxFileNumber(out_dir)
     print(
         '\nmax file number: {} \nSelect range of animation \neg 0,50 \nDefault is 0,{}'.format(max_file_num,max_file_num)
@@ -89,6 +93,14 @@ def selectAnimateRange(out_dir: str):
         data_range_raw = '0,{}'.format(max_file_num)
     data_range = data_range_raw.rsplit(',')
     return [int(f) for f in data_range]
+
+def select_averaging_length() -> int:
+    print('Define averaging length (ie number of datapoints to average over). Default is 1, ie none')
+    raw_input = input() 
+    if raw_input == '':
+        return 1
+    else:
+        return int(raw_input)
     
 # def select_global_vars():
 #     print('would you like to update global variables? \n(y/n)')

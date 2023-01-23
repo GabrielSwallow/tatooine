@@ -37,7 +37,7 @@ auto_plotters = [
     Nbody_Characteristics.plot_one_using_out,
     Accretion.plot_one_disk_accretion,
     Accretion.plot_one_planet_accretion,
-    migration.calculate_migration,
+    migration.plot_migration_one,
     Torque.plot_torque,
 ]
 
@@ -45,21 +45,22 @@ data_name = UI_helper.selectDataToPlot()
 directories = Navigation_helper.Directories(data_name)
 n_max = Navigation_helper.findMaxFileNumber(directories.out_dir)
 
+@patch('UI_helper.select_averaging_length')
 @patch('UI_helper.selectFunctionsToRun')
 @patch('UI_helper.selectObjectToPlot')
 @patch('UI_helper.selectManyDataFilesToPlot')
 @patch('UI_helper.selectDataFileToPlot')
 @patch('UI_helper.selectDataToPlot')
-
 def test(
     mock_selectDataToPlot,
     mock_selectDataFileToPlot,
     mock_selectManyDataFilesToPlot,
     mock_selectObjectToPlot,
     mock_selectFunctionsToRun,
+    mock_select_averaging_length
     ):
     mock_selectDataToPlot.return_value = data_name
-
+    mock_select_averaging_length.return_value = 5
     mock_selectDataFileToPlot.return_value = 0
     mock_selectManyDataFilesToPlot.return_value = [0,1, int(n_max/2), int(n_max/2)+1, n_max-1, n_max]
     mock_selectObjectToPlot.return_value = (2, 'b')
