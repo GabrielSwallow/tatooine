@@ -17,6 +17,8 @@ import TwoD_sigma
 import OneD_profile
 import Nbody_Characteristics
 import Accretion
+import migration
+import Torque
 
 plotters = [
     TwoD_sigma.plot_one, 
@@ -29,6 +31,9 @@ plotters = [
     Nbody_Characteristics.plot_one_using_out,
     Accretion.plot_one_disk_accretion,
     Accretion.plot_one_planet_accretion,
+    migration.plot_migration_one,
+    migration.plot_migration_many_avgs,
+    Torque.plot_torque,
 ]
 
 if __name__ == '__main__':
