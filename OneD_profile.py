@@ -9,6 +9,7 @@ import UI_helper
 import Navigation_helper
 import Data_parser_helper
 from Global_variables import *
+import plot_params
 
 def plot_one() -> None:
     data_name = UI_helper.selectDataToPlot()
@@ -45,7 +46,7 @@ def animate() -> None:
     animation = camera.animate()
     animation.save(save_path)
 
-def plot(data_name: str, data_file_to_plot: int) -> None:  
+def plot(data_name: str, data_file_to_plot: int) -> None: 
     n = data_file_to_plot
     directories = Navigation_helper.Directories(data_name)
 
@@ -75,6 +76,7 @@ def plot_n_bodies(data_name: str, data_file_to_plot: int) -> None:
         plt.plot([a[n], a[n]], [0., 1.], color='red')
 
 def plot_the_data(fig: plt.Figure, n: int, data_name: str):
+    plot_params.square()
     directories = Navigation_helper.Directories(data_name)
     data = pluto.Pluto(directories.out_dir)
     var_data = data.primitive_variable(var, n)[0,:,:] #* data.units['density']

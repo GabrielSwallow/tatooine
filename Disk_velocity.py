@@ -9,6 +9,7 @@ import UI_helper
 import Navigation_helper
 import Data_parser_helper
 from Global_variables import *
+import plot_params
 
 def plot_one() -> None:
     data_name = UI_helper.selectDataToPlot()
@@ -17,6 +18,7 @@ def plot_one() -> None:
     plot(data_name, data_file_to_plot)
 
 def plot(data_name: str, data_file_to_plot: int) -> None:  
+    plot_params.square()
     n = data_file_to_plot
     directories = Navigation_helper.Directories(data_name)
     # data_parent_dir = all_data_dir + data_name
@@ -51,6 +53,7 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     plt.close()
 
 def animate() -> None:
+    plot_params.square()
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
     n_max = Navigation_helper.findMaxFileNumber(directories.out_dir)

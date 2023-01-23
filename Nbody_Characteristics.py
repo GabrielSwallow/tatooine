@@ -12,6 +12,7 @@ import Navigation_helper
 import re
 from Global_variables import *
 import Data_parser_helper
+import plot_params
 
 
 def plot_one_using_dat() -> None:
@@ -23,6 +24,7 @@ def plot_one_using_out() -> None:
     plot_using_out(data_name)
 
 def plot_using_dat(data_name: str) -> None:
+    plot_params.square()
     directories = Navigation_helper.Directories(data_name)
     
     obj, obj_des = UI_helper.selectObjectToPlot(directories.out_dir)
@@ -62,6 +64,7 @@ def plot_using_dat(data_name: str) -> None:
     plt.close(fig)
 
 def plot_using_out(data_name: str) -> None:
+    plot_params.square()
     directories = Navigation_helper.Directories(data_name)
 
     obj, obj_des = UI_helper.selectObjectToPlot(directories.out_dir)

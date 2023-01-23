@@ -8,6 +8,7 @@ import UI_helper
 import Navigation_helper
 import Data_parser_helper
 from Global_variables import *
+import plot_params
 
 def get_torque_from_out_file():
     data_name = UI_helper.selectDataToPlot()
@@ -17,6 +18,7 @@ def get_torque_from_out_file():
     return calculate_torque(data_name, data_file_to_plot, obj_index)
 
 def plot_torque():
+    plot_params.square()
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
     obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)

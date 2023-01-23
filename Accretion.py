@@ -9,6 +9,7 @@ import UI_helper
 import Navigation_helper
 import Data_parser_helper
 from Global_variables import *
+import plot_params
 
 def plot_one_disk_accretion() -> None:
     data_name = UI_helper.selectDataToPlot()
@@ -19,6 +20,7 @@ def plot_one_planet_accretion() -> None:
     plot_planet_accretion(data_name)
 
 def plot_disk_accretion(data_name: str) -> None:
+    plot_params.square()
     directories = Navigation_helper.Directories(data_name)
     
     # obj, obj_des = UI_helper.selectObjectToPlot(directories.out_dir)
@@ -39,8 +41,8 @@ def plot_disk_accretion(data_name: str) -> None:
     plt.close(fig)
 
 def plot_planet_accretion(data_name: str) -> None:
+    plot_params.square()
     directories = Navigation_helper.Directories(data_name)
-
     obj, obj_des = UI_helper.selectObjectToPlot(directories.out_dir)
     
     (
