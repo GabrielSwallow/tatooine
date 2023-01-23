@@ -9,12 +9,24 @@ import Navigation_helper
 import Data_parser_helper
 from Global_variables import *
 import Torque
+import plot_params
 
-def calculate_migration():
+def plot_migration_one():
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
     obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
+    avg_num = UI_helper.select_averaging_length()
+    calculate_migration(data_name, obj_index, avg_num)
 
+def plot_migration_many_avgs():
+    data_name = UI_helper.selectDataToPlot()
+    directories = Navigation_helper.Directories(data_name)
+    obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
+    for i in range(1, 10):
+        calculate_migration(data_name, obj_index, i)
+
+def calculate_migration(data_name: str, obj_index: int, avg_num: int):
+    plot_params.square()
 
     directories = Navigation_helper.Directories(data_name)
     (
@@ -28,10 +40,14 @@ def calculate_migration():
     delta_a_list = np.array([a[i+1] - a[i] for i in range(len(a)-1)])
     a_delta_t_list = np.array([a[i]*(time[i+1] - time[i]) for i in range(len(a)-1)])
 
-    new_list_length = int(len(delta_a_list)/10)
-    time_list = np.array([time[i*10] for i in range(new_list_length)])
-    larger_delta_a_list = np.array([sum(delta_a_list[i*10:(i*10)+10]) for i in range(new_list_length)])
-    larger_a_delta_t_list = np.array([sum(a_delta_t_list[i*10:(i*10)+10]) for i in range(new_list_length)])
+    new_list_length = int(len(delta_a_list)/avg_num)
+    time_list = np.array([time[i*avg_num] for i in range(new_list_length)])
+    larger_delta_a_list = np.array(
+        [sum(delta_a_list[i*avg_num:(i*avg_num)+avg_num]) for i in range(new_list_length)]
+    )
+    larger_a_delta_t_list = np.array(
+        [sum(a_delta_t_list[i*avg_num:(i*avg_num)+avg_num]) for i in range(new_list_length)]
+    )
 
     a_dot_over_a_list = larger_delta_a_list / larger_a_delta_t_list
 
@@ -54,4 +70,6 @@ def calculate_migration():
     plt.close(fig)
 
 if __name__ == '__main__':
-    calculate_migration()
+    plotters = [plot_migration_one, plot_migration_many_avgs]
+    func_index = UI_helper.selectFunctionsToRun(plotters)
+    eval('{}()'.format(plotters[func_index].__name__))
