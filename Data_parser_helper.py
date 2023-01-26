@@ -41,8 +41,6 @@ def getAnalysisOutMetaInfo(data_name: str):
         analysis_num_orbits_per_log,
     )
 
-
-    
 def getNbodyInformation_out(data_name: str, obj: int):
     '''
     returns 

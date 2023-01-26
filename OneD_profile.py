@@ -25,6 +25,7 @@ def plot_many() -> None:
         plot(data_name, data_file_to_plot)
 
 def animate() -> None:
+    plot_params.square()
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
     n_min, n_max = UI_helper.selectAnimateRange(directories.out_dir)
@@ -47,6 +48,7 @@ def animate() -> None:
     animation.save(save_path)
 
 def plot(data_name: str, data_file_to_plot: int) -> None: 
+    plot_params.square()
     n = data_file_to_plot
     directories = Navigation_helper.Directories(data_name)
 
@@ -76,7 +78,6 @@ def plot_n_bodies(data_name: str, data_file_to_plot: int) -> None:
         plt.plot([a[n], a[n]], [0., 1.], color='red')
 
 def plot_the_data(fig: plt.Figure, n: int, data_name: str):
-    plot_params.square()
     directories = Navigation_helper.Directories(data_name)
     data = pluto.Pluto(directories.out_dir)
     var_data = data.primitive_variable(var, n)[0,:,:] #* data.units['density']
@@ -89,8 +90,9 @@ def plot_the_data(fig: plt.Figure, n: int, data_name: str):
     plot_n_bodies(data_name, n)
 
     if var == 'rho':
-        plt.plot(R[1,:-1], np.mean(var_data, axis=0)/ sig_ref, color='orange')
-        plt.plot(R[0], (R[0]**-alpha_sigma), '-', color='blue') 
+        plt.plot(R[1,:-1], (np.mean(var_data, axis=0)/ sig_ref) / (R[0,:-1]**-alpha_sigma), color='orange')
+        # plt.plot(R[1,:-1], np.mean(var_data, axis=0)/ sig_ref, color='orange')
+        # plt.plot(R[0], (R[0]**-alpha_sigma), '-', color='blue') 
         plt.ylabel(r'$\Sigma \, [g/cm^2]$')
     elif var == 'vx1':
         plt.plot(R[1,:-1], np.mean(var_data, axis=0), color='orange')
