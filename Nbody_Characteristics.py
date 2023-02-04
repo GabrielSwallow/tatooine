@@ -39,12 +39,12 @@ def plot_using_dat(data_name: str) -> None:
 
     fig, axs = plt.subplots(2,1, sharex= 'all')
 
-    fin = 100
+    fin = len(time) - 1
     axs[0].plot(time[0:fin], a[0:fin])
     axs[0].set_title('Semi-Major Axis [$\mathrm{a_{bin}}$]')
     
     axs[1].plot(time[0:fin], e[0:fin])
-    axs[1].set_title('Eccentricity')
+    axs[1].set_title('Eccentricity [$\mathrm{e}$]')
     
     # axs[2].plot(time, period)
     # axs[2].set_title('period [$\mathrm{Rad}$]')
