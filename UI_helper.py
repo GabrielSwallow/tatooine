@@ -94,6 +94,18 @@ def selectAnimateRange(out_dir: str):
     data_range = data_range_raw.rsplit(',')
     return [int(f) for f in data_range]
 
+def selectPlottingRange(out_dir: str):
+    # TODO: change this to be data)name not out_dir
+    max_file_num = Navigation_helper.findMaxFileNumber(out_dir)
+    print(
+        '\nmax file number: {} \nSelect range of plot \neg 0,50 \nDefault is 0,{}'.format(max_file_num,max_file_num)
+    )
+    data_range_raw = input()
+    if data_range_raw == '':
+        data_range_raw = '0,{}'.format(max_file_num)
+    data_range = data_range_raw.rsplit(',')
+    return [int(f) for f in data_range]
+
 def select_averaging_length() -> int:
     print('Define averaging length (ie number of datapoints to average over). Default is 1, ie none')
     raw_input = input() 
@@ -101,6 +113,8 @@ def select_averaging_length() -> int:
         return 1
     else:
         return int(raw_input)
+
+
     
 # def select_global_vars():
 #     print('would you like to update global variables? \n(y/n)')
