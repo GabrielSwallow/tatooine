@@ -365,3 +365,17 @@ def y_coord(r: float, phi: float) -> float:
 
 def r_coord(x: float, y: float) -> float:
     return np.sqrt(x**2 + y**2)
+
+def time_split(time: list, t_min: int, t_max: int) -> list:
+    for i in range(len(time)):
+        i_min = i
+        if time[i] >= t_min: break
+        else: continue
+    
+    for i_inv in range(len(time)):
+        i = len(time) - 1 - i_inv
+        i_max = i
+        if time[i] <= t_max: break
+        else:continue
+    
+    return i_min, i_max
