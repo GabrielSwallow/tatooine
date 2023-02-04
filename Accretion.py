@@ -33,7 +33,7 @@ def plot_disk_accretion(data_name: str) -> None:
     save_path = '{}{}_disk_accretion.png'.format(directories.plots_dir, data_name)
     repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_disk__accretion({}).png'.format(directories.plots_dir, data_name, repeated_plots)
+        save_path = '{}{}_disk_accretion({}).png'.format(directories.plots_dir, data_name, repeated_plots)
         repeated_plots += 1
     
     print('Saving plot in {0}'.format(save_path))
