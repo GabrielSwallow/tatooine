@@ -236,3 +236,43 @@ def get_averages_data(data_name: str):
         iter,
         accretion
     )
+
+def get_averages_data(data_name: str):
+    '''
+    returns
+    (
+        time, # in binary orbits
+        disk_mass,
+        disk_eccentricity,
+        disk_periapsis,
+        inner_disk_eccentricity,
+        inner_disk_periapsis,
+        sigma_min,
+        iter,
+        accretion
+    )
+    '''
+    # TODO: once we add accretion of multiple planets, the last few columns will be optional 
+    # depending on how many objects we have. Make this general
+    directories = Navigation_helper.Directories(data_name)
+    (
+        time,
+        disk_mass,
+        disk_eccentricity,
+        disk_periapsis,
+        inner_disk_eccentricity,
+        inner_disk_periapsis,
+        sigma_min,
+        iter,
+    ) = np.loadtxt(directories.averages, skiprows=9, unpack = True)
+
+    return (
+        time/(2*np.pi),
+        disk_mass,
+        disk_eccentricity,
+        disk_periapsis,
+        inner_disk_eccentricity,
+        inner_disk_periapsis,
+        sigma_min,
+        iter,
+    )
