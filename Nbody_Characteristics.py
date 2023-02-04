@@ -28,6 +28,9 @@ def plot_using_dat(data_name: str) -> None:
     directories = Navigation_helper.Directories(data_name)
     
     obj, obj_des = UI_helper.selectObjectToPlot(directories.out_dir)
+    n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
+    t_min = n_min * nts
+    t_max = n_max * nts
     
     (
         time,
@@ -37,13 +40,15 @@ def plot_using_dat(data_name: str) -> None:
         mass,
     ) = Data_parser_helper.getNbodyInformation_dat(data_name, obj) 
 
+    i_min, i_max = tools.time_split(time, t_min, t_max)
+
     fig, axs = plt.subplots(2,1, sharex= 'all')
 
     fin = len(time) - 1
-    axs[0].plot(time[0:fin], a[0:fin])
+    axs[0].plot(time[i_min:i_max], a[i_min:i_max])
     axs[0].set_title('Semi-Major Axis [$\mathrm{a_{bin}}$]')
     
-    axs[1].plot(time[0:fin], e[0:fin])
+    axs[1].plot(time[i_min:i_max], e[i_min:i_max])
     axs[1].set_title('Eccentricity [$\mathrm{e}$]')
     
     # axs[2].plot(time, period)
@@ -53,10 +58,10 @@ def plot_using_dat(data_name: str) -> None:
     
     fig.tight_layout()
     
-    save_path = '{}{}_obj{}_orbital_elements_dat.png'.format(directories.plots_dir, data_name, obj)
+    save_path = '{}{}_obj{}_orbital_elements_dat_{}-{}.png'.format(directories.plots_dir, data_name, obj, n_min, n_max)
     repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_obj{}_orbital_elements_dat({}).png'.format(directories.plots_dir, data_name, obj, repeated_plots)
+        save_path = '{}{}_obj{}_orbital_elements_dat_{}-{}({}).png'.format(directories.plots_dir, data_name, obj, n_min, n_max, repeated_plots)
         repeated_plots += 1
     
     print('Saving plot in {0}'.format(save_path))
@@ -68,6 +73,7 @@ def plot_using_out(data_name: str) -> None:
     directories = Navigation_helper.Directories(data_name)
 
     obj, obj_des = UI_helper.selectObjectToPlot(directories.out_dir)
+    n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
     
     (
         time,
@@ -79,26 +85,26 @@ def plot_using_out(data_name: str) -> None:
     
     fig, axs = plt.subplots(4,1, sharex= 'all')
 
-    axs[0].plot(time, a)
+    axs[0].plot(time[n_min:n_max], a[n_min:n_max])
     axs[0].set_title('Semi-Major Axis [$\mathrm{a_{bin}}$]')
     
-    axs[1].plot(time, e)
+    axs[1].plot(time[n_min:n_max], e[n_min:n_max])
     axs[1].set_title('Eccentricity')
     
-    axs[2].plot(time, omega)
+    axs[2].plot(time[n_min:n_max], omega[n_min:n_max])
     axs[2].set_title('Angular Distance of Pericenter [$\mathrm{Rad}$]')
     
-    axs[3].plot(time, anomaly)
+    axs[3].plot(time[n_min:n_max], anomaly[n_min:n_max])
     axs[3].set_title('True Anomaly [$\mathrm{Rad}$]')
     axs[3].set(xlabel = 'Time [$\mathrm{T_{bin}}$]')
     fig.suptitle('Orbital Elements of Kepler-47{}'.format(obj_des))
     
     fig.tight_layout()
     
-    save_path = '{}{}_obj{}_orbital_elements.png'.format(directories.plots_dir, data_name, obj)
+    save_path = '{}{}_obj{}_orbital_elements_{}-{}.png'.format(directories.plots_dir, data_name, obj, n_min, n_max)
     repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_obj{}_orbital_elements({}).png'.format(directories.plots_dir, data_name, obj, repeated_plots)
+        save_path = '{}{}_obj{}_orbital_elements_{}-{}({}).png'.format(directories.plots_dir, data_name, obj, n_min, n_max, repeated_plots)
         repeated_plots += 1
     
     print('Saving plot in {0}'.format(save_path))
