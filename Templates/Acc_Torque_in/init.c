@@ -9,7 +9,8 @@
 #define AN_E_INNER                4
 #define AN_PERI_INNER             5
 #define AN_SIGMA_MIN              6
-#define AN_ACC                    7
+#define AN_TORQUE                 7
+#define AN_ACC                    8
 
 ////////////////////////////////////
 // Make these global variables
@@ -89,6 +90,7 @@ void Analysis (const Data *d, Grid *grid)
         OP_SUM, 
         OP_SUM, 
         OP_MIN,
+        OP_SUM, // AN_TORQUE
         OP_SUM, // AN_ACC
     };
 

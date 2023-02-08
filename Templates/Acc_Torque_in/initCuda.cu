@@ -275,6 +275,9 @@ __device__ void calcAnalysisValues(real *values, uint3 dataIdx, dim3 dataDim)
     // TODO: make this more physical
     values[AN_ACC] = 0.0;
     real accretion_time_scale = 1/0.0069;
+
+    values[AN_TORQUE] = 0.0
+
     for (int l = 2; l < NB_N; l++)
         {
             real delta_x = xgrid - cudaNb.x[l];
@@ -288,8 +291,12 @@ __device__ void calcAnalysisValues(real *values, uint3 dataIdx, dim3 dataDim)
                 if (acc != NULL) {
                     values[AN_ACC] = acc * dV/cuda_dt;
             }
+
+            values[AN_TORQUE] = 1.0
         }
     }
+
+    
     ////////////////////
     ////////////////
 }
