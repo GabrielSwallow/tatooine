@@ -26,16 +26,20 @@ def plot_torque():
     inter_torque_list = []
     outer_torque_list = []
     time_list = []
+    i = 47
+    f = 50
     for n in range(Navigation_helper.findMaxFileNumber(directories.out_dir)):
         inner_torque, outer_torque, time = calculate_torque(data_name, n, obj_index)
-        inter_torque_list.append(inner_torque)
-        outer_torque_list.append(outer_torque)
+        inter_torque_list.append(abs(inner_torque))
+        outer_torque_list.append(abs(outer_torque))
         time_list.append(time)
     fig = plt.figure()
+    
     plt.plot(time_list, inter_torque_list, label='inner torque')
     plt.plot(time_list, outer_torque_list, label='outer torque')
     plt.xlabel('Time (binary orbits)')
     plt.ylabel('Torque (unknown units)')
+    plt.yscale('log')
     plt.legend()
     plt.grid()
 
@@ -107,7 +111,55 @@ def calculate_torque(data_name: str, data_index: int, obj_index: int = 2):
                 outer_torque += torque_cell
     return inner_torque, outer_torque, time
 
+def get_average_disk_velocity_at_r(data_name: str, data_index: int, wavenumber: int) -> list[float]:
+    directorites = Navigation_helper.Directories(data_name)
+    data = pluto.Pluto(directorites.out_dir)
+    var_data = data.primitive_variable('vx2', data_index)[0,:,:] #* data.units['density']
+    return [np.mean(var_data[:, r]) for r in range(684)]
+
+def get_planet_velocity(data_name: str, data_index: int, wavenumber: int, obj_index: int = 2) -> float:
+    n = data_index
+    (
+        _,
+        x_nbody_list,
+        y_nbody_list,
+        z,
+        vx,
+        vy,
+        vz,
+    ) = Data_parser_helper.getNbodyCoordinates(data_name, obj_index)
+
+    (
+        dbl_num_orbits_per_out, 
+        analysis_num_orbits_per_log,
+    ) = Data_parser_helper.getAnalysisOutMetaInfo(data_name)
+    analysis_logs_per_dbl_out = int(dbl_num_orbits_per_out / analysis_num_orbits_per_log)
+    time = dbl_num_orbits_per_out * n
+
+    x_nbody = x_nbody_list[analysis_logs_per_dbl_out * n]
+    y_nbody = y_nbody_list[analysis_logs_per_dbl_out * n]
+    r_nbody = tools.r_coord(x_nbody, y_nbody)
+    return tools.kepler_velocity(r_nbody)
+
+def calculate_Lindblad_torque(data_name: str, data_index: int, wavenumber: int, obj_index: int = 2):
+    disk_velocities = get_average_disk_velocity_at_r(data_name, data_index, wavenumber)
+    planet_velocity = get_planet_velocity(data_name, data_index, wavenumber, obj_index)
+    print(planet_velocity)
+    plt.plot(range(len(disk_velocities)), disk_velocities)
+    plt.show()
+
+
 if __name__ == '__main__':
     # inner_torque, outer_torque, time = get_torque_from_out_file()
     # print(inner_torque, outer_torque, time)
+    
     plot_torque()
+
+    # calculate_Lindblad_torque(
+    #     data_name='accretion_with_in_large',
+    #     data_index=50,
+    #     wavenumber=2,
+    #     obj_index=2
+    # )
+
+    # plot_torque()
