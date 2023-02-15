@@ -10,14 +10,40 @@ import Data_parser_helper
 from Global_variables import *
 import plot_params
 
-def get_torque_from_out_file():
+def print_torque_from_calculation():
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
     data_file_to_plot = UI_helper.selectDataFileToPlot(directories.out_dir)
     obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
     return calculate_torque(data_name, data_file_to_plot, obj_index)
 
-def plot_torque():
+def plot_torque_from_averages():
+    plot_params.square()
+    data_name = UI_helper.selectDataToPlot()
+    directories = Navigation_helper.Directories(data_name)
+    obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
+    (time, _, _,  _, _, _, _, _, torque_list, _) = Data_parser_helper.get_averages_data(data_name)
+    obj_torque = torque_list[obj_index-2]
+
+    fig = plt.figure()
+    plt.plot(time, abs(obj_torque), label='torque')
+    plt.xlabel('Time (binary orbits)')
+    plt.ylabel('Torque (unknown units)')
+    plt.yscale('log')
+    plt.legend()
+    plt.grid()
+
+    save_path = '{}{}_obj{}_torque.png'.format(directories.plots_dir, data_name, obj_index)
+    repeated_plots = 0
+    while(os.path.isfile(save_path)):
+        save_path = '{}{}_obj{}_torque({}).png'.format(directories.plots_dir, data_name, obj_index, repeated_plots)
+        repeated_plots += 1
+    
+    print('Saving plot in {0}'.format(save_path))
+    fig.savefig(save_path)
+    plt.close(fig)
+
+def plot_torque_from_calculation():
     plot_params.square()
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
@@ -150,10 +176,13 @@ def calculate_Lindblad_torque(data_name: str, data_index: int, wavenumber: int, 
 
 
 if __name__ == '__main__':
+    plotters = [plot_torque_from_averages, plot_torque_from_calculation]
+    func_index = UI_helper.selectFunctionsToRun(plotters)
+    eval('{}()'.format(plotters[func_index].__name__))
+
     # inner_torque, outer_torque, time = get_torque_from_out_file()
     # print(inner_torque, outer_torque, time)
     
-    plot_torque()
 
     # calculate_Lindblad_torque(
     #     data_name='accretion_with_in_large',
