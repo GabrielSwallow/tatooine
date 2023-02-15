@@ -19,7 +19,7 @@ def plot_gap_e_avg() -> None:
     t_min = n_min * nts
     t_max = n_max * nts
 
-    (time, _, e, _, _, _, _, _) = Data_parser_helper.get_averages_data(data_name)
+    (time, _, e, _, _, _, _, _, _) = Data_parser_helper.get_averages_data(data_name)
     
     i_min, i_max = tools.time_split(time, t_min, t_max)
 

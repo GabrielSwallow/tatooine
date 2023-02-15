@@ -67,20 +67,22 @@ def selectObjectToPlot(out_dir: str) -> Tuple[int, str]:
     if obj == 0:
         print('\nCannot select obj = 0 for Nbody characteristics. Try again.')
         obj, obj_des = selectObjectToPlot(out_dir)
-    if obj == 1:
-        obj_des = 'B'
-    elif obj == 2:
-        obj_des = 'b'
-    elif obj == 3:
-        obj_des = 'c'
-    elif obj == 4:
-        obj_des = 'd'
-    else:
-        print('\nInvalid obj int entered. Try again.')
-        selectObjectToPlot()
-        return 
+    # if obj == 1:
+    #     obj_des = 'B'
+    # elif obj == 2:
+    #     obj_des = 'b'
+    # elif obj == 3:
+    #     obj_des = 'c'
+    # elif obj == 4:
+    #     obj_des = 'd'
+    # else:
+    #     print('\nInvalid obj int entered. Try again.')
+    #     selectObjectToPlot()
+    #     return 
 
-    return obj, obj_des
+    # return obj, obj_des
+
+    return objects_ids[obj]
 
 def selectAnimateRange(out_dir: str):
     # TODO: change this to be data)name not out_dir

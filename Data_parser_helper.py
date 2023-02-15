@@ -2,6 +2,7 @@ import re
 import numpy as np
 import UI_helper
 import Navigation_helper
+from Global_variables import *
 
 def get_initial_planet_masses(data_name: str):
     directories = Navigation_helper.Directories(data_name)
@@ -207,23 +208,29 @@ def get_averages_data(data_name: str):
         inner_disk_periapsis,
         sigma_min,
         iter,
-        accretion
+        [torque], len=num_bodies,
+        [accretion], len=num_bodies,
     )
     '''
     # TODO: once we add accretion of multiple planets, the last few columns will be optional 
     # depending on how many objects we have. Make this general
     directories = Navigation_helper.Directories(data_name)
-    (
-        time,
-        disk_mass,
-        disk_eccentricity,
-        disk_periapsis,
-        inner_disk_eccentricity,
-        inner_disk_periapsis,
-        sigma_min,
-        iter,
-        accretion
-    ) = np.loadtxt(directories.averages, skiprows=9, unpack = True)
+    data = np.loadtxt(directories.averages, skiprows=9, unpack = True)
+
+    time = data[0]
+    disk_mass = data[1]
+    disk_eccentricity = data[2]
+    disk_periapsis = data[3]
+    inner_disk_eccentricity = data[4]
+    inner_disk_periapsis = data[5]
+    sigma_min = data[6]
+    iter = data[7]
+    planet_info = data[:8]
+
+    num_planets = findNumBodies(directories.out_dir) - 2
+
+    torque = planet_info[0:num_planets]
+    accretion = planet_info[num_planets:num_planets*2]
 
     return (
         time/(2*np.pi),
@@ -234,45 +241,46 @@ def get_averages_data(data_name: str):
         inner_disk_periapsis,
         sigma_min,
         iter,
-        accretion
+        torque,
+        accretion,
     )
 
-def get_averages_data(data_name: str):
-    '''
-    returns
-    (
-        time, # in binary orbits
-        disk_mass,
-        disk_eccentricity,
-        disk_periapsis,
-        inner_disk_eccentricity,
-        inner_disk_periapsis,
-        sigma_min,
-        iter,
-        accretion
-    )
-    '''
-    # TODO: once we add accretion of multiple planets, the last few columns will be optional 
-    # depending on how many objects we have. Make this general
-    directories = Navigation_helper.Directories(data_name)
-    (
-        time,
-        disk_mass,
-        disk_eccentricity,
-        disk_periapsis,
-        inner_disk_eccentricity,
-        inner_disk_periapsis,
-        sigma_min,
-        iter,
-    ) = np.loadtxt(directories.averages, skiprows=9, unpack = True)
+# def get_averages_data(data_name: str):
+#     '''
+#     returns
+#     (
+#         time, # in binary orbits
+#         disk_mass,
+#         disk_eccentricity,
+#         disk_periapsis,
+#         inner_disk_eccentricity,
+#         inner_disk_periapsis,
+#         sigma_min,
+#         iter,
+#         accretion
+#     )
+#     '''
+#     # TODO: once we add accretion of multiple planets, the last few columns will be optional 
+#     # depending on how many objects we have. Make this general
+#     directories = Navigation_helper.Directories(data_name)
+#     (
+#         time,
+#         disk_mass,
+#         disk_eccentricity,
+#         disk_periapsis,
+#         inner_disk_eccentricity,
+#         inner_disk_periapsis,
+#         sigma_min,
+#         iter,
+#     ) = np.loadtxt(directories.averages, skiprows=9, unpack = True)
 
-    return (
-        time/(2*np.pi),
-        disk_mass,
-        disk_eccentricity,
-        disk_periapsis,
-        inner_disk_eccentricity,
-        inner_disk_periapsis,
-        sigma_min,
-        iter,
-    )
+#     return (
+#         time/(2*np.pi),
+#         disk_mass,
+#         disk_eccentricity,
+#         disk_periapsis,
+#         inner_disk_eccentricity,
+#         inner_disk_periapsis,
+#         sigma_min,
+#         iter,
+#     )

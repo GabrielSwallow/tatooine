@@ -24,10 +24,12 @@ def plot_disk_accretion(data_name: str) -> None:
     directories = Navigation_helper.Directories(data_name)
     
     # obj, obj_des = UI_helper.selectObjectToPlot(directories.out_dir)
-    (time, _, _, _, _, _, _, _, accretion) = Data_parser_helper.get_averages_data(data_name) 
+    (time, _, _, _, _, _, _, _, _, accretion_list) = Data_parser_helper.get_averages_data(data_name) 
+    total_accretion = [accretion_list[0][i] + accretion_list[1][i] for i in range(len(accretion_list[0]))]
+
 
     fig = plt.figure()
-    plt.plot(time, accretion)
+    plt.plot(time, total_accretion)
     fig.tight_layout()
     
     save_path = '{}{}_disk_accretion.png'.format(directories.plots_dir, data_name)
