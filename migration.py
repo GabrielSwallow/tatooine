@@ -40,13 +40,13 @@ def calculate_migration(data_name: str, obj_index: int, avg_num: int):
     delta_a_list = np.array([a[i+1] - a[i] for i in range(len(a)-1)])
     a_delta_t_list = np.array([a[i]*(time[i+1] - time[i]) for i in range(len(a)-1)])
 
-    new_list_length = int(len(delta_a_list)/avg_num)
-    time_list = np.array([time[i*avg_num] for i in range(new_list_length)])
+    list_len = int(len(delta_a_list)/avg_num)
+    time_list = np.array([time[i*avg_num] for i in range(list_len - avg_num)])
     larger_delta_a_list = np.array(
-        [sum(delta_a_list[i*avg_num:(i*avg_num)+avg_num]) for i in range(new_list_length)]
+        [sum(delta_a_list[i:(i+avg_num)]) for i in range(list_len - avg_num)]
     )
     larger_a_delta_t_list = np.array(
-        [sum(a_delta_t_list[i*avg_num:(i*avg_num)+avg_num]) for i in range(new_list_length)]
+        [sum(a_delta_t_list[i:(i+avg_num)]) for i in range(list_len - avg_num)]
     )
 
     a_dot_over_a_list = larger_delta_a_list / larger_a_delta_t_list
