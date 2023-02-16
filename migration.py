@@ -22,7 +22,7 @@ def plot_migration_many_avgs():
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
     obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
-    for i in range(1, 10):
+    for i in [i*5 for i in range(1, 10)]:
         calculate_migration(data_name, obj_index, i)
 
 def calculate_migration(data_name: str, obj_index: int, avg_num: int):
@@ -40,8 +40,7 @@ def calculate_migration(data_name: str, obj_index: int, avg_num: int):
     delta_a_list = np.array([a[i+1] - a[i] for i in range(len(a)-1)])
     a_delta_t_list = np.array([a[i]*(time[i+1] - time[i]) for i in range(len(a)-1)])
 
-    list_len = int(len(delta_a_list)/avg_num)
-    time_list = np.array([time[i*avg_num] for i in range(list_len - avg_num)])
+    list_len = int(len(delta_a_list))
     larger_delta_a_list = np.array(
         [sum(delta_a_list[i:(i+avg_num)]) for i in range(list_len - avg_num)]
     )
@@ -50,6 +49,7 @@ def calculate_migration(data_name: str, obj_index: int, avg_num: int):
     )
 
     a_dot_over_a_list = larger_delta_a_list / larger_a_delta_t_list
+    time_list = np.array(time[0:(list_len-avg_num)])
 
     fig = plt.figure()
     plt.plot(time_list, a_dot_over_a_list)
