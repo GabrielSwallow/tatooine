@@ -45,6 +45,7 @@ def plot_velocities(data_name: str, data_file_to_plot: int):
                                                 ylim=[-size,size]
                                                 ))
     directories = Navigation_helper.Directories(data_name)
+    data = pluto.Pluto(directories.out_dir)
 
     global logsc
     global var
@@ -54,9 +55,9 @@ def plot_velocities(data_name: str, data_file_to_plot: int):
 
     logsc = False
     var   = "vx1"
-    plot_the_data(n, directories.out_dir, ax[0])
+    plot_the_data(n, data, directories.out_dir, ax[0])
     var  = "vx2"
-    plot_the_data(n, directories.out_dir, ax[1])
+    plot_the_data(n, data, directories.out_dir, ax[1])
                 
     fig.tight_layout() 
 
@@ -81,8 +82,8 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
                                                 ))
 
     directories = Navigation_helper.Directories(data_name)
-
-    plot_the_data(n, directories.out_dir, ax)
+    data = pluto.Pluto(directories.out_dir)
+    plot_the_data(n, directories.out_dir, data, ax)
                 
     fig.tight_layout() 
 
@@ -100,6 +101,7 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
 def animate() -> None:
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
+    data = pluto.Pluto(directories.out_dir)
     n_min, n_max = UI_helper.selectAnimateRange(directories.out_dir)
 
     fig, ax = plt.subplots(1, 1, subplot_kw=dict(aspect='equal',
@@ -112,7 +114,7 @@ def animate() -> None:
     # animate = plt_anim.FuncAnimation(fig, partial(plot_the_data, out_dir=out_dir, ax=ax), n_max)
 
     for n in range(n_min, n_max+1):
-        plot_the_data(n, directories.out_dir, ax, plot_colorbars=False)
+        plot_the_data(n, directories.out_dir, data, ax, plot_colorbars=False)
         fig.tight_layout() 
         camera.snap()
         # cb.remove()
@@ -132,8 +134,7 @@ def animate() -> None:
     animation.save(save_path)
     plt.close(fig)
 
-def plot_the_data(n: int, out_dir: str, ax: plt.Axes, plot_colorbars: bool = True):
-    data = pluto.Pluto(out_dir)
+def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_colorbars: bool = True):
     var_data = data.primitive_variable(var, n)[0,:,:] #* data.units['density']
 
     r, phi = data.grid['centers'].X1, data.grid['centers'].X2
