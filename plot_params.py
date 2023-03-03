@@ -14,5 +14,17 @@ def square():
     }
     plt.rcParams.update(params)
 
+def poster():
+    params = {
+        "axes.labelsize":14,
+        "font.size":20,
+        "legend.fontsize":14,
+        "xtick.labelsize":14,
+        "ytick.labelsize":14,
+        "figure.figsize":[12,10],
+        "figure.dpi":500,
+    }
+    plt.rcParams.update(params)
+
 def default():
     plt.rcParams.update(plt.rcParamsDefault)
