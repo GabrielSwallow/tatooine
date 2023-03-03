@@ -4,7 +4,7 @@ nbody = True
 var   = "rho" # rho, vx1, vx2
 
 nts   = 100 # output time step
-all_data_dir = 'C:/Users/gabri/OneDrive/Documents/Physics_Y4/sims/'
+all_data_dir = '../Data/'
 a_bin = 1
 size = 12
 Rmax = 70
