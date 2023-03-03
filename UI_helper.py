@@ -84,6 +84,31 @@ def selectObjectToPlot(out_dir: str) -> Tuple[int, str]:
 
     return objects_ids[obj]
 
+def selectObjectsToPlot(out_dir: str) -> Tuple[list, list]:
+    print("\nObjects: \n Smaller Stellar Object : 1 \n Specific Planet : 2, ...")
+    obj = input("please Select Which Objects to Plot \n")
+    obj_list_str = obj.rsplit(',')
+    obj_list = []
+    for i in obj_list_str:
+        obj_list.append(int(i))
+
+    num_bodies = Data_parser_helper.findNumBodies(out_dir)
+    obj_des_list = []
+
+    for i in obj_list:
+        if i > num_bodies-1:
+            print('\nMax object_id = {}. You selected {}. Try again'.format(num_bodies-1, obj))
+            obj_list, obj_des_list = selectObjectsToPlot(out_dir)
+        if i == 0:
+            print('\nCannot select obj = 0 for Nbody characteristics. Try again.')
+            obj_list, obj_des_list = selectObjectsToPlot(out_dir)
+        obj_des_list.append(objects_ids[i])
+    
+    return obj_list, obj_des_list
+        
+
+
+
 def selectAnimateRange(out_dir: str):
     # TODO: change this to be data)name not out_dir
     max_file_num = Navigation_helper.findMaxFileNumber(out_dir)
