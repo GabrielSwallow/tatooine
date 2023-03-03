@@ -385,3 +385,14 @@ def rolling_average(data: list, avg_num: int) -> list:
     return np.array(
         [sum(data[i:(i+avg_num)])/avg_num for i in range(list_len - avg_num)]
     )
+
+def roll_avg(data: list, avg_num: int) -> list:
+    if avg_num == 1:
+        return data
+    
+    old_len = int(len(data))
+    new_len = old_len + 1 - avg_num
+    new_data = []
+    for i in range(0, new_len):
+        new_data.append(np.sum(data[i:i+avg_num])/avg_num)
+    return np.array(new_data)
