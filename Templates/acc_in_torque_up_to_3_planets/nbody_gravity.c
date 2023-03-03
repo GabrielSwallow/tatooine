@@ -60,12 +60,12 @@ void nbodyCalcAccelerations()
     }
     ////////////////////////////////////
     /* Disk accretion */
-    double add_mp1 = g_dm_planet1; // important to know if g_dm is a mass or  a mass rate
-    double add_mp2 = g_dm_planet2;
-
-    g_nb.m[2] += add_mp1;
-    g_nb.m[3] += add_mp1;
-    // g_nb.m[3] += add_mp2;
+    int g_dm_planet_list[3] = {g_dm_planet1, g_dm_planet2, g_dm_planet3};
+    for (int l = 2; l < NB_N; l++)
+    {
+        double add_mp = g_dm_planet_list[l-2]; // important to know if g_dm is a mass or  a mass rate
+        g_nb.m[l] += add_mp
+    }
     ////////////////////////////////////
 
 }

@@ -50,6 +50,7 @@ __device__ void cudaUserDefBoundary (int side, uint3 dataIdx, dim3 dataDim)
 
         ////////////////////////////////////
         /* Accretion by N-bodies */
+        #if ACCRETE
         for (int l = 0; l < NB_N; l++)
         {
             real delta_x = xgrid - cudaNb.x[l];
@@ -65,6 +66,7 @@ __device__ void cudaUserDefBoundary (int side, uint3 dataIdx, dim3 dataDim)
                 cudaV.rho[idx] -= acc;
             }
         }
+        #endif
         ////////////////////////////////////
         
         
@@ -297,6 +299,7 @@ __device__ void calcAnalysisValues(real *values, uint3 dataIdx, dim3 dataDim)
             real R_nbody = sqrt(cudaNb.x[l]*cudaNb.x[l] + cudaNb.y[l]*cudaNb.y[l]);
             // use real hill radius
             // take d_phi*r as minimum, so always one cell at least being accreted
+            #if ACCRETE
             real hill_radius = 0.75; 
 
             if (delta_x*delta_x + delta_y*delta_y <= hill_radius * hill_radius) {
@@ -305,6 +308,7 @@ __device__ void calcAnalysisValues(real *values, uint3 dataIdx, dim3 dataDim)
                     values[accretion_labels[l-2]] = acc * dV/cuda_dt;
                 }
             }
+            #endif
 
             real norm = (sigma*dV*cudaNb.m[l]) / ((R - R_nbody)*(R - R_nbody));
             real factor_1 = ygrid * (xgrid - cudaNb.x[l]);
