@@ -22,11 +22,13 @@ def plot_torque_from_averages():
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
     obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
+    avg_num = UI_helper.select_averaging_length()
     (time, _, _,  _, _, _, _, _, torque_list, _) = Data_parser_helper.get_averages_data(data_name)
     obj_torque = torque_list[obj_index-2]
+    rolling_average_torque = tools.rolling_average(obj_torque, avg_num)
 
     fig = plt.figure()
-    plt.plot(time, abs(obj_torque), label='torque')
+    plt.plot(time, abs(rolling_average_torque), label='torque')
     plt.xlabel('Time (binary orbits)')
     plt.ylabel('Torque (unknown units)')
     plt.yscale('log')
