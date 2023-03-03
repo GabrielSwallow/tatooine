@@ -227,10 +227,16 @@ def get_averages_data(data_name: str):
     iter = data[7]
     planet_info = data[:8]
 
-    num_planets = findNumBodies(directories.out_dir) - 2
+    # num_planets = findNumBodies(directories.out_dir) - 2
+    num_data_points = int(planet_info/2)
 
-    torque = planet_info[0:num_planets]
-    accretion = planet_info[num_planets:num_planets*2]
+    if num_data_points == 9:
+        # then using the new, general scheme with inner and outer separate
+        torque = planet_info[0:6]
+        accretion = planet_info[6:9]
+    else:
+        torque = planet_info[0:num_data_points]
+        accretion = planet_info[num_data_points:num_data_points*2]
 
     return (
         time/(2*np.pi),

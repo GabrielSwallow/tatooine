@@ -43,6 +43,34 @@ def plot_torque_from_averages():
     fig.savefig(save_path)
     plt.close(fig)
 
+def plot_torque_from_averages_with_inner_and_outer():
+    plot_params.square()
+    data_name = UI_helper.selectDataToPlot()
+    directories = Navigation_helper.Directories(data_name)
+    obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
+    (time, _, _,  _, _, _, _, _, torque_list, _) = Data_parser_helper.get_averages_data(data_name)
+    obj_torque_inner = torque_list[(obj_index-2)*2]
+    obj_torque_outer = torque_list[(obj_index-2)*2 + 1]
+
+    fig = plt.figure()
+    plt.plot(time, abs(obj_torque_inner), label='torque')
+    plt.plot(time, abs(obj_torque_outer), label='torque')
+    plt.xlabel('Time (binary orbits)')
+    plt.ylabel('Torque (unknown units)')
+    plt.yscale('log')
+    plt.legend()
+    plt.grid()
+
+    save_path = '{}{}_obj{}_torque.png'.format(directories.plots_dir, data_name, obj_index)
+    repeated_plots = 0
+    while(os.path.isfile(save_path)):
+        save_path = '{}{}_obj{}_torque({}).png'.format(directories.plots_dir, data_name, obj_index, repeated_plots)
+        repeated_plots += 1
+    
+    print('Saving plot in {0}'.format(save_path))
+    fig.savefig(save_path)
+    plt.close(fig)
+
 def plot_torque_from_calculation():
     plot_params.square()
     data_name = UI_helper.selectDataToPlot()
@@ -176,7 +204,11 @@ def calculate_Lindblad_torque(data_name: str, data_index: int, wavenumber: int, 
 
 
 if __name__ == '__main__':
-    plotters = [plot_torque_from_averages, plot_torque_from_calculation]
+    plotters = [
+        plot_torque_from_averages, 
+        plot_torque_from_averages_with_inner_and_outer, 
+        plot_torque_from_calculation
+    ]
     func_index = UI_helper.selectFunctionsToRun(plotters)
     eval('{}()'.format(plotters[func_index].__name__))
 
