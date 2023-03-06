@@ -18,13 +18,6 @@ def plot_migration_one():
     avg_num = UI_helper.select_averaging_length()
     calculate_migration(data_name, obj_index, avg_num)
 
-def plot_migration_many_avgs():
-    data_name = UI_helper.selectDataToPlot()
-    directories = Navigation_helper.Directories(data_name)
-    obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
-    for i in [i*5 for i in range(1, 10)]:
-        calculate_migration(data_name, obj_index, i)
-
 def calculate_migration(data_name: str, obj_index: int, avg_num: int):
     plot_params.square()
 
@@ -66,6 +59,6 @@ def calculate_migration(data_name: str, obj_index: int, avg_num: int):
     plt.close(fig)
 
 if __name__ == '__main__':
-    plotters = [plot_migration_one, plot_migration_many_avgs]
+    plotters = [plot_migration_one]
     func_index = UI_helper.selectFunctionsToRun(plotters)
     eval('{}()'.format(plotters[func_index].__name__))
