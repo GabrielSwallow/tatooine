@@ -383,7 +383,7 @@ def time_split(time: list, t_min: int, t_max: int) -> list:
 def rolling_average(data: list, avg_num: int) -> list:
     list_len = int(len(data))
     return np.array(
-        [sum(data[i:(i+avg_num)])/avg_num for i in range(list_len - avg_num)]
+        [np.mean(data[i:(i+avg_num)]) for i in range(list_len - avg_num)]
     )
 
 def roll_avg(data: list, avg_num: int) -> list:

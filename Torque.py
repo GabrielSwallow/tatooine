@@ -15,7 +15,8 @@ def print_torque_from_calculation():
     directories = Navigation_helper.Directories(data_name)
     data_file_to_plot = UI_helper.selectDataFileToPlot(directories.out_dir)
     obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
-    return calculate_torque(data_name, data_file_to_plot, obj_index)
+    data = pluto.Pluto(directories.out_dir)
+    return calculate_torque(data, data_name, data_file_to_plot, obj_index)
 
 def plot_torque_from_averages():
     plot_params.square()
@@ -89,8 +90,9 @@ def plot_torque_from_calculation():
     time_list = []
     i = 47
     f = 50
+    data = pluto.Pluto(directories.out_dir)
     for n in range(Navigation_helper.findMaxFileNumber(directories.out_dir)):
-        inner_torque, outer_torque, time = calculate_torque(data_name, n, obj_index)
+        inner_torque, outer_torque, time = calculate_torque(data, data_name, n, obj_index)
         inter_torque_list.append(abs(inner_torque))
         outer_torque_list.append(abs(outer_torque))
         time_list.append(time)
@@ -118,9 +120,8 @@ def plot_torque_from_calculation():
     fig.savefig(save_path)
     plt.close(fig)
 
-def calculate_torque(data_name: str, data_index: int, obj_index: int = 2):
+def calculate_torque(data: pluto.Pluto, data_name: str, data_index: int, obj_index: int = 2):
     directories = Navigation_helper.Directories(data_name)
-    data = pluto.Pluto(directories.out_dir)
     n = data_index
 
     sigma = data.primitive_variable('rho', n)[0,:,:] #* data.units['density']
