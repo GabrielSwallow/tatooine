@@ -29,6 +29,7 @@ def plot_using_dat(data_name: str) -> None:
     
     obj, obj_des = UI_helper.selectObjectToPlot(directories.out_dir)
     n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
+    num_avg = UI_helper.select_averaging_length()
     t_min = n_min * nts
     t_max = n_max * nts
     
@@ -41,14 +42,17 @@ def plot_using_dat(data_name: str) -> None:
     ) = Data_parser_helper.getNbodyInformation_dat(data_name, obj) 
 
     i_min, i_max = tools.time_split(time, t_min, t_max)
+    t_split_rolling_average = tools.rolling_average(time[i_min:i_max], num_avg)
+    a_split_rolling_average = tools.rolling_average(a[i_min:i_max], num_avg)
+    e_split_rolling_average = tools.rolling_average(e[i_min:i_max], num_avg)
 
     fig, axs = plt.subplots(2,1, sharex= 'all')
 
     fin = len(time) - 1
-    axs[0].plot(time[i_min:i_max], a[i_min:i_max])
+    axs[0].plot(t_split_rolling_average, a_split_rolling_average)
     axs[0].set_title(r'Semi-Major Axis [$\mathrm{a_{bin}}$]')
     
-    axs[1].plot(time[i_min:i_max], e[i_min:i_max])
+    axs[1].plot(t_split_rolling_average, e_split_rolling_average)
     axs[1].set_title(r'Eccentricity [$\mathrm{e}$]')
     
     # axs[2].plot(time, period)

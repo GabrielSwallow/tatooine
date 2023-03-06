@@ -41,13 +41,14 @@ def plot_gap_parameters_out() -> None:
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
     n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
+    avg_num = UI_helper.select_averaging_length()
 
     e = []
     a = []
     t = []
+    data = pluto.Pluto(directories.out_dir)
     for n in range(n_min, n_max+1):
         t.append(n*nts)
-        data = pluto.Pluto(directories.out_dir)
         var_data = data.primitive_variable(var, n)[0,:,:]
         R, Phi = np.meshgrid(data.grid['faces'][0], data.grid['faces'][1])
         (a_n, e_n, _, _, _, _, _) = gap.ellipse_find(R, Phi, var_data)
@@ -55,10 +56,10 @@ def plot_gap_parameters_out() -> None:
         a.append(abs(a_n))
     
     fig, axs = plt.subplots(2,1, sharex = 'all')
-    axs[0].plot(t, a)
+    axs[0].plot(t[:-avg_num], tools.rolling_average(a, avg_num))
     axs[0].set_title('Semi-Major Axis [$\mathrm{a_{bin}}$]')
 
-    axs[1].plot(t, e)
+    axs[1].plot(t[:-avg_num], tools.rolling_average(e, avg_num))
     axs[1].set_title('Eccentricity [$\mathrm{e}$]')
 
     axs[1].set(xlabel = 'Time [$\mathrm{T_{bin}}$]')
