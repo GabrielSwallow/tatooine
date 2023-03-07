@@ -275,13 +275,15 @@ __device__ void calcAnalysisValues(real *values, uint3 dataIdx, dim3 dataDim)
     // TODO: make this more physical
     values[AN_ACC_1] = 0.0;
     values[AN_ACC_2] = 0.0;
-    int accretion_labels[] = {AN_ACC_1, AN_ACC_2};
+    values[AN_ACC_3] = 0.0;
+    int accretion_labels[] = {AN_ACC_1, AN_ACC_2, AN_ACC_3};
 
     real accretion_time_scale = 1/0.00069;
 
     values[AN_TORQUE_1] = 0.0;
     values[AN_TORQUE_2] = 0.0;
-    int torque_labels[] = {AN_TORQUE_1, AN_TORQUE_2};
+    values[AN_TORQUE_3] = 0.0;
+    int torque_labels[] = {AN_TORQUE_1, AN_TORQUE_2, AN_TORQUE_3};
     
     for (int l = 2; l < NB_N; l++)
         {

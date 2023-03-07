@@ -67,6 +67,7 @@
 
 //////////////////////////////////// 
 // additional global variables
-extern double g_dm_planet1;
-extern double g_dm_planet2;
+extern double g_dm_planet_1;
+extern double g_dm_planet_2;
+extern double g_dm_planet_3;
 ////////////////////////////////////

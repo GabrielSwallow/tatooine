@@ -36,6 +36,12 @@ def calculate_migration(data_name: str, obj_index: int, avg_num: int):
     list_len = int(len(delta_a_list))
     larger_delta_a_list = tools.rolling_average(delta_a_list, avg_num)
     larger_a_delta_t_list = tools.rolling_average(a_delta_t_list, avg_num)
+    larger_delta_a_list = np.array(
+        [np.mean(delta_a_list[i:(i+avg_num)]) for i in range(list_len - avg_num)]
+    )
+    larger_a_delta_t_list = np.array(
+        [np.mean(a_delta_t_list[i:(i+avg_num)]) for i in range(list_len - avg_num)]
+    )
 
     a_dot_over_a_list = larger_delta_a_list / larger_a_delta_t_list
     time_list = np.array(time[0:(list_len-avg_num)])

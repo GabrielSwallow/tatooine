@@ -1,7 +1,7 @@
 #include <float.h>
 #include "pluto.h"
 
-#define NUMBER_OF_ANALYSIS_VALUES 11
+#define NUMBER_OF_ANALYSIS_VALUES 13
 #define AN_MASS                   0
 #define AN_E                      1
 #define AN_PERI                   2
@@ -11,13 +11,17 @@
 #define AN_SIGMA_MIN              6
 #define AN_TORQUE_1               7
 #define AN_TORQUE_2               8
-#define AN_ACC_1                  9
-#define AN_ACC_2                  10
+#define AN_TORQUE_3               9
+#define AN_ACC_1                  10
+#define AN_ACC_2                  11
+#define AN_ACC_3                  12
 
 ////////////////////////////////////
 // Make these global variables
-double g_dm_planet1 = 0.0;
-double g_dm_planet2 = 0.0;
+double g_dm_planet_1 = 0.0;
+double g_dm_planet_2 = 0.0;
+double g_dm_planet_3 = 0.0;
+
 ////////////////////////////////////
 
 /* ********************************************************************* */
@@ -203,8 +207,9 @@ void Analysis (const Data *d, Grid *grid)
     analysisValues[AN_PERI_INNER]  /= analysisValues[AN_MASS_INNER];
 
     ////////////////////////////////////
-    g_dm_planet1 = analysisValues[AN_ACC_1]*g_dt; // this needs to be a mass, or mass rate
-    g_dm_planet2 = analysisValues[AN_ACC_2]*g_dt; // this needs to be a mass, or mass rate
+    g_dm_planet_1 = analysisValues[AN_ACC_1]*g_dt; // this needs to be a mass, or mass rate
+    g_dm_planet_2 = analysisValues[AN_ACC_2]*g_dt; // this needs to be a mass, or mass rate
+    g_dm_planet_3 = analysisValues[AN_ACC_3]*g_dt; // this needs to be a mass, or mass rate
     ////////////////////////////////////
     
     /* Write ascii file "averages.dat" to disk */
