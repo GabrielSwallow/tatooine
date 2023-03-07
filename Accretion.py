@@ -25,8 +25,10 @@ def plot_disk_accretion(data_name: str) -> None:
     
     # obj, obj_des = UI_helper.selectObjectToPlot(directories.out_dir)
     (time, _, _, _, _, _, _, _, _, accretion_list) = Data_parser_helper.get_averages_data(data_name) 
-    total_accretion = [accretion_list[0][i] + accretion_list[1][i] for i in range(len(accretion_list[0]))]
-
+    total_accretion = [
+    sum([accretion_list[j][i] for j in range(len(accretion_list))]) 
+    for i in range(len(accretion_list[0]))
+    ]
 
     fig = plt.figure()
     plt.plot(time, total_accretion)

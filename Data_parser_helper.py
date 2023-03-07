@@ -215,7 +215,11 @@ def get_averages_data(data_name: str):
     # TODO: once we add accretion of multiple planets, the last few columns will be optional 
     # depending on how many objects we have. Make this general
     directories = Navigation_helper.Directories(data_name)
-    data = np.loadtxt(directories.averages, skiprows=9, unpack = True)
+    with open(directories.averages) as f:
+        lines = f.readlines()
+        meta_data = list(filter(lambda line: '#' in line, lines))
+        data_names = meta_data[-1].split()
+    data = np.loadtxt(directories.averages, skiprows=len(meta_data), unpack = True)
 
     time = data[0]
     disk_mass = data[1]
@@ -225,7 +229,7 @@ def get_averages_data(data_name: str):
     inner_disk_periapsis = data[5]
     sigma_min = data[6]
     iter = data[7]
-    planet_info = data[:8]
+    planet_info = data[8:]
 
     # num_planets = findNumBodies(directories.out_dir) - 2
     num_extra_userdef_datapoints = len(planet_info)
@@ -234,10 +238,15 @@ def get_averages_data(data_name: str):
         # then using the new, general scheme with inner and outer separate
         torque = planet_info[0:6]
         accretion = planet_info[6:9]
-    else:
+    elif 'torque' in data_names:
+        # then using intermediate version: just one torque per planet, one acc
         num_planets = int(num_extra_userdef_datapoints/2)
         torque = planet_info[0:num_planets]
         accretion = planet_info[num_planets:num_planets*2]
+    else:
+        # old data, not using either
+        torque = None
+        accretion = planet_info
 
     return (
         time/(2*np.pi),
