@@ -60,10 +60,11 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     while(os.path.isfile(save_path)):
         save_path = '{}{}_1d_profile_{}_{}({}).png'.format(directories.plots_dir, data_name, var, n, repeated_plots)
         repeated_plots += 1
+    print('Saving plot in {0}'.format(save_path))
     plt.savefig(save_path)
     plt.close()
 
-def plot_n_bodies(data_name: str, data_file_to_plot: int) -> None:
+def plot_n_bodies(rho_max: float, data_name: str, data_file_to_plot: int) -> None:
     n = data_file_to_plot
     directories = Navigation_helper.Directories(data_name)
     num_bodies = Data_parser_helper.findNumBodies(directories.out_dir)
@@ -75,7 +76,7 @@ def plot_n_bodies(data_name: str, data_file_to_plot: int) -> None:
             omega,
             anomoly,
         ) = Data_parser_helper.getNbodyInformation_out(data_name, body_id) 
-        plt.plot([a[n], a[n]], [0., 1.], color='red')
+        plt.plot([a[n], a[n]], [0., rho_max], color='red', label=f'{objects_ids[body_id].name} position')
 
 def plot_the_data(fig: plt.Figure, n: int, data_name: str):
     directories = Navigation_helper.Directories(data_name)
@@ -87,23 +88,26 @@ def plot_the_data(fig: plt.Figure, n: int, data_name: str):
     sig_ref = data.user_def_parameters['SIGMA_REF']
     alpha_sigma = data.user_def_parameters['ALPHA_SIGMA']
 
-    plot_n_bodies(data_name, n)
+    scaled_average_azimuthal_rho = (np.mean(var_data, axis=0)/ sig_ref) / (R[0,:-1]**-alpha_sigma)
+    plot_n_bodies(max(scaled_average_azimuthal_rho), data_name, n)
 
     if var == 'rho':
-        plt.plot(R[1,:-1], (np.mean(var_data, axis=0)/ sig_ref) / (R[0,:-1]**-alpha_sigma), color='orange')
+        plt.plot(R[1,:-1], scaled_average_azimuthal_rho, color='orange', label=r'scaled $\Sigma$')
         # plt.plot(R[1,:-1], np.mean(var_data, axis=0)/ sig_ref, color='orange')
         # plt.plot(R[0], (R[0]**-alpha_sigma), '-', color='blue') 
         plt.ylabel(r'$\Sigma \, [g/cm^2]$')
     elif var == 'vx1':
         plt.plot(R[1,:-1], np.mean(var_data, axis=0), color='orange')
+        plt.ylabel(var)
     elif var == 'vx2':
         #TODO: figure out the units here to do this properly
         Kep_vel = 0 # tools.kepler_velocity(R[:-1,:-1][0], data) * data.read_units()['velocity']
         Kep_ang_vel = Kep_vel / R[:-1,:-1][0]
         plt.plot(R[1,:-1], np.mean(var_data, axis=0) - Kep_vel, color='orange')
+        plt.ylabel(var)
     plt.grid()
-    plt.ylabel(var)
     plt.xlabel(r'radius [a_bin]')
+    plt.legend()
     plt.title('Kep 47')
 
 if __name__ == '__main__':
