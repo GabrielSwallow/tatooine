@@ -269,7 +269,8 @@ void Analysis (const Data *d, Grid *grid)
 
         if (g_time > tpos)
         {
-            fprintf(fp, "%-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12ld  %-12.6e  %-12.6e  %-12.6e  %-12.6e\n", 
+            fprintf(fp, 
+                    "%-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12ld  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e  %-12.6e\n", 
                     g_time, 
                     analysisValues[AN_MASS],
                     analysisValues[AN_E],
@@ -282,8 +283,8 @@ void Analysis (const Data *d, Grid *grid)
                     analysisValues[AN_TORQUE_1_OUTER],
                     analysisValues[AN_TORQUE_2_INNER],
                     analysisValues[AN_TORQUE_2_OUTER],
-                    analysisValues[AN_TORQUE_2_INNER],
-                    analysisValues[AN_TORQUE_2_OUTER],
+                    analysisValues[AN_TORQUE_3_INNER],
+                    analysisValues[AN_TORQUE_3_OUTER],
                     analysisValues[AN_ACC_1],
                     analysisValues[AN_ACC_2],
                     analysisValues[AN_ACC_3]);

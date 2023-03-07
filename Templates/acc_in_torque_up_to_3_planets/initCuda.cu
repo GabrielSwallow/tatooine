@@ -316,10 +316,9 @@ __device__ void calcAnalysisValues(real *values, uint3 dataIdx, dim3 dataDim)
             real torque = norm * (factor_1 + factor_2);
 
             if (R < R_nbody) {
-                values[inner_torque_labels[l-2]] = torque
+                values[inner_torque_labels[l-2]] = torque;
             } else {
-                values[outer[l-2]] = torque
-
+                values[outer_torque_labels[l-2]] = torque;
             }
     }
 

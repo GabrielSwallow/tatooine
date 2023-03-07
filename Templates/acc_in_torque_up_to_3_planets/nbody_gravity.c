@@ -64,7 +64,7 @@ void nbodyCalcAccelerations()
     for (int l = 2; l < NB_N; l++)
     {
         double add_mp = g_dm_planet_list[l-2]; // important to know if g_dm is a mass or  a mass rate
-        g_nb.m[l] += add_mp
+        g_nb.m[l] += add_mp;
     }
     ////////////////////////////////////
 
