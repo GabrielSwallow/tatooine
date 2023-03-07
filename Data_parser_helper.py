@@ -42,7 +42,7 @@ def getAnalysisOutMetaInfo(data_name: str):
         analysis_num_orbits_per_log,
     )
 
-def getNbodyInformation_out(data_name: str, obj: int):
+def getNbodyInformation_out(data_name: str, object: astrophysical_object):
     '''
     returns 
     (
@@ -59,28 +59,27 @@ def getNbodyInformation_out(data_name: str, obj: int):
 
     (
         unfiltered_time,
-        object_id,
+        object_ids,
         unfiltered_a,
         unfiltered_e,
         unfiltered_omega,
         unfiltered_anomaly,
     ) = np.loadtxt(directories.nbody_elements_filename, usecols=(0,1,2,3,6,7), unpack = True)
 
-    time = dbl_num_orbits_per_out * unfiltered_time[object_id == obj]
+    time = dbl_num_orbits_per_out * unfiltered_time[object_ids == object.id]
 
     if len(time) == 0: 
         max_object_id = findNumBodies(directories.out_dir) - 1
-        print('\nMax object_id = {}. You selected {}. Try again'.format(max_object_id, obj))
-        obj, obj_des = UI_helper.selectObjectToPlot()
-        getNbodyInformation_out(data_name, obj)
-        return
+        print('\nMax object_id = {}. You selected {}. Try again'.format(max_object_id, object.id))
+        object = UI_helper.selectObjectToPlot()
+        return getNbodyInformation_out(data_name, object.id)
     
     return (
         time,
-        unfiltered_a[object_id == obj],
-        unfiltered_e[object_id == obj],
-        unfiltered_omega[object_id == obj],
-        unfiltered_anomaly[object_id == obj]
+        unfiltered_a[object_ids == object.id],
+        unfiltered_e[object_ids == object.id],
+        unfiltered_omega[object_ids == object.id],
+        unfiltered_anomaly[object_ids == object.id]
     )
 
 def getNbodyInformation_dat(data_name: str, obj: int):

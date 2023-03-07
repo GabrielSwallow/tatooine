@@ -64,7 +64,7 @@ def fourier_fixer(arr):
 def migration_with_fourier() -> None:
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
-    obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
+    object = UI_helper.selectObjectToPlot(directories.out_dir)
     av = UI_helper.select_averaging_length()
 
     (
@@ -73,7 +73,7 @@ def migration_with_fourier() -> None:
         e,
         anomoly,
         mass,
-    ) = Data_parser_helper.getNbodyInformation_dat(data_name, obj_index)
+    ) = Data_parser_helper.getNbodyInformation_dat(data_name, object.id)
 
     delta_a_list = np.array([a[i+1] - a[i] for i in range(len(a)-1)])
     a_delta_t_list = np.array([a[i]*(time[i+1] - time[i]) for i in range(len(a)-1)])
@@ -107,10 +107,10 @@ def migration_with_fourier() -> None:
     plt.grid()
     fig.tight_layout()
 
-    save_path = '{}{}_obj{}_migration_fourier{}.png'.format(directories.plots_dir, data_name, obj_index, av)
+    save_path = '{}obj{}_migration_fourier{}.png'.format(directories.plots_dir, object.id, av)
     repeated_plots = 0
     while (os.path.isfile(save_path)):
-        save_path = '{}{}_obj{}_migration_fourier{}({}).png'.format(directories.plots_dir, data_name, obj_index, av, repeated_plots)
+        save_path = '{}obj{}_migration_fourier{}({}).png'.format(directories.plots_dir, object.id, av, repeated_plots)
         repeated_plots += 1
     
     print('Saving plot in {0}'.format(save_path))

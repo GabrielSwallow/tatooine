@@ -44,10 +44,10 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     plt.ylabel(r'$ Vx1 \, [g/cm^2]$')
     plt.title('Kep 47')
 
-    save_path = '{}{}_vx1_profile_{}.png'.format(directories.plots_dir, data_name, n)
+    save_path = '{}vx1_profile_{}.png'.format(directories.plots_dir, n)
     repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_vx1_profile_{}({}).png'.format(directories.plots_dir, data_name, n, repeated_plots)
+        save_path = '{}vx1_profile_{}({}).png'.format(directories.plots_dir, n, repeated_plots)
         repeated_plots += 1
     plt.savefig(save_path)
     plt.close()
@@ -84,10 +84,10 @@ def animate() -> None:
         plt.title('Kep 47')
         camera.snap()
 
-    save_path = '{}{}_vx1_profile_{}.gif'.format(directories.plots_dir, data_name, n)
+    save_path = '{}vx1_profile_{}.gif'.format(directories.plots_dir, n)
     repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_vx1_profile_{}({}).gif'.format(directories.plots_dir, data_name, n, repeated_plots)
+        save_path = '{}vx1_profile_{}({}).gif'.format(directories.plots_dir, n, repeated_plots)
         repeated_plots += 1
     animation = camera.animate()
     animation.save(save_path)

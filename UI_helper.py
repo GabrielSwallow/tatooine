@@ -9,14 +9,14 @@ from Global_variables import *
 
 def selectDataToPlot(sub_dir_of_data: str = '', datasets = None) -> str:
     if not datasets:
-        datasets = os.listdir(Global_variables.all_data_dir + sub_dir_of_data)
+        datasets = os.listdir(all_data_dir + sub_dir_of_data)
     for d_index, filename in enumerate(datasets):
         print(d_index, ' : ', filename)
     
     dataset_index = int(input("please choose a dataset to plot for \n"))
-    data_name = sub_dir_of_data + datasets[dataset_index] + '/'
-    if 'GROUP' in data_name:
-        return selectDataToPlot(data_name)
+    data_name = sub_dir_of_data + datasets[dataset_index]
+    if 'GROUP' in datasets[dataset_index]:
+        return selectDataToPlot(data_name+'/')
 
     Navigation_helper.createPlotsFolderIfAbsent(data_name)
     return data_name
@@ -57,35 +57,21 @@ def selectFunctionsToRun(functions: list) -> int:
     ))
     return func_index
 
-def selectObjectToPlot(out_dir: str) -> Tuple[int, str]:
+def selectObjectToPlot(out_dir: str) -> astrophysical_object:
     # TODO: change this to be data)name not out_dir
     print("\nObjects: \n Smaller Stellar Object : 1 \n Specific Planet : 2, ...")
-    obj = int(input("please Select Which Object to Plot \n"))
+    obj_id = int(input("please Select Which Object to Plot \n"))
 
     num_bodies = Data_parser_helper.findNumBodies(out_dir)
-    if obj > num_bodies-1:
-        print('\nMax object_id = {}. You selected {}. Try again'.format(num_bodies-1, obj))
-        obj, obj_des = selectObjectToPlot(out_dir)
+    if obj_id > num_bodies-1:
+        print('\nMax object_id = {}. You selected {}. Try again'.format(num_bodies-1, obj_id))
+        return selectObjectToPlot(out_dir)
 
-    if obj == 0:
+    if obj_id == 0:
         print('\nCannot select obj = 0 for Nbody characteristics. Try again.')
-        obj, obj_des = selectObjectToPlot(out_dir)
-    # if obj == 1:
-    #     obj_des = 'B'
-    # elif obj == 2:
-    #     obj_des = 'b'
-    # elif obj == 3:
-    #     obj_des = 'c'
-    # elif obj == 4:
-    #     obj_des = 'd'
-    # else:
-    #     print('\nInvalid obj int entered. Try again.')
-    #     selectObjectToPlot()
-    #     return 
+        return selectObjectToPlot(out_dir)
 
-    # return obj, obj_des
-
-    return objects_ids[obj]
+    return objects_in_kep47[obj_id]
 
 def selectObjectsToPlot(out_dir: str) -> Tuple[list, list]:
     print("\nObjects: \n Smaller Stellar Object : 1 \n Specific Planet : 2, ...")
@@ -105,7 +91,7 @@ def selectObjectsToPlot(out_dir: str) -> Tuple[list, list]:
         if i == 0:
             print('\nCannot select obj = 0 for Nbody characteristics. Try again.')
             obj_list, obj_des_list = selectObjectsToPlot(out_dir)
-        obj_des_list.append(objects_ids[i])
+        obj_des_list.append(objects_in_kep47[i])
     
     return obj_list, obj_des_list
         
@@ -212,5 +198,5 @@ def cylce_selection_index(options: list, current_index: int) -> int:
     else: 
         return current_index + 1
 
-# if __name__ == '__main__':
-#     select_global_vars()
+if __name__ == '__main__':
+    selectDataToPlot()

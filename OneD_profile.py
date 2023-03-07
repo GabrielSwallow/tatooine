@@ -39,10 +39,10 @@ def animate() -> None:
         plot_the_data(fig, n, data_name)
         camera.snap()
 
-    save_path = '{}{}_1d_profile_{}_ANIMATION_{}-{}.gif'.format(directories.plots_dir, data_name, var, n_min, n_max)
+    save_path = '{}1d_profile_{}_ANIMATION_{}-{}.gif'.format(directories.plots_dir, var, n_min, n_max)
     repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_1d_profile_{}_ANIMATION_{}-{}({}).gif'.format(directories.plots_dir, data_name, var, n_min, n_max, repeated_plots)
+        save_path = '{}1d_profile_{}_ANIMATION_{}-{}({}).gif'.format(directories.plots_dir, var, n_min, n_max, repeated_plots)
         repeated_plots += 1
     animation = camera.animate()
     animation.save(save_path)
@@ -55,10 +55,10 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     fig = plt.figure()
     plot_the_data(fig, n, data_name)
 
-    save_path = '{}{}_1d_profile_{}_{}.png'.format(directories.plots_dir, data_name, var, n)
+    save_path = '{}1d_profile_{}_{}.png'.format(directories.plots_dir, var, n)
     repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_1d_profile_{}_{}({}).png'.format(directories.plots_dir, data_name, var, n, repeated_plots)
+        save_path = '{}1d_profile_{}_{}({}).png'.format(directories.plots_dir, var, n, repeated_plots)
         repeated_plots += 1
     print('Saving plot in {0}'.format(save_path))
     plt.savefig(save_path)
@@ -76,7 +76,7 @@ def plot_n_bodies(rho_max: float, data_name: str, data_file_to_plot: int) -> Non
             omega,
             anomoly,
         ) = Data_parser_helper.getNbodyInformation_out(data_name, body_id) 
-        plt.plot([a[n], a[n]], [0., rho_max], color='red', label=f'{objects_ids[body_id].name} position')
+        plt.plot([a[n], a[n]], [0., rho_max], color='red', label=f'{objects_in_kep47[body_id].name} position')
 
 def plot_the_data(fig: plt.Figure, n: int, data_name: str):
     directories = Navigation_helper.Directories(data_name)

@@ -62,10 +62,10 @@ def plot_velocities(data_name: str, data_file_to_plot: int):
     fig.tight_layout() 
 
     log_str = ''
-    save_path = '{}{}{}_2d_{}_{}.png'.format(directories.plots_dir, data_name, log_str, var, n)
+    save_path = '{}{}2d_{}_{}.png'.format(directories.plots_dir, log_str, var, n)
     repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}{}{}_2d_{}_{}({}).png'.format(directories.plots_dir, data_name, log_str, var, n, repeated_plots)
+        save_path = '{}{}2d_{}_{}({}).png'.format(directories.plots_dir, log_str, var, n, repeated_plots)
         repeated_plots += 1
     print('Saving plot in {0}'.format(save_path))
     fig.savefig(save_path)
@@ -87,12 +87,12 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
                 
     fig.tight_layout() 
 
-    if logsc: log_str = '_LOG'
+    if logsc: log_str = 'LOG_'
     else: log_str = ''
-    save_path = '{}{}{}_2d_{}_{}.png'.format(directories.plots_dir, data_name, log_str, var, n)
+    save_path = '{}{}2d_{}_{}.png'.format(directories.plots_dir, log_str, var, n)
     repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}{}{}_2d_{}_{}({}).png'.format(directories.plots_dir, data_name, log_str, var, n, repeated_plots)
+        save_path = '{}{}2d_{}_{}({}).png'.format(directories.plots_dir, log_str, var, n, repeated_plots)
         repeated_plots += 1
     print('Saving plot in {0}'.format(save_path))
     fig.savefig(save_path)
@@ -119,13 +119,13 @@ def animate() -> None:
         camera.snap()
         # cb.remove()
 
-    if logsc: log_str = '_LOG'
+    if logsc: log_str = 'LOG_'
     else: log_str = ''
-    save_path = '{}{}{}_2d_{}_ANIMATION_{}-{}.gif'.format(directories.plots_dir, data_name, log_str, var, n_min, n_max)
+    save_path = '{}{}2d_{}_ANIMATION_{}-{}.gif'.format(directories.plots_dir, log_str, var, n_min, n_max)
 
     repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}{}{}_2d_{}_ANIMATION_{}-{}({}).gif'.format(directories.plots_dir, data_name, log_str, var, n_min, n_max, repeated_plots)
+        save_path = '{}{}2d_{}_ANIMATION_{}-{}({}).gif'.format(directories.plots_dir, log_str, var, n_min, n_max, repeated_plots)
         repeated_plots += 1
 
     # animate.save(save_path)
@@ -332,12 +332,12 @@ def plot_alt(data_name: str, data_file_to_plot: int) -> None:
     fig.tight_layout() 
     plot_params.poster
 
-    if logsc: log_str = '_LOG'
+    if logsc: log_str = 'LOG_'
     else: log_str = ''
-    save_path = '{}{}{}_2d_{}_{}.png'.format(directories.plots_dir, data_name, log_str, var, n)
+    save_path = '{}{}2d_{}_{}.png'.format(directories.plots_dir, log_str, var, n)
     repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}{}{}_2d_{}_{}({}).png'.format(directories.plots_dir, data_name, log_str, var, n, repeated_plots)
+        save_path = '{}{}2d_{}_{}({}).png'.format(directories.plots_dir, log_str, var, n, repeated_plots)
         repeated_plots += 1
     print('Saving plot in {0}'.format(save_path))
     fig.savefig(save_path, bbox_inches = 'tight', dpi = 160)

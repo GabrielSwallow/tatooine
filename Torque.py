@@ -14,18 +14,18 @@ def print_torque_from_calculation():
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
     data_file_to_plot = UI_helper.selectDataFileToPlot(directories.out_dir)
-    obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
+    object = UI_helper.selectObjectToPlot(directories.out_dir)
     data = pluto.Pluto(directories.out_dir)
-    return calculate_torque(data, data_name, data_file_to_plot, obj_index)
+    return calculate_torque(data, data_name, data_file_to_plot, object.id)
 
 def plot_torque_from_averages():
     plot_params.square()
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
-    obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
+    object = UI_helper.selectObjectToPlot(directories.out_dir)
     avg_num = UI_helper.select_averaging_length()
     (time, _, _,  _, _, _, _, _, torque_list, _) = Data_parser_helper.get_averages_data(data_name)
-    obj_torque = torque_list[obj_index-2]
+    obj_torque = torque_list[object.id-2]
     rolling_average_torque = tools.rolling_average(obj_torque, avg_num)
 
     fig = plt.figure()
@@ -36,10 +36,10 @@ def plot_torque_from_averages():
     plt.legend()
     plt.grid()
 
-    save_path = '{}{}_obj{}_torque.png'.format(directories.plots_dir, data_name, obj_index)
+    save_path = '{}obj{}_torque.png'.format(directories.plots_dir, object.id)
     repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_obj{}_torque({}).png'.format(directories.plots_dir, data_name, obj_index, repeated_plots)
+        save_path = '{}obj{}_torque({}).png'.format(directories.plots_dir, object.id, repeated_plots)
         repeated_plots += 1
     
     print('Saving plot in {0}'.format(save_path))
@@ -50,11 +50,11 @@ def plot_torque_from_averages_with_inner_and_outer():
     plot_params.square()
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
-    obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
+    object = UI_helper.selectObjectToPlot(directories.out_dir)
     avg_num = UI_helper.select_averaging_length()
     (time, _, _,  _, _, _, _, _, torque_list, _) = Data_parser_helper.get_averages_data(data_name)
-    obj_torque_inner = torque_list[(obj_index-2)*2]
-    obj_torque_outer = torque_list[(obj_index-2)*2 + 1]
+    obj_torque_inner = torque_list[(object.id2)*2]
+    obj_torque_outer = torque_list[(object.id-2)*2 + 1]
 
     rolling_average_obj_torque_inner = tools.rolling_average(obj_torque_inner, avg_num)
     rolling_average_obj_torque_outer = tools.rolling_average(obj_torque_outer, avg_num)
@@ -68,10 +68,10 @@ def plot_torque_from_averages_with_inner_and_outer():
     plt.legend()
     plt.grid()
 
-    save_path = '{}{}_obj{}_torque.png'.format(directories.plots_dir, data_name, obj_index)
+    save_path = '{}obj{}_torque.png'.format(directories.plots_dir, object.id)
     repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_obj{}_torque({}).png'.format(directories.plots_dir, data_name, obj_index, repeated_plots)
+        save_path = '{}obj{}_torque({}).png'.format(directories.plots_dir, object.id, repeated_plots)
         repeated_plots += 1
     
     print('Saving plot in {0}'.format(save_path))
@@ -82,7 +82,7 @@ def plot_torque_from_calculation():
     plot_params.square()
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
-    obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
+    object = UI_helper.selectObjectToPlot(directories.out_dir)
     avg_num = UI_helper.select_averaging_length()
 
     inter_torque_list = []
@@ -92,7 +92,7 @@ def plot_torque_from_calculation():
     f = 50
     data = pluto.Pluto(directories.out_dir)
     for n in range(Navigation_helper.findMaxFileNumber(directories.out_dir)):
-        inner_torque, outer_torque, time = calculate_torque(data, data_name, n, obj_index)
+        inner_torque, outer_torque, time = calculate_torque(data, data_name, n, object.id)
         inter_torque_list.append(abs(inner_torque))
         outer_torque_list.append(abs(outer_torque))
         time_list.append(time)
@@ -110,10 +110,10 @@ def plot_torque_from_calculation():
     plt.legend()
     plt.grid()
 
-    save_path = '{}{}_obj{}_torque.png'.format(directories.plots_dir, data_name, obj_index)
+    save_path = '{}obj{}_torque.png'.format(directories.plots_dir, object.id)
     repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_obj{}_torque({}).png'.format(directories.plots_dir, data_name, obj_index, repeated_plots)
+        save_path = '{}obj{}_torque({}).png'.format(directories.plots_dir, object.id, repeated_plots)
         repeated_plots += 1
     
     print('Saving plot in {0}'.format(save_path))

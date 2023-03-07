@@ -14,9 +14,9 @@ import plot_params
 def plot_migration_one():
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
-    obj_index, _ = UI_helper.selectObjectToPlot(directories.out_dir)
+    object = UI_helper.selectObjectToPlot(directories.out_dir)
     avg_num = UI_helper.select_averaging_length()
-    calculate_migration(data_name, obj_index, avg_num)
+    calculate_migration(data_name, object.id, avg_num)
 
 def calculate_migration(data_name: str, obj_index: int, avg_num: int):
     plot_params.square()
@@ -48,10 +48,10 @@ def calculate_migration(data_name: str, obj_index: int, avg_num: int):
     plt.grid()
     fig.tight_layout()
     
-    save_path = '{}{}_obj{}_migration.png'.format(directories.plots_dir, data_name, obj_index)
+    save_path = '{}obj{}_migration.png'.format(directories.plots_dir, obj_index)
     repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}{}_obj{}_migration({}).png'.format(directories.plots_dir, data_name, obj_index, repeated_plots)
+        save_path = '{}obj{}_migration({}).png'.format(directories.plots_dir, repeated_plots)
         repeated_plots += 1
     
     print('Saving plot in {0}'.format(save_path))

@@ -27,10 +27,10 @@ def plot_gap_e_avg() -> None:
     plt.plot(time[i_min:i_max],e[i_min:i_max])
     fig.tight_layout()
 
-    save_path = '{}{}_disc_eccentricity_averages.png'.format(directories.plots_dir, data_name)
+    save_path = '{}disc_eccentricity_averages.png'.format(directories.plots_dir)
     repeated_plots = 0
     while (os.path.isfile(save_path)):
-        save_path = '{}{}_disc_eccentricity_averages({}).png'.format(directories.plots_dir, data_name, repeated_plots)
+        save_path = '{}disc_eccentricity_averages({}).png'.format(directories.plots_dir, repeated_plots)
         repeated_plots += 1
     
     print('Saving plot in {0}'.format(save_path))
@@ -67,10 +67,10 @@ def plot_gap_parameters_out() -> None:
 
     fig.tight_layout()
 
-    save_path = '{}{}_disc_eccentricity_{}-{}.png'.format(directories.plots_dir, data_name, n_min, n_max)
+    save_path = '{}disc_eccentricity_{}-{}.png'.format(directories.plots_dir, n_min, n_max)
     repeated_plots = 0
     while (os.path.isfile(save_path)):
-        save_path = '{}{}_disc_eccentricity_{}-{}({}).png'.format(directories.plots_dir, data_name, n_min, n_max, repeated_plots)
+        save_path = '{}disc_eccentricity_{}-{}({}).png'.format(directories.plots_dir, n_min, n_max, repeated_plots)
         repeated_plots += 1
     
     print('Saving plot in {0}'.format(save_path))

@@ -119,7 +119,7 @@ if __name__ == '__main__':
     failed_plots.append(plot_disk_properties())
     num_bodies = Data_parser_helper.findNumBodies(directories.out_dir)
     for i in range(2, num_bodies):
-        failed_plots.append(plot_planet_properties(objects_ids[i]))
+        failed_plots.append(plot_planet_properties(objects_in_kep47[i]))
     
     print('failed plotters:')
     for f in failed_plots:
