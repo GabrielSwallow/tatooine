@@ -7,14 +7,17 @@ from Global_variables import *
 # from menu import Menu
 # import simple_term_menu as stm
 
-def selectDataToPlot(datasets = None) -> str:
+def selectDataToPlot(sub_dir_of_data: str = '', datasets = None) -> str:
     if not datasets:
-        datasets = os.listdir(all_data_dir)
+        datasets = os.listdir(Global_variables.all_data_dir + sub_dir_of_data)
     for d_index, filename in enumerate(datasets):
         print(d_index, ' : ', filename)
     
     dataset_index = int(input("please choose a dataset to plot for \n"))
-    data_name = datasets[dataset_index]
+    data_name = sub_dir_of_data + datasets[dataset_index] + '/'
+    if 'GROUP' in data_name:
+        return selectDataToPlot(data_name)
+
     Navigation_helper.createPlotsFolderIfAbsent(data_name)
     return data_name
 
