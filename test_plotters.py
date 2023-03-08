@@ -23,6 +23,7 @@ import Nbody_Characteristics
 import Accretion
 import migration
 import Torque
+import Disc_Characteristics
 import Data_parser_helper
 
 from unittest.mock import patch, create_autospec
@@ -40,6 +41,8 @@ disk_properties_plotters = [
     # Accretion.plot_one_planet_accretion,
     # migration.plot_migration_one,
     # Torque.plot_torque_from_averages,
+    Disc_Characteristics.plot_disc_e_avg,
+    Disc_Characteristics.plot_gap_parameters_out,
 ]
 
 planet_properties_plotters = [

@@ -12,14 +12,14 @@ from Global_variables import *
 import plot_params
 import Gap_Finder as gap
 
-def plot_gap_e_avg() -> None:
+def plot_disc_e_avg() -> None:
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
     n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
     t_min = n_min * nts
     t_max = n_max * nts
 
-    (time, _, e, _, _, _, _, _, _) = Data_parser_helper.get_averages_data(data_name)
+    (time, _, e, _, _, _, _, _, _, _) = Data_parser_helper.get_averages_data(data_name)
     
     i_min, i_max = tools.time_split(time, t_min, t_max)
 
@@ -67,10 +67,10 @@ def plot_gap_parameters_out() -> None:
 
     fig.tight_layout()
 
-    save_path = '{}disc_eccentricity_{}-{}.png'.format(directories.plots_dir, n_min, n_max)
+    save_path = '{}gap_eccentricity_{}-{}.png'.format(directories.plots_dir, n_min, n_max)
     repeated_plots = 0
     while (os.path.isfile(save_path)):
-        save_path = '{}disc_eccentricity_{}-{}({}).png'.format(directories.plots_dir, n_min, n_max, repeated_plots)
+        save_path = '{}gap_eccentricity_{}-{}({}).png'.format(directories.plots_dir, n_min, n_max, repeated_plots)
         repeated_plots += 1
     
     print('Saving plot in {0}'.format(save_path))
@@ -78,6 +78,6 @@ def plot_gap_parameters_out() -> None:
     plt.close(fig)
 
 if __name__ == '__main__':
-    plotters = [plot_gap_e_avg, plot_gap_parameters_out]
+    plotters = [plot_disc_e_avg, plot_gap_parameters_out]
     func_index = UI_helper.selectFunctionsToRun(plotters)
     eval('{}()'.format(plotters[func_index].__name__))
