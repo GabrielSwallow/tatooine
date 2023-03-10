@@ -50,7 +50,12 @@ planet_properties_plotters = [
     Nbody_Characteristics.plot_one_using_out,
     Accretion.plot_one_planet_accretion,
     migration.plot_migration_one,
+]
+
+torque_plotters = [
+    Torque.plot_torque_from_averages_with_inner_and_outer,
     Torque.plot_torque_from_averages,
+    Torque.plot_torque_from_calculation,
 ]
 
 data_name = UI_helper.selectDataToPlot()
@@ -115,6 +120,13 @@ def plot_planet_properties(
             eval('{}.{}()'.format(f.__module__, f.__name__))
         except:
             failed_plots.append('{}.{}'.format(f.__module__, f.__name__))
+    for f in torque_plotters:
+        try:
+            eval('{}.{}()'.format(f.__module__, f.__name__))
+            break
+        except:
+            failed_plots.append('{}.{}'.format(f.__module__, f.__name__))
+
     return failed_plots
 
 if __name__ == '__main__':
