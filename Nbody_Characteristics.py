@@ -85,7 +85,7 @@ def plot_using_out(data_name: str) -> None:
         e,
         omega,
         anomaly,
-    ) = Data_parser_helper.getNbodyInformation_out(directories.data_name, object.id) 
+    ) = Data_parser_helper.getNbodyInformation_out(directories.data_name, object) 
     
     fig, axs = plt.subplots(4,1, sharex= 'all')
 
@@ -105,7 +105,7 @@ def plot_using_out(data_name: str) -> None:
     
     fig.tight_layout()
     
-    save_path = '{}obj{}_orbital_elements_{}-{}.png'.format(directories.plots_dir, object.d, n_min, n_max)
+    save_path = '{}obj{}_orbital_elements_{}-{}.png'.format(directories.plots_dir, object.id, n_min, n_max)
     repeated_plots = 0
     while(os.path.isfile(save_path)):
         save_path = '{}obj{}_orbital_elements_{}-{}({}).png'.format(directories.plots_dir, n_min, n_max, repeated_plots)
