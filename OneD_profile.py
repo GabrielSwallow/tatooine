@@ -24,6 +24,10 @@ def plot_many() -> None:
     for data_file_to_plot in many_data_files_to_plot:
         plot(data_name, data_file_to_plot)
 
+def plot_one_multiple_data_sets_overlayed() -> None:
+    data_ids = UI_helper.select_many_data_ids_to_overlay()
+    plot_multiple_data_sets_overlayed(data_ids)
+
 def animate() -> None:
     plot_params.square()
     data_name = UI_helper.selectDataToPlot()
@@ -64,7 +68,25 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     plt.savefig(save_path)
     plt.close()
 
-def plot_n_bodies(rho_max: float, data_name: str, data_file_to_plot: int) -> None:
+def plot_multiple_data_sets_overlayed(many_data_to_plot: list[data_id]) -> None:
+    plot_params.square()
+
+    fig = plt.figure()
+    for data_to_plot in many_data_to_plot:
+        plot_the_data(fig, data_to_plot.out_file, data_to_plot.name, data_to_plot.legend_name)
+    
+    plot_name = UI_helper.name_the_plot() + '_'
+
+    save_path = '{}1d_profile_{}.png'.format(global_plots_dir+plot_name, var)
+    repeated_plots = 1
+    while(os.path.isfile(save_path)):
+        save_path = '{}1d_profile_{}({}).png'.format(global_plots_dir+plot_name, var, repeated_plots)
+        repeated_plots += 1
+    print('Saving plot in {0}'.format(save_path))
+    plt.savefig(save_path)
+    plt.close()
+
+def plot_n_bodies(rho_max: float, data_name: str, data_file_to_plot: int, legend_name: str = '') -> None:
     n = data_file_to_plot
     directories = Navigation_helper.Directories(data_name)
     num_bodies = Data_parser_helper.findNumBodies(directories.out_dir)
@@ -76,9 +98,9 @@ def plot_n_bodies(rho_max: float, data_name: str, data_file_to_plot: int) -> Non
             omega,
             anomoly,
         ) = Data_parser_helper.getNbodyInformation_out(data_name, objects_in_kep47[body_id]) 
-        plt.plot([a[n], a[n]], [0., rho_max], color='red', label=f'{objects_in_kep47[body_id].name} position')
+        plt.plot([a[n], a[n]], [0., rho_max], label=f'{legend_name}_{objects_in_kep47[body_id].name} position')
 
-def plot_the_data(fig: plt.Figure, n: int, data_name: str):
+def plot_the_data(fig: plt.Figure, n: int, data_name: str, legend_name: str = ''):
     directories = Navigation_helper.Directories(data_name)
     data = pluto.Pluto(directories.out_dir)
     var_data = data.primitive_variable(var, n)[0,:,:] #* data.units['density']
@@ -89,10 +111,10 @@ def plot_the_data(fig: plt.Figure, n: int, data_name: str):
     alpha_sigma = data.user_def_parameters['ALPHA_SIGMA']
 
     scaled_average_azimuthal_rho = (np.mean(var_data, axis=0)/ sig_ref) / (R[0,:-1]**-alpha_sigma)
-    plot_n_bodies(max(scaled_average_azimuthal_rho), data_name, n)
+    plot_n_bodies(max(scaled_average_azimuthal_rho), data_name, n, legend_name)
 
     if var == 'rho':
-        plt.plot(R[1,:-1], scaled_average_azimuthal_rho, color='orange', label=r'scaled $\Sigma$')
+        plt.plot(R[1,:-1], scaled_average_azimuthal_rho, label=r'{} scaled $\Sigma$'.format(legend_name))
         # plt.plot(R[1,:-1], np.mean(var_data, axis=0)/ sig_ref, color='orange')
         # plt.plot(R[0], (R[0]**-alpha_sigma), '-', color='blue') 
         plt.ylabel(r'$\Sigma \, [g/cm^2]$')
@@ -111,7 +133,7 @@ def plot_the_data(fig: plt.Figure, n: int, data_name: str):
     plt.title('Kep 47')
 
 if __name__ == '__main__':
-    plotters = [plot_one, plot_many, animate]
+    plotters = [plot_one, plot_many, animate, plot_one_multiple_data_sets_overlayed]
     func_index = UI_helper.selectFunctionsToRun(plotters)
     eval('{}()'.format(plotters[func_index].__name__))
 

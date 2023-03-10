@@ -1,4 +1,5 @@
 all_data_dir = '../Data/'
+global_plots_dir = '../Plots/'
 cart  = False
 logsc = True
 nbody = True
@@ -17,6 +18,12 @@ class astrophysical_object():
     def __init__(self, id: int, name: str) -> None:
         self.id = id
         self.name = name
+
+class data_id():
+    def __init__(self, name: str, out_file: int, legend_name: str) -> None:
+        self.name = name
+        self.out_file = out_file
+        self.legend_name = legend_name
 
 objects_in_kep47 = [
     astrophysical_object(0, 'Star 1'),

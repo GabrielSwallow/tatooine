@@ -77,7 +77,42 @@ def plot_gap_parameters_out() -> None:
     fig.savefig(save_path)
     plt.close(fig)
 
+def plot_the_data_disc_e_avg(fig: plt.Figure, data_name: str, legend_name: str = '') -> None:
+    directories = Navigation_helper.Directories(data_name)
+    n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
+    t_min = n_min * nts
+    t_max = n_max * nts
+
+    (time, _, e, _, _, _, _, _, _, _) = Data_parser_helper.get_averages_data(data_name)
+    i_min, i_max = tools.time_split(time, t_min, t_max)
+    plt.plot(time[i_min:i_max], e[i_min:i_max], label = f'{legend_name} gap eccentricity')
+
+def plot_multiple_data_sets_overlayed_disc_e_avg(many_data_to_plot: list[data_id]) -> None:
+    plot_params.square()
+
+    fig = plt.figure()
+    for data_to_plot in many_data_to_plot:
+        plot_the_data_disc_e_avg(fig, data_to_plot.name, data_to_plot.legend_name)
+    
+    plot_name = UI_helper.name_the_plot() + '_'
+
+    save_path = '{}disc_eccentricity_averages_{}.png'.format(global_plots_dir+plot_name, var)
+    repeated_plots = 1
+    while(os.path.isfile(save_path)):
+        save_path = '{}disc_eccentricity_averages_{}({}).png'.format(global_plots_dir+plot_name, var, repeated_plots)
+        repeated_plots += 1
+    print('Saving plot in {0}'.format(save_path))
+    plt.legend()
+    plt.ylabel('gap eccentricity')
+    plt.xlabel('Time [$\mathrm{T_{bin}}$]')
+    plt.savefig(save_path)
+    plt.close()
+
+def plot_one_multiple_data_sets_overlayed_disc_e_avg() -> None:
+    data_ids = UI_helper.select_many_data_ids_to_overlay(choose_out_file = False)
+    plot_multiple_data_sets_overlayed_disc_e_avg(data_ids)
+
 if __name__ == '__main__':
-    plotters = [plot_disc_e_avg, plot_gap_parameters_out]
+    plotters = [plot_disc_e_avg, plot_gap_parameters_out, plot_one_multiple_data_sets_overlayed_disc_e_avg]
     func_index = UI_helper.selectFunctionsToRun(plotters)
     eval('{}()'.format(plotters[func_index].__name__))

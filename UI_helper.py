@@ -44,6 +44,21 @@ def selectManyDataFilesToPlot(out_dir: str):
     list_of_files = data_files_to_plot.rsplit(',')
     return [int(f) for f in list_of_files]
 
+def select_many_data_ids_to_overlay(choose_out_file: bool = True) -> list[data_id]:
+    data_ids = []
+    add_more_data_str = 'y'
+    while add_more_data_str == 'y':
+        data_name = selectDataToPlot()
+        directories = Navigation_helper.Directories(data_name)
+        if choose_out_file: 
+            data_file_to_plot = selectDataFileToPlot(directories.out_dir)
+        else: 
+            data_file_to_plot = 0
+        legend_name = define_legend_name()
+        data_ids.append(data_id(data_name, data_file_to_plot, legend_name))
+        add_more_data_str = input('continue adding data_ids? \ny for yes \n')
+    return data_ids
+
 def selectFunctionsToRun(functions: list) -> int:
     for index, func in enumerate(functions):
         print('{} : {}.{}'.format(index, func.__module__, func.__name__))
@@ -129,6 +144,14 @@ def select_averaging_length() -> int:
         return 1
     else:
         return int(raw_input)
+
+def name_the_plot() -> str:
+    print('Define the name of the plot:')
+    return input()
+
+def define_legend_name() -> str:
+    print('Define the name of the data for the legend:')
+    return input()
 
 
     
