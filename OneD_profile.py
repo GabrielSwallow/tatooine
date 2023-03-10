@@ -75,7 +75,7 @@ def plot_n_bodies(rho_max: float, data_name: str, data_file_to_plot: int) -> Non
             e,
             omega,
             anomoly,
-        ) = Data_parser_helper.getNbodyInformation_out(data_name, body_id) 
+        ) = Data_parser_helper.getNbodyInformation_out(data_name, objects_in_kep47[body_id]) 
         plt.plot([a[n], a[n]], [0., rho_max], color='red', label=f'{objects_in_kep47[body_id].name} position')
 
 def plot_the_data(fig: plt.Figure, n: int, data_name: str):
