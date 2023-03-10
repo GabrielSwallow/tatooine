@@ -109,9 +109,6 @@ def selectObjectsToPlot(out_dir: str) -> Tuple[list, list]:
         obj_des_list.append(objects_in_kep47[i])
     
     return obj_list, obj_des_list
-        
-
-
 
 def selectAnimateRange(out_dir: str):
     # TODO: change this to be data)name not out_dir
