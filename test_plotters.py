@@ -63,6 +63,7 @@ avg_num = UI_helper.select_averaging_length()
 directories = Navigation_helper.Directories(data_name)
 n_max = Navigation_helper.findMaxFileNumber(directories.out_dir)
 
+@patch('UI_helper.selectPlottingRange')
 @patch('UI_helper.select_averaging_length')
 @patch('UI_helper.selectFunctionsToRun')
 # @patch('UI_helper.selectObjectToPlot')
@@ -75,12 +76,14 @@ def plot_disk_properties(
     mock_selectManyDataFilesToPlot,
     # mock_selectObjectToPlot,
     mock_selectFunctionsToRun,
-    mock_select_averaging_length
+    mock_select_averaging_length,
+    mock_selectPlottingRange,
     ):
     mock_selectDataToPlot.return_value = data_name
     mock_select_averaging_length.return_value = avg_num
     mock_selectDataFileToPlot.return_value = 0
     mock_selectManyDataFilesToPlot.return_value = [0,1, int(n_max/2), int(n_max/2)+1, n_max-1, n_max]
+    mock_selectPlottingRange.return_value = [0, Navigation_helper.findMaxFileNumber(directories.out_dir)]
     # mock_selectObjectToPlot.return_value = body_to_plot
     # mock_selectFunctionsToRun.return_value = 'all'
 
@@ -92,6 +95,7 @@ def plot_disk_properties(
             failed_plots.append('{}.{}'.format(f.__module__, f.__name__))
     return failed_plots
 
+@patch('UI_helper.selectPlottingRange')
 @patch('UI_helper.select_averaging_length')
 @patch('UI_helper.selectFunctionsToRun')
 @patch('UI_helper.selectObjectToPlot')
@@ -106,12 +110,14 @@ def plot_planet_properties(
     mock_selectObjectToPlot,
     mock_selectFunctionsToRun,
     mock_select_averaging_length,
+    mock_selectPlottingRange,
     ):
     mock_selectDataToPlot.return_value = data_name
     mock_select_averaging_length.return_value = 5
     mock_selectDataFileToPlot.return_value = 0
     mock_selectManyDataFilesToPlot.return_value = [0,1, int(n_max/2), int(n_max/2)+1, n_max-1, n_max]
     mock_selectObjectToPlot.return_value = object_id
+    mock_selectPlottingRange.return_value = [0, Navigation_helper.findMaxFileNumber(directories.out_dir)]
     # mock_selectFunctionsToRun.return_value = 'all'
 
     failed_plots = []
