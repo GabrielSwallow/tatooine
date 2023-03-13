@@ -57,7 +57,7 @@ def calculate_migration(data_name: str, obj_index: int, avg_num: int):
     save_path = '{}obj{}_migration.png'.format(directories.plots_dir, obj_index)
     repeated_plots = 0
     while(os.path.isfile(save_path)):
-        save_path = '{}obj{}_migration({}).png'.format(directories.plots_dir, repeated_plots)
+        save_path = '{}obj{}_migration({}).png'.format(directories.plots_dir, obj_index, repeated_plots)
         repeated_plots += 1
     
     print('Saving plot in {0}'.format(save_path))

@@ -53,15 +53,15 @@ def plot_torque_from_averages_with_inner_and_outer():
     object = UI_helper.selectObjectToPlot(directories.out_dir)
     avg_num = UI_helper.select_averaging_length()
     (time, _, _,  _, _, _, _, _, torque_list, _) = Data_parser_helper.get_averages_data(data_name)
-    obj_torque_inner = torque_list[(object.id2)*2]
+    obj_torque_inner = torque_list[(object.id-2)*2]
     obj_torque_outer = torque_list[(object.id-2)*2 + 1]
 
-    rolling_average_obj_torque_inner = tools.rolling_average(obj_torque_inner, avg_num)
+    rolling_average_obj_torque_inner, time = tools.rolling_average(obj_torque_inner, avg_num, x_data=time)
     rolling_average_obj_torque_outer = tools.rolling_average(obj_torque_outer, avg_num)
 
     fig = plt.figure()
-    plt.plot(time, abs(rolling_average_obj_torque_inner), label='torque')
-    plt.plot(time, abs(rolling_average_obj_torque_outer), label='torque')
+    plt.plot(time, abs(rolling_average_obj_torque_inner), label='inner torque')
+    plt.plot(time, abs(rolling_average_obj_torque_outer), label='outer toque')
     plt.xlabel('Time (binary orbits)')
     plt.ylabel('Torque (unknown units)')
     plt.yscale('log')
