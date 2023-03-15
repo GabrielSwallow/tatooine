@@ -26,7 +26,7 @@ def plot_many() -> None:
         plot(data_name, data_file_to_plot)
 
 def plot_one() -> None:
-    plot_params.default()
+    plot_params.TwoD_sigma_viva()
     data_name = UI_helper.selectDataToPlot()
     out_dir = all_data_dir + data_name + '/out'
     data_file_to_plot = UI_helper.selectDataFileToPlot(out_dir)
@@ -134,13 +134,10 @@ def animate() -> None:
     animation.save(save_path)
     plt.close(fig)
 
-def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_colorbars: bool = True):
+def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_colorbars: bool = True, plot_meta_data = False):
     var_data = data.primitive_variable(var, n)[0,:,:] #* data.units['density']
 
     r, phi = data.grid['centers'].X1, data.grid['centers'].X2
-
-    ax.set_ylabel(r'$y\;[a_\mathrm{b}]$',fontsize=fs)
-    ax.set_xlabel(r'$x\;[a_\mathrm{b}]$',fontsize=fs)
 
     # Circle around cylinder, the large central cell
     r_cylinder = data.grid['faces'][0][0]
@@ -211,7 +208,7 @@ def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_co
         colourbar_label = var
     elif var=='rho':
         if logsc:
-            plot = ax.pcolor(X*a_bin, Y*a_bin, np.log10(var_data/np.max(var_data)), cmap='gist_heat')#, vmin=-2)
+            plot = ax.pcolor(X*a_bin, Y*a_bin, np.log10(var_data/np.max(var_data)), cmap='gist_heat') #, vmin=-3)#, vmin=-2)
             colourbar_label = r'$log\Sigma\;\left[\mathrm{g}\,/\mathrm{cm}^{-2}\right]$'
         else:
             plot = ax.pcolor(X*a_bin, Y*a_bin, var_data/np.max(var_data), cmap='viridis')#, vmin=0.0, vmax=0.1)#, vmin=0.01, vmax=2000)#,
@@ -243,6 +240,40 @@ def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_co
 
     #plot = ax.pcolor(R, phi, sigma, cmap='magma', vmin=1.0, vmax=100.)#, norm=colors.LogNorm(vmin=sigma.min(), vmax=sigma.max()))
 
+    ax.set_ylabel(r'$y\;[a_\mathrm{b}]$',fontsize=fs)
+    ax.set_xlabel(r'$x\;[a_\mathrm{b}]$',fontsize=fs)
+
+    if plot_meta_data:
+        time_text = ax.text(
+            0.95, 
+            0.95, 
+            r't={} yr'.format(n*nts),
+            #0.95, 0.95, r't={}$T_\mathrm{{b}}$'.format(n*nts),
+            color='w',
+            size='x-large',
+            #weight='bold',
+            ha='right',
+            va='top',transform=ax.transAxes
+        )
+        time_text.set_bbox(dict(facecolor='red', alpha=0.5, edgecolor='red'))
+        # time_text.set_bbox(dict(facecolor='white', alpha=0.5, edgecolor='black'))
+
+        binary_text = ax.text(
+            0.05, 
+            0.15,
+            r'$e_\mathrm{{gap}} = {0:.2f}$'.format(num_e)+'\n'
+            #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
+            +r'$a_\mathrm{{gap}} = {0:.2f}\,a_\mathrm{{b}}$'.format(a),
+            color='w',
+            size='x-large',
+            #weight='bold',
+            ha='left',
+            va='top',
+            transform=ax.transAxes
+        )
+        binary_text.set_bbox(dict(facecolor='red', alpha=0.5, edgecolor='red'))
+        # Plot ellipse
+        ax.plot(x_ell*a_bin, y_ell*a_bin, '--w', lw=1.5)
     # Colorbar
     if plot_colorbars:
         cb = plt.colorbar(plot, orientation='vertical')
@@ -251,27 +282,6 @@ def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_co
     # Centre of mass
     ax.plot(0,0, '+k', ms=3)
 
-    time_text = ax.text(0.95, 0.95, r't={} yr'.format(n*nts),
-            #0.95, 0.95, r't={}$T_\mathrm{{b}}$'.format(n*nts),
-            color='c',
-            size='x-large',
-            #weight='bold',
-            ha='right',
-            va='top',transform=ax.transAxes)
-
-    # Plot ellipse
-    ax.plot(x_ell*a_bin, y_ell*a_bin, '--w', lw=1.5)
-
-    binary_text = ax.text(0.05, 0.15,
-           r'$e_\mathrm{{gap}} = {0:.2f}$'.format(num_e)+'\n'
-           #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
-           +r'$a_\mathrm{{gap}} = {0:.2f}\,a_\mathrm{{b}}$'.format(a),
-           color='w',
-           size='x-large',
-           #weight='bold',
-           ha='left',
-           va='top',
-           transform=ax.transAxes)
     nbody_text_list = []
     if nbody:
         # plot the planet evolution here
@@ -284,7 +294,9 @@ def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_co
         for nn in range(N):
             xp, yp = x[pid==nn], y[pid==nn]
             ax.plot(xp[tx==n]*a_bin, yp[tx==n]*a_bin, '.b', ms=6.0)
-            if nn>0:
+
+            if plot_meta_data and nn>0: 
+                # if nn>0:
                 #print(e[pid2==1], pid2[pid2==nn])
                 a = aa[pid2==nn]
                 e = ee[pid2==nn]
@@ -295,20 +307,24 @@ def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_co
                 y_ell = r*np.sin(phi)
                 ax.plot(x_ell,y_ell,'w:')
                 
-                nbody_text = ax.text(0.5, 0.15*nn,
-                    r'$e_\mathrm{{p}} = {0:.3e}$'.format(float(e[n]))+'\n'
+            
+                nbody_text = ax.text(
+                    0.5, 0.15*nn,
+                    fr'$e_\mathrm{{{objects_in_kep47[nn].shorthand_name}}} = {round(float(e[n]), 3)}$'+'\n'
                     #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
-                    +r'$a_\mathrm{{p}} = {0:.3e}\,a_\mathrm{{b}}$'.format(float(a[n])),
-                    color='c',
+                    +fr'$a_\mathrm{{{objects_in_kep47[nn].shorthand_name}}} = {round(float(a[n]), 3)}\,a_\mathrm{{b}}$',
+                    color='w',
                     size='x-large',
                     #weight='bold',
                     ha='left',
                     va='top',
-                    transform=ax.transAxes)
+                    transform=ax.transAxes
+                )
+                nbody_text.set_bbox(dict(facecolor='red', alpha=0.5, edgecolor='red'))
+
                 nbody_text_list.append(nbody_text)
-    
-    return time_text, binary_text, *nbody_text_list
-                    
+    if plot_meta_data:
+        return time_text, binary_text, *nbody_text_list
         
 def plot_many_alt() -> None:
     plot_params.default()

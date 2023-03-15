@@ -26,5 +26,17 @@ def poster():
     }
     plt.rcParams.update(params)
 
+def TwoD_sigma_viva():
+    params = {
+        "axes.labelsize":10,
+        "font.size":10,
+        "legend.fontsize":12,
+        "xtick.labelsize":12,
+        "ytick.labelsize":12,
+        "figure.figsize":[6,5],
+        "figure.dpi":500,
+    }
+    plt.rcParams.update(params)
+
 def default():
     plt.rcParams.update(plt.rcParamsDefault)
