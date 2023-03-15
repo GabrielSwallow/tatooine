@@ -15,9 +15,10 @@ size = size*a_bin
 name = 'Kep-47' #name of the simulation
 
 class astrophysical_object():
-    def __init__(self, id: int, name: str) -> None:
+    def __init__(self, id: int, name: str, shorthand_name: str) -> None:
         self.id = id
         self.name = name
+        self.shorthand_name = shorthand_name
 
 class data_id():
     def __init__(self, name: str, out_file: int, legend_name: str) -> None:
@@ -26,9 +27,9 @@ class data_id():
         self.legend_name = legend_name
 
 objects_in_kep47 = [
-    astrophysical_object(0, 'Star 1'),
-    astrophysical_object(1, 'Star 2'),
-    astrophysical_object(2, 'kep47b'),
-    astrophysical_object(3, 'kep47c'),
-    astrophysical_object(4, 'kep47d'),
+    astrophysical_object(0, 'Star 1', '1'),
+    astrophysical_object(1, 'Star 2', '2'),
+    astrophysical_object(2, 'kep47b', '47b'),
+    astrophysical_object(3, 'kep47c', '47d'),
+    astrophysical_object(4, 'kep47d', '47c'),
 ]
