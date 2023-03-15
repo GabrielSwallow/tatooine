@@ -114,7 +114,7 @@ def animate() -> None:
     # animate = plt_anim.FuncAnimation(fig, partial(plot_the_data, out_dir=out_dir, ax=ax), n_max)
 
     for n in range(n_min, n_max+1):
-        plot_the_data(n, directories.out_dir, data, ax, plot_colorbars=False)
+        plot_the_data(n, directories.out_dir, data, ax, show_colorbars=False)
         fig.tight_layout() 
         camera.snap()
         # cb.remove()
@@ -130,11 +130,19 @@ def animate() -> None:
 
     # animate.save(save_path)
 
-    animation = camera.animate()
+    animation = camera.animate(interval=100)
     animation.save(save_path)
     plt.close(fig)
 
-def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_colorbars: bool = True, plot_meta_data = False):
+def plot_the_data(
+        n: int, 
+        out_dir: str, 
+        data: pluto.Pluto, 
+        ax: plt.Axes, 
+        show_colorbars: bool = True, 
+        show_meta_data = False,
+        show_instability_zone = True,
+        ):
     var_data = data.primitive_variable(var, n)[0,:,:] #* data.units['density']
 
     r, phi = data.grid['centers'].X1, data.grid['centers'].X2
@@ -186,7 +194,9 @@ def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_co
     else:
         X = np.multiply(R, np.cos(Phi))
         Y = np.multiply(R, np.sin(Phi))
-        a, num_e, phi_0, x_0, y_0, x_ell, y_ell = gap.ellipse_find(R, Phi, var_data)
+        # a, num_e, phi_0, x_0, y_0, x_ell, y_ell = gap.ellipse_find(R, Phi, var_data)
+        x_0, y_0, phi_0, a, b, num_e = tools.calc_gap_ellipse(var_data, r, phi, fraction=0.1)
+        x_ell, y_ell = tools.get_ellipse_points(x_0, y_0, phi_0, a, b)
     '''
     vr = data.primitive_variable('vx1', n)[0,:,:]
     vphi = data.primitive_variable('vx2', n)[0,:,:]
@@ -243,7 +253,7 @@ def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_co
     ax.set_ylabel(r'$y\;[a_\mathrm{b}]$',fontsize=fs)
     ax.set_xlabel(r'$x\;[a_\mathrm{b}]$',fontsize=fs)
 
-    if plot_meta_data:
+    if show_meta_data:
         time_text = ax.text(
             0.95, 
             0.95, 
@@ -275,12 +285,16 @@ def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_co
         # Plot ellipse
         ax.plot(x_ell*a_bin, y_ell*a_bin, '--w', lw=1.5)
     # Colorbar
-    if plot_colorbars:
+    if show_colorbars:
         cb = plt.colorbar(plot, orientation='vertical')
         cb.set_label(colourbar_label, fontsize=fs)
 
     # Centre of mass
     ax.plot(0,0, '+k', ms=3)
+
+    # Instability Zone
+    if show_instability_zone:
+        plot_instability_zone(ax)
 
     nbody_text_list = []
     if nbody:
@@ -295,7 +309,7 @@ def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_co
             xp, yp = x[pid==nn], y[pid==nn]
             ax.plot(xp[tx==n]*a_bin, yp[tx==n]*a_bin, '.b', ms=6.0)
 
-            if plot_meta_data and nn>0: 
+            if show_meta_data and nn>0: 
                 # if nn>0:
                 #print(e[pid2==1], pid2[pid2==nn])
                 a = aa[pid2==nn]
@@ -323,7 +337,7 @@ def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_co
                 nbody_text.set_bbox(dict(facecolor='red', alpha=0.5, edgecolor='red'))
 
                 nbody_text_list.append(nbody_text)
-    if plot_meta_data:
+    if show_meta_data:
         return time_text, binary_text, *nbody_text_list
         
 def plot_many_alt() -> None:
@@ -533,6 +547,10 @@ def plot_the_data_alt(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plo
                 # nbody_text_list.append(nbody_text)
 
 
+def plot_instability_zone(ax: plt.Axes) -> None:
+    radius = 2.31
+    theta = np.arange(0, 2*np.pi, 0.01)
+    ax.plot(radius*np.cos(theta), radius*np.sin(theta), '--w', lw=1.5)
 
 
 
