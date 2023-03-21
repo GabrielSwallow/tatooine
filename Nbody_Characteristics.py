@@ -51,7 +51,6 @@ def plot_using_dat_planet_and_cavity(data_name: str) -> None:
         # Kep47d_astrophysical_object,
         # cavity_astrophysical_object,
     ]   
-    KepStar1_astrophysical_object
 
     num_plots = len(data_to_plot_list)
     plot_params.one_by_N_subplots(num_plots)
@@ -109,6 +108,7 @@ def plot_the_data_using_dat(
         num_avg: int,
         data_to_plot: str,
         show_final_data: bool = True,
+        show_instability_limit: bool = True,
     ):
 
     t_min = n_min * nts
@@ -132,6 +132,8 @@ def plot_the_data_using_dat(
         ax.plot(t_split_rolling_average, a_split_rolling_average, label = legend_name)
         if show_final_data:
             plotter_helper.plot_Kep47b_for_line_plot(ax, t_split_rolling_average[0], t_split_rolling_average[-1])
+        if show_instability_limit:
+            plotter_helper.plot_instability_zone_for_line_plot(ax, t_split_rolling_average[0], t_split_rolling_average[-1])
         ax.set_ylabel(r'Semi-Major Axis [$\mathrm{a_{bin}}$]')
     ax.set_xlabel('Time [$\mathrm{T_{bin}}$]')
 

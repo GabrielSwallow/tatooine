@@ -69,19 +69,23 @@ def plot_multiple_data_sets_overlayed_subplots(
     plt.close()
 
 
-def plot_instability_zone(ax: plt.Axes) -> None:
-    radius = 2.31
+def plot_instability_zone_for_line_plot(ax: plt.Axes, t_min: float, t_max: float) -> None:
+    radius = instability_limit_astrophysical_object.radius
+    ax.plot([t_min,t_max], [radius, radius], 'b--', linewidth = 2, label='instability limit')
+
+def plot_Kep47b_for_line_plot(ax: plt.Axes, t_min: float, t_max: float) -> None:
+    radius = Kep47b_astrophysical_object.radius
+    ax.plot([t_min,t_max], [radius, radius], 'g--', linewidth = 2, label='kep47b final orbit')
+
+def plot_instability_zone_for_twoD_sigma(ax: plt.Axes) -> None:
+    radius = instability_limit_astrophysical_object.radius
     theta = np.arange(0, 2*np.pi, 0.01)
     ax.plot(radius*np.cos(theta), radius*np.sin(theta), '--w', lw=1.5)
 
-def plot_Kep47b_for_line_plot(ax: plt.Axes, t_min: float, t_max: float) -> None:
-    K_47b_radius = objects_in_kep47[2].radius
-    ax.plot([t_min,t_max], [K_47b_radius,K_47b_radius], 'g--', linewidth = 2, label='kep47b final orbit')
-
 def plot_Kepler_47_planets_for_twoD_sigma(ax: plt.Axes) -> None:
-    K_47b_radius = objects_in_kep47[2].radius
-    K_47c_radius = objects_in_kep47[3].radius
-    K_47d_radius = objects_in_kep47[4].radius
+    K_47b_radius = Kep47b_astrophysical_object.radius
+    K_47c_radius = Kep47c_astrophysical_object.radius
+    K_47d_radius = Kep47d_astrophysical_object.radius
     theta = np.arange(0, 2*np.pi, 0.01)
     ax.plot(K_47b_radius*np.cos(theta), K_47b_radius*np.sin(theta), '#fffdcfff', lw=3)
     ax.plot(K_47d_radius*np.cos(theta), K_47d_radius*np.sin(theta), '#fffdcfff', lw=3)
