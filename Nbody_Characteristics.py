@@ -13,53 +13,80 @@ import re
 from Global_variables import *
 import Data_parser_helper
 import plot_params
+import Disc_Characteristics
+import plotter_helper
+
+class possible_data_to_plot():
+    eccentricity = 'eccentricity'
+    semi_major_axis = 'semi major axis'
 
 
 def plot_one_using_dat() -> None:
     data_name = UI_helper.selectDataToPlot()
     plot_using_dat(data_name)
 
+def plot_one_using_dat_planet_and_cavity() -> None:
+    data_name = UI_helper.selectDataToPlot()
+    plot_using_dat_planet_and_cavity(data_name)
+
 def plot_one_using_out() -> None:
     data_name = UI_helper.selectDataToPlot()
     plot_using_out(data_name)
 
-def plot_using_dat(data_name: str) -> None:
-    plot_params.square()
+def plot_using_dat_planet_and_cavity(data_name: str) -> None:
     directories = Navigation_helper.Directories(data_name)
+    n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
+    num_avg = UI_helper.select_averaging_length()
+
+    data_to_plot_list = [
+        # possible_data_to_plot.eccentricity,
+        possible_data_to_plot.semi_major_axis,
+    ]
+
+    objects_to_plot_list = [
+        # KepStar1_astrophysical_object,
+        # KepStar2_astrophysical_object,
+        Kep47b_astrophysical_object,
+        # Kep47c_astrophysical_object,
+        # Kep47d_astrophysical_object,
+        # cavity_astrophysical_object,
+    ]   
+    KepStar1_astrophysical_object
+
+    num_plots = len(data_to_plot_list)
+    plot_params.one_by_N_subplots(num_plots)
+    fig, axs = plt.subplots(1, num_plots, sharex= 'all')
+    if num_plots == 1: axs = [axs]
+
+    for object_to_plot in objects_to_plot_list:
+        for j, data_to_plot in enumerate(data_to_plot_list):
+            if object_to_plot == cavity_astrophysical_object:
+                Disc_Characteristics.plot_the_data_gap_parameters_out(axs[j], data_name, n_min, n_max, 10, legend_name = 'cavity', data_to_plot = data_to_plot)
+            else:
+                plot_the_data_using_dat(axs[j], data_name, object_to_plot.name, object_to_plot, n_min, n_max, num_avg, data_to_plot)
+    plt.legend()
+    fig.tight_layout()
     
+    save_path = '{}orbital_elements_many_objects_{}-{}.png'.format(directories.plots_dir, n_min, n_max)
+    repeated_plots = 0
+    while(os.path.isfile(save_path)):
+        save_path = '{}orbital_elements_many_objects_{}-{}({}).png'.format(directories.plots_dir, n_min, n_max, repeated_plots)
+        repeated_plots += 1
+    
+    print('Saving plot in {0}'.format(save_path))
+    fig.savefig(save_path)
+    plt.close(fig)
+
+def plot_using_dat(data_name: str) -> None:
+    directories = Navigation_helper.Directories(data_name)
     object = UI_helper.selectObjectToPlot(directories.out_dir)
     n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
     num_avg = UI_helper.select_averaging_length()
-    t_min = n_min * nts
-    t_max = n_max * nts
-    
-    (
-        time,
-        a,
-        e,
-        period,
-        mass,
-    ) = Data_parser_helper.getNbodyInformation_dat(data_name, object.id) 
 
-    i_min, i_max = tools.time_split(time, t_min, t_max)
-    t_split_rolling_average = tools.rolling_average(time[i_min:i_max], num_avg)
-    a_split_rolling_average = tools.rolling_average(a[i_min:i_max], num_avg)
-    e_split_rolling_average = tools.rolling_average(e[i_min:i_max], num_avg)
-
-    fig, axs = plt.subplots(2,1, sharex= 'all')
-
-    fin = len(time) - 1
-    axs[0].plot(t_split_rolling_average, a_split_rolling_average)
-    axs[0].set_title(r'Semi-Major Axis [$\mathrm{a_{bin}}$]')
-    
-    axs[1].plot(t_split_rolling_average, e_split_rolling_average)
-    axs[1].set_title(r'Eccentricity [$\mathrm{e}$]')
-    
-    # axs[2].plot(time, period)
-    # axs[2].set_title('period [$\mathrm{Rad}$]')
-    axs[1].set(xlabel = 'Time [$\mathrm{T_{bin}}$]')
-    fig.suptitle('Orbital Elements of {}'.format(object.name))
-    
+    plot_params.one_by_two_subplot()
+    fig, axs = plt.subplots(1, 2, sharex= 'all')
+    plot_the_data_using_dat(axs[0], data_name, '', object, n_min, n_max, num_avg, possible_data_to_plot.eccentricity)
+    plot_the_data_using_dat(axs[1], data_name, '', object, n_min, n_max, num_avg, possible_data_to_plot.semi_major_axis)
     fig.tight_layout()
     
     save_path = '{}obj{}_orbital_elements_dat_{}-{}.png'.format(directories.plots_dir, object.id, n_min, n_max)
@@ -71,6 +98,44 @@ def plot_using_dat(data_name: str) -> None:
     print('Saving plot in {0}'.format(save_path))
     fig.savefig(save_path)
     plt.close(fig)
+
+def plot_the_data_using_dat(
+        ax: plt.Axes, 
+        data_name: str, 
+        legend_name: str,
+        object: astrophysical_object,
+        n_min: int, 
+        n_max: int,
+        num_avg: int,
+        data_to_plot: str,
+        show_final_data: bool = True,
+    ):
+
+    t_min = n_min * nts
+    t_max = n_max * nts
+    (
+        time,
+        a,
+        e,
+        period,
+        mass,
+    ) = Data_parser_helper.getNbodyInformation_dat(data_name, object.id) 
+
+    i_min, i_max = tools.time_split(time, t_min, t_max)
+
+    if data_to_plot == 'eccentricity':
+        e_split_rolling_average, t_split_rolling_average = tools.rolling_average(num_avg, e[i_min:i_max], time)
+        ax.plot(t_split_rolling_average, e_split_rolling_average, label = legend_name)
+        ax.set_ylabel(r'Eccentricity')
+    elif data_to_plot == 'semi major axis':
+        a_split_rolling_average, t_split_rolling_average = tools.rolling_average(num_avg, a[i_min:i_max], time)
+        ax.plot(t_split_rolling_average, a_split_rolling_average, label = legend_name)
+        if show_final_data:
+            plotter_helper.plot_Kep47b_for_line_plot(ax, t_split_rolling_average[0], t_split_rolling_average[-1])
+        ax.set_ylabel(r'Semi-Major Axis [$\mathrm{a_{bin}}$]')
+    ax.set_xlabel('Time [$\mathrm{T_{bin}}$]')
+
+    return object, n_min, n_max
 
 def plot_using_out(data_name: str) -> None:
     plot_params.square()
@@ -255,6 +320,11 @@ def plot_resonance_dat_fit() -> None:
     plt.close(fig)
     
 if __name__ == '__main__':
-    plotters = [plot_one_using_dat, plot_one_using_out, plot_resonance_dat, plot_resonance_dat_fit]
+    plotters = [
+        plot_one_using_dat, 
+        plot_one_using_dat_planet_and_cavity,
+        plot_one_using_out, 
+        plot_resonance_dat, 
+        plot_resonance_dat_fit]
     func_index = UI_helper.selectFunctionsToRun(plotters)
     eval('{}()'.format(plotters[func_index].__name__))
