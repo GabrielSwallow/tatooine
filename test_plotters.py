@@ -46,8 +46,8 @@ disk_properties_plotters = [
 ]
 
 planet_properties_plotters = [
-    # Nbody_Characteristics.plot_one_using_dat,
-    Nbody_Characteristics.plot_one_using_out,
+    Nbody_Characteristics.plot_one_using_dat,
+    # Nbody_Characteristics.plot_one_using_out,
     Accretion.plot_one_planet_accretion,
     migration.plot_migration_one,
 ]
@@ -82,7 +82,7 @@ def plot_disk_properties(
     mock_selectDataToPlot.return_value = data_name
     mock_select_averaging_length.return_value = avg_num
     mock_selectDataFileToPlot.return_value = 0
-    mock_selectManyDataFilesToPlot.return_value = [0,1, int(n_max/2), int(n_max/2)+1, n_max-1, n_max]
+    mock_selectManyDataFilesToPlot.return_value = [0, int(n_max/2),  n_max]
     mock_selectPlottingRange.return_value = [0, Navigation_helper.findMaxFileNumber(directories.out_dir)]
     # mock_selectObjectToPlot.return_value = body_to_plot
     # mock_selectFunctionsToRun.return_value = 'all'
