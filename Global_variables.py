@@ -41,8 +41,9 @@ KepStar2_astrophysical_object = astrophysical_object(1, 'Star 2', '2', 1.)
 Kep47b_astrophysical_object = astrophysical_object(2, 'kep47b', '47b', 3.53)
 Kep47c_astrophysical_object = astrophysical_object(3, 'kep47c', '47d', 8.5844)
 Kep47d_astrophysical_object = astrophysical_object(4, 'kep47d', '47c', 11.8330)
-cavity_astrophysical_object = astrophysical_object(5, 'Cavity', 'gap', 0)
+cavity_astrophysical_object = astrophysical_object(5, 'Cavity', 'gap', 0.)
 instability_limit_astrophysical_object = astrophysical_object(6, 'instability limit', 'crit', 2.31)
+Jupiter_astrophysical_object = astrophysical_object(7, 'Jupiter', 'J', 0.)
 
 objects_in_kep47 = [
     KepStar1_astrophysical_object,
