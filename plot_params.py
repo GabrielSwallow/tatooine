@@ -11,6 +11,7 @@ def square():
         "xtick.labelsize":16,
         "ytick.labelsize":16,
         "figure.figsize": [9,8],
+        "figure.dpi":500,
     }
     plt.rcParams.update(params)
 
