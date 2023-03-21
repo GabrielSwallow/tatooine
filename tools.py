@@ -380,17 +380,30 @@ def time_split(time: list, t_min: int, t_max: int) -> list:
     
     return i_min, i_max
 
-def rolling_average(data: list, avg_num: int, x_data: list = None) -> list:
+def rolling_average(avg_num: int, data: list = None, x_data: list = None) -> list:
+    ''' 
+    returns
+        (
+            rolling_avg_data
+            optional: rolling_avg_x_datea
+        )
+    
+    '''
     list_len = int(len(data))
     if isinstance(x_data, (list, tuple, np.ndarray)):
-        return (
-            np.array([np.mean(data[i:(i+avg_num)]) for i in range(list_len - avg_num)]),
-            np.array(x_data[0:list_len - avg_num])
-        )
-    else:
-        return np.array(
-            [np.mean(data[i:(i+avg_num)]) for i in range(list_len - avg_num)]
-        )
+        if isinstance(data, (list, tuple, np.ndarray)):
+            return (
+                np.array(
+                    [np.mean(data[i:(i+avg_num)]) for i in range(list_len - avg_num)]
+                    ),
+                np.array(x_data[0:list_len - avg_num])
+            )
+        else:
+            return np.array(x_data[0:list_len - avg_num])
+
+    return np.array(
+        [np.mean(data[i:(i+avg_num)]) for i in range(list_len - avg_num)]
+    )
         
         
 
