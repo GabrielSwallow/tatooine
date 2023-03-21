@@ -43,7 +43,11 @@ def plot_using_dat_planet_and_cavity(data_name: str) -> None:
         possible_data_to_plot.semi_major_axis,
     ]
 
+    Jupiter_astrophysical_object.id = 2
+    Kep47b_astrophysical_object.id = 3
+
     objects_to_plot_list = [
+        Jupiter_astrophysical_object,
         # KepStar1_astrophysical_object,
         # KepStar2_astrophysical_object,
         Kep47b_astrophysical_object,
@@ -57,12 +61,17 @@ def plot_using_dat_planet_and_cavity(data_name: str) -> None:
     fig, axs = plt.subplots(1, num_plots, sharex= 'all')
     if num_plots == 1: axs = [axs]
 
+    show_final_data = False
+    show_instability_limit = True
     for object_to_plot in objects_to_plot_list:
         for j, data_to_plot in enumerate(data_to_plot_list):
             if object_to_plot == cavity_astrophysical_object:
                 Disc_Characteristics.plot_the_data_gap_parameters_out(axs[j], data_name, n_min, n_max, 10, legend_name = 'cavity', data_to_plot = data_to_plot)
             else:
-                plot_the_data_using_dat(axs[j], data_name, object_to_plot.name, object_to_plot, n_min, n_max, num_avg, data_to_plot)
+                plot_the_data_using_dat(axs[j], data_name, object_to_plot.name, object_to_plot, n_min, n_max, num_avg, data_to_plot, show_final_data, show_instability_limit)
+                show_final_data = False
+                show_instability_limit = False
+
     plt.legend()
     fig.tight_layout()
     
@@ -86,6 +95,7 @@ def plot_using_dat(data_name: str) -> None:
     fig, axs = plt.subplots(1, 2, sharex= 'all')
     plot_the_data_using_dat(axs[0], data_name, '', object, n_min, n_max, num_avg, possible_data_to_plot.eccentricity)
     plot_the_data_using_dat(axs[1], data_name, '', object, n_min, n_max, num_avg, possible_data_to_plot.semi_major_axis)
+    plt.legend()
     fig.tight_layout()
     
     save_path = '{}obj{}_orbital_elements_dat_{}-{}.png'.format(directories.plots_dir, object.id, n_min, n_max)
@@ -107,8 +117,8 @@ def plot_the_data_using_dat(
         n_max: int,
         num_avg: int,
         data_to_plot: str,
-        show_final_data: bool = True,
-        show_instability_limit: bool = True,
+        show_final_data: bool = False,
+        show_instability_limit: bool = False,
     ):
 
     t_min = n_min * nts
