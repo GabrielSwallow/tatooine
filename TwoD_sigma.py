@@ -141,7 +141,8 @@ def plot_the_data(
         ax: plt.Axes, 
         show_colorbars: bool = True, 
         show_meta_data = False,
-        show_instability_zone = True,
+        show_instability_zone = False,
+        show_Kepler_47_planets = False,
         ):
     var_data = data.primitive_variable(var, n)[0,:,:] #* data.units['density']
 
@@ -295,6 +296,10 @@ def plot_the_data(
     # Instability Zone
     if show_instability_zone:
         plot_instability_zone(ax)
+    
+    # Kepler-47 Planets
+    if show_Kepler_47_planets:
+        plot_Kepler_47_planets(ax)
 
     nbody_text_list = []
     if nbody:
@@ -551,6 +556,15 @@ def plot_instability_zone(ax: plt.Axes) -> None:
     radius = 2.31
     theta = np.arange(0, 2*np.pi, 0.01)
     ax.plot(radius*np.cos(theta), radius*np.sin(theta), '--w', lw=1.5)
+
+def plot_Kepler_47_planets(ax: plt.Axes) -> None:
+    K_47b_radius = 3.53
+    K_47d_radius = 8.58
+    K_47c_radius = 11.83
+    theta = np.arange(0, 2*np.pi, 0.01)
+    ax.plot(K_47b_radius*np.cos(theta), K_47b_radius*np.sin(theta), '#fffdcfff', lw=3)
+    ax.plot(K_47d_radius*np.cos(theta), K_47d_radius*np.sin(theta), '#fffdcfff', lw=3)
+    ax.plot(K_47c_radius*np.cos(theta), K_47c_radius*np.sin(theta), '#fffdcfff', lw=3)
 
 
 
