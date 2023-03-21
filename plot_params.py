@@ -3,17 +3,41 @@ Sets and updates the parameters for plots
 """
 import matplotlib.pyplot as plt
 
-def square():
+def nice_params():
     params = {
         "axes.labelsize":20,
         "font.size":20,
         "legend.fontsize":16,
         "xtick.labelsize":16,
         "ytick.labelsize":16,
-        "figure.figsize": [9,8],
         "figure.dpi":500,
     }
     plt.rcParams.update(params)
+
+def square():
+    nice_params()
+    plt.rcParams.update(
+        {"figure.figsize": [9,8]}
+    )
+
+def one_by_two_subplot():
+    nice_params()
+    plt.rcParams.update(
+        {"figure.figsize": [18,8]}
+    )
+
+def one_by_N_subplots(N: int):
+    nice_params()
+    horizontal_size = 6 * N
+    plt.rcParams.update(
+        {"figure.figsize": [horizontal_size,5]}
+    )
+
+def two_by_one_subplot():
+    nice_params()
+    plt.rcParams.update(
+        {"figure.figsize": [9,16]}
+    )
 
 def poster():
     params = {
