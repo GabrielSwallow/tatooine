@@ -16,6 +16,7 @@ import Navigation_helper
 from celluloid import Camera
 from Global_variables import *
 import plot_params
+import plotter_helper
 
 def plot_many() -> None:
     plot_params.default()
@@ -140,7 +141,7 @@ def plot_the_data(
         data: pluto.Pluto, 
         ax: plt.Axes, 
         show_colorbars: bool = True, 
-        show_meta_data = False,
+        show_meta_data = True,
         show_instability_zone = False,
         show_Kepler_47_planets = False,
         ):
@@ -264,9 +265,10 @@ def plot_the_data(
             size='x-large',
             #weight='bold',
             ha='right',
-            va='top',transform=ax.transAxes
+            va='top',
+            transform=ax.transAxes,
+            bbox = (dict(facecolor='red', alpha=0.5, edgecolor='red')),
         )
-        time_text.set_bbox(dict(facecolor='red', alpha=0.5, edgecolor='red'))
         # time_text.set_bbox(dict(facecolor='white', alpha=0.5, edgecolor='black'))
 
         binary_text = ax.text(
@@ -280,9 +282,9 @@ def plot_the_data(
             #weight='bold',
             ha='left',
             va='top',
-            transform=ax.transAxes
+            transform=ax.transAxes,
+            bbox = dict(facecolor='red', alpha=0.5, edgecolor='red'),
         )
-        binary_text.set_bbox(dict(facecolor='red', alpha=0.5, edgecolor='red'))
         # Plot ellipse
         ax.plot(x_ell*a_bin, y_ell*a_bin, '--w', lw=1.5)
     # Colorbar
@@ -295,11 +297,11 @@ def plot_the_data(
 
     # Instability Zone
     if show_instability_zone:
-        plot_instability_zone(ax)
+        plotter_helper.plot_instability_zone(ax)
     
     # Kepler-47 Planets
     if show_Kepler_47_planets:
-        plot_Kepler_47_planets(ax)
+        plotter_helper.plot_Kepler_47_planets_for_twoD_sigma(ax)
 
     nbody_text_list = []
     if nbody:
@@ -314,7 +316,7 @@ def plot_the_data(
             xp, yp = x[pid==nn], y[pid==nn]
             ax.plot(xp[tx==n]*a_bin, yp[tx==n]*a_bin, '.b', ms=6.0)
 
-            if show_meta_data and nn>0: 
+            if show_meta_data and nn>1: 
                 # if nn>0:
                 #print(e[pid2==1], pid2[pid2==nn])
                 a = aa[pid2==nn]
@@ -326,20 +328,24 @@ def plot_the_data(
                 y_ell = r*np.sin(phi)
                 ax.plot(x_ell,y_ell,'w:')
                 
+                e_id = r'$e_{{{}}}$'.format(objects_in_kep47[nn].shorthand_name)
+                e_num = r'${0:.3f}$'.format(e[n])
+                a_id = r'$a_{{{}}}$'.format(objects_in_kep47[nn].shorthand_name)
+                a_num = r'${0:.3f}$'.format(a[n])
             
                 nbody_text = ax.text(
-                    0.5, 0.15*nn,
-                    fr'$e_\mathrm{{{objects_in_kep47[nn].shorthand_name}}} = {round(float(e[n]), 3)}$'+'\n'
-                    #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
-                    +fr'$a_\mathrm{{{objects_in_kep47[nn].shorthand_name}}} = {round(float(a[n]), 3)}\,a_\mathrm{{b}}$',
+                    0.5, 
+                    -0.15+0.15*nn,
+                    e_id + r'=' + e_num +'\n' + a_id + r'=' + a_num + r' $a_{b}$',
                     color='w',
                     size='x-large',
                     #weight='bold',
                     ha='left',
                     va='top',
-                    transform=ax.transAxes
+                    transform=ax.transAxes,
+                    bbox = dict(facecolor='red', alpha=0.5, edgecolor='red')
                 )
-                nbody_text.set_bbox(dict(facecolor='red', alpha=0.5, edgecolor='red'))
+
 
                 nbody_text_list.append(nbody_text)
     if show_meta_data:
@@ -506,16 +512,20 @@ def plot_the_data_alt(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plo
     # Plot ellipse
     ax.plot(x_ell*a_bin, y_ell*a_bin, '--w', lw=1.5)
 
-    binary_text = ax.text(0.05, 0.20,
-            r'$e_\mathrm{{gap}} = {0:.2f}$'.format(num_e)+'\n'
-            #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
-            +r'$a_\mathrm{{gap}} = {0:.2f}\,a_\mathrm{{b}}$'.format(a),
-            color='w',
-            size=20,
-            #weight='bold',
-            ha='left',
-            va='top',
-            transform=ax.transAxes)
+    binary_text = ax.text(
+        0.05, 
+        0.20,
+        r'$e_\mathrm{{gap}} = {0:.2f}$'.format(num_e)+'\n'
+        #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
+        +r'$a_\mathrm{{gap}} = {0:.2f}\,a_\mathrm{{b}}$'.format(a),
+        color='w',
+        size=20,
+        #weight='bold',
+        ha='left',
+        va='top',
+        transform=ax.transAxes
+    )
+
     nbody_text_list = []
     if nbody:
         # plot the planet evolution here
@@ -550,21 +560,6 @@ def plot_the_data_alt(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plo
                 #     va='top',
                 #     transform=ax.transAxes)
                 # nbody_text_list.append(nbody_text)
-
-
-def plot_instability_zone(ax: plt.Axes) -> None:
-    radius = 2.31
-    theta = np.arange(0, 2*np.pi, 0.01)
-    ax.plot(radius*np.cos(theta), radius*np.sin(theta), '--w', lw=1.5)
-
-def plot_Kepler_47_planets(ax: plt.Axes) -> None:
-    K_47b_radius = 3.53
-    K_47d_radius = 8.58
-    K_47c_radius = 11.83
-    theta = np.arange(0, 2*np.pi, 0.01)
-    ax.plot(K_47b_radius*np.cos(theta), K_47b_radius*np.sin(theta), '#fffdcfff', lw=3)
-    ax.plot(K_47d_radius*np.cos(theta), K_47d_radius*np.sin(theta), '#fffdcfff', lw=3)
-    ax.plot(K_47c_radius*np.cos(theta), K_47c_radius*np.sin(theta), '#fffdcfff', lw=3)
 
 
 
