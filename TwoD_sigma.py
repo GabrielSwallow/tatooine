@@ -297,7 +297,7 @@ def plot_the_data(
 
     # Instability Zone
     if show_instability_zone:
-        plotter_helper.plot_instability_zone(ax)
+        plotter_helper.plot_instability_zone_for_twoD_sigma(ax)
     
     # Kepler-47 Planets
     if show_Kepler_47_planets:
