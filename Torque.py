@@ -26,7 +26,7 @@ def plot_torque_from_averages():
     avg_num = UI_helper.select_averaging_length()
     (time, _, _,  _, _, _, _, _, torque_list, _) = Data_parser_helper.get_averages_data(data_name)
     obj_torque = torque_list[object.id-2]
-    rolling_average_torque = tools.rolling_average(obj_torque, avg_num)
+    rolling_average_torque = tools.rolling_average(avg_num, obj_torque)
 
     fig = plt.figure()
     plt.plot(time, abs(rolling_average_torque), label='torque')
@@ -56,8 +56,8 @@ def plot_torque_from_averages_with_inner_and_outer():
     obj_torque_inner = torque_list[(object.id-2)*2]
     obj_torque_outer = torque_list[(object.id-2)*2 + 1]
 
-    rolling_average_obj_torque_inner, time = tools.rolling_average(obj_torque_inner, avg_num, x_data=time)
-    rolling_average_obj_torque_outer = tools.rolling_average(obj_torque_outer, avg_num)
+    rolling_average_obj_torque_inner, time = tools.rolling_average(avg_num, obj_torque_inner, x_data=time)
+    rolling_average_obj_torque_outer = tools.rolling_average(avg_num, obj_torque_outer)
 
     fig = plt.figure()
     plt.plot(time, abs(rolling_average_obj_torque_inner), label='inner torque')
@@ -97,8 +97,8 @@ def plot_torque_from_calculation():
         outer_torque_list.append(abs(outer_torque))
         time_list.append(time)
     rolling_average_time = time_list[0:len(time_list)-avg_num]
-    rolling_average_obj_torque_inner = tools.rolling_average(inter_torque_list, avg_num)
-    rolling_average_obj_torque_outer = tools.rolling_average(outer_torque_list, avg_num)
+    rolling_average_obj_torque_inner = tools.rolling_average(avg_num, inter_torque_list)
+    rolling_average_obj_torque_outer = tools.rolling_average(avg_num, outer_torque_list)
 
     fig = plt.figure()
     
