@@ -259,7 +259,7 @@ def plot_the_data(
         time_text = ax.text(
             0.95, 
             0.95, 
-            r't={} yr'.format(n*nts),
+            r'time={} $T_{{bin}}$'.format(n*nts),
             #0.95, 0.95, r't={}$T_\mathrm{{b}}$'.format(n*nts),
             color='w',
             size='x-large',
