@@ -43,17 +43,17 @@ def plot_using_dat_planet_and_cavity(data_name: str) -> None:
         possible_data_to_plot.semi_major_axis,
     ]
 
-    Jupiter_astrophysical_object.id = 2
-    Kep47b_astrophysical_object.id = 3
+    # Jupiter_astrophysical_object.id = 2
+    # Kep47b_astrophysical_object.id = 3
 
     objects_to_plot_list = [
-        Jupiter_astrophysical_object,
+        # Jupiter_astrophysical_object,
         # KepStar1_astrophysical_object,
         # KepStar2_astrophysical_object,
         Kep47b_astrophysical_object,
         # Kep47c_astrophysical_object,
         # Kep47d_astrophysical_object,
-        # cavity_astrophysical_object,
+        cavity_astrophysical_object,
     ]   
 
     num_plots = len(data_to_plot_list)
@@ -61,12 +61,12 @@ def plot_using_dat_planet_and_cavity(data_name: str) -> None:
     fig, axs = plt.subplots(1, num_plots, sharex= 'all')
     if num_plots == 1: axs = [axs]
 
-    show_final_data = False
-    show_instability_limit = True
+    show_final_data = True
+    show_instability_limit = False
     for object_to_plot in objects_to_plot_list:
         for j, data_to_plot in enumerate(data_to_plot_list):
             if object_to_plot == cavity_astrophysical_object:
-                Disc_Characteristics.plot_the_data_gap_parameters_out(axs[j], data_name, n_min, n_max, 10, legend_name = 'cavity', data_to_plot = data_to_plot)
+                Disc_Characteristics.plot_the_data_gap_parameters_out(axs[j], data_name, 'cavity', n_min, n_max, 10, data_to_plot)
             else:
                 plot_the_data_using_dat(axs[j], data_name, object_to_plot.name, object_to_plot, n_min, n_max, num_avg, data_to_plot, show_final_data, show_instability_limit)
                 show_final_data = False
