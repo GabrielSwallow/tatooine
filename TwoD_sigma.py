@@ -348,8 +348,8 @@ def plot_the_data_alt(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plo
 
     r, phi = data.grid['centers'].X1, data.grid['centers'].X2
 
-    ax.set_ylabel(r'$y\;[a_\mathrm{b}]$',fontsize=20)
-    ax.set_xlabel(r'$x\;[a_\mathrm{b}]$',fontsize=20)
+    #ax.set_ylabel(r'$y\;[a_\mathrm{b}]$',fontsize=20)
+    #ax.set_xlabel(r'$x\;[a_\mathrm{b}]$',fontsize=20)
 
     # Circle around cylinder, the large central cell
     r_cylinder = data.grid['faces'][0][0]
@@ -453,34 +453,34 @@ def plot_the_data_alt(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plo
     #plot = ax.pcolor(R, phi, sigma, cmap='magma', vmin=1.0, vmax=100.)#, norm=colors.LogNorm(vmin=sigma.min(), vmax=sigma.max()))
 
     # Colorbar
-    if plot_colorbars:
-        cb = plt.colorbar(plot, orientation='vertical')
-        cb.set_label(colourbar_label, fontsize=fs)
+    # if plot_colorbars:
+    #     cb = plt.colorbar(plot, orientation='vertical')
+    #     cb.set_label(colourbar_label, fontsize=fs)
 
     # Centre of mass
-    ax.plot(0,0, '+k', ms=3)
+    #ax.plot(0,0, '+k', ms=3)
 
-    time_text = ax.text(0.95, 0.98, r't={} yr'.format(n*nts),
-            #0.95, 0.95, r't={}$T_\mathrm{{b}}$'.format(n*nts),
-            color='b',
-            size=20,
-            #weight='bold',
-            ha='right',
-            va='top',transform=ax.transAxes)
+    # time_text = ax.text(0.95, 0.98, r't={} yr'.format(n*nts),
+    #         #0.95, 0.95, r't={}$T_\mathrm{{b}}$'.format(n*nts),
+    #         color='b',
+    #         size=20,
+    #         #weight='bold',
+    #         ha='right',
+    #         va='top',transform=ax.transAxes)
 
     # Plot ellipse
     ax.plot(x_ell*a_bin, y_ell*a_bin, '--w', lw=1.5)
 
-    binary_text = ax.text(0.05, 0.20,
-            r'$e_\mathrm{{gap}} = {0:.2f}$'.format(num_e)+'\n'
-            #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
-            +r'$a_\mathrm{{gap}} = {0:.2f}\,a_\mathrm{{b}}$'.format(a),
-            color='w',
-            size=20,
-            #weight='bold',
-            ha='left',
-            va='top',
-            transform=ax.transAxes)
+    # binary_text = ax.text(0.05, 0.20,
+    #         r'$e_\mathrm{{gap}} = {0:.2f}$'.format(num_e)+'\n'
+    #         #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
+    #         +r'$a_\mathrm{{gap}} = {0:.2f}\,a_\mathrm{{b}}$'.format(a),
+    #         color='w',
+    #         size=20,
+    #         #weight='bold',
+    #         ha='left',
+    #         va='top',
+    #         transform=ax.transAxes)
     nbody_text_list = []
     if nbody:
         # plot the planet evolution here
@@ -502,7 +502,7 @@ def plot_the_data_alt(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plo
                 r = a[n]*(1.0-e[n]**2)/(1.0-e[n]*np.cos(phi-phi_0))
                 x_ell = r*np.cos(phi)
                 y_ell = r*np.sin(phi)
-                #ax.plot(x_ell,y_ell,'w:')
+                ax.plot(x_ell,y_ell,'w:')
                 
                 # nbody_text = ax.text(0.5, 0.15*nn,
                 #     r'$e_\mathrm{{p}} = {0:.3e}$'.format(float(e[n]))+'\n'

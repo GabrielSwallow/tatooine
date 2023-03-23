@@ -23,6 +23,58 @@ def plot_one_using_out() -> None:
     data_name = UI_helper.selectDataToPlot()
     plot_using_out(data_name)
 
+def plot_using_dat_planet_and_cavity(data_name: str) -> None:
+    directories = Navigation_helper.Directories(data_name)
+    n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
+    num_avg = UI_helper.select_averaging_length()
+
+    data_to_plot_list = [
+        possible_data_to_plot.eccentricity,
+        # possible_data_to_plot.semi_major_axis,
+    ]
+
+    # Jupiter_astrophysical_object.id = 2
+    # Kep47b_astrophysical_object.id = 3
+
+    objects_to_plot_list = [
+        # Jupiter_astrophysical_object,
+        # KepStar1_astrophysical_object,
+        # KepStar2_astrophysical_object,
+        Kep47b_astrophysical_object,
+        # Kep47c_astrophysical_object,
+        # Kep47d_astrophysical_object,
+        cavity_astrophysical_object,
+    ]   
+
+    num_plots = len(data_to_plot_list)
+    plot_params.one_by_N_subplots(num_plots)
+    fig, axs = plt.subplots(1, num_plots, sharex= 'all')
+    if num_plots == 1: axs = [axs]
+
+    show_final_data = True
+    show_instability_limit = False
+    for object_to_plot in objects_to_plot_list:
+        for j, data_to_plot in enumerate(data_to_plot_list):
+            if object_to_plot == cavity_astrophysical_object:
+                Disc_Characteristics.plot_the_data_gap_parameters_out(axs[j], data_name, 'cavity', n_min, n_max, 10, data_to_plot)
+            else:
+                plot_the_data_using_dat(axs[j], data_name, object_to_plot.name, object_to_plot, n_min, n_max, num_avg, data_to_plot, show_final_data, show_instability_limit)
+                show_final_data = False
+                show_instability_limit = False
+
+    plt.legend()
+    fig.tight_layout()
+    
+    save_path = '{}orbital_elements_many_objects_{}-{}.png'.format(directories.plots_dir, n_min, n_max)
+    repeated_plots = 0
+    while(os.path.isfile(save_path)):
+        save_path = '{}orbital_elements_many_objects_{}-{}({}).png'.format(directories.plots_dir, n_min, n_max, repeated_plots)
+        repeated_plots += 1
+    
+    print('Saving plot in {0}'.format(save_path))
+    fig.savefig(save_path)
+    plt.close(fig)
+
 def plot_using_dat(data_name: str) -> None:
     plot_params.square()
     directories = Navigation_helper.Directories(data_name)

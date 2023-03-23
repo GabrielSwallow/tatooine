@@ -374,7 +374,7 @@ def plot_eject():
     l5 = ax.plot(gap_time, gap_a, 'm:')
     ax.set_ylabel(r'Semi-Major Axis ($a_{bin}$)', size = 14)
     ax.set_xlabel(r'Time ($T_{bin}$)', size = 14)
-    plt.legend(['planet 1', 'planet 2','instability limit', 'Kep47b a', 'gap radius'])
+    plt.legend(['Jupiter analogue', 'Neptune Analogue','instability limit', 'Kep47b a', 'gap radius'])
     save_path = '../Poster_plots/Finished_plot_4.png'
     repeated_plots = 0
     while (os.path.isfile(save_path)):
