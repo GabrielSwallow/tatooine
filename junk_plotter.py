@@ -24,7 +24,7 @@ import Data_parser_helper
 import Gap_Finder as gap
 
 plots_dir = '../Poster_plots/'
-n = 200
+n = 1000
 n_min = 0
 n_max = n
 t_min = nts * n_min
@@ -33,23 +33,23 @@ t_max = nts * n_max
 a_crit = 2.31
 kepb = 3.53
 
-a3h3_name = 'acc_alpha-3h.03_MJ1.0_aB13.0_2/'
-a4h4_name = 'acc_47a-4_MJ1.0_aB13.0_2/'
-a3h4_name = 'acc_MJ1.0_aB13.0_Ve-3_2/'
-a4h3_name = 'acc_MJ1.0_aB13.0_Ve-4_2/'
-a3h4_na_name = 'MJ1.0_aB13.0_Ve-3_restart/'
+a3h3_name = 'GROUP_alpha-3h.03/GROUP_accretion_tests/acc_alpha-3h.03_MJ1.0_aB13.0_3_restart2/'
+a4h4_name = 'GROUP_47a-4_tests/GROUP_accretion_tests/acc_47a-4_MJ1.0_aB13.0_3_restart2/'
+a3h4_name = 'GROUP_disc_alp1e-3_tests/GROUP_accretion_tests/acc_MJ1.0_aB13.0_Ve-3_3_restart2/'
+a4h3_name = 'GROUP_disc_apha-4_h03/GROUP_accretion_tests/acc_MJ1.0_aB13.0_Ve-4_3_restart2/'
+#a3h4_na_name = 'MJ1.0_aB13.0_Ve-3_restart/'
 
 a3h3_dir = all_data_dir + a3h3_name + 'out/'
 a3h4_dir = all_data_dir + a3h4_name + 'out/'
 a4h3_dir = all_data_dir + a4h3_name + 'out/'
 a4h4_dir = all_data_dir + a4h4_name + 'out/'
-a3h4_na_dir = all_data_dir + a3h4_na_name + 'out/'
+#a3h4_na_dir = all_data_dir + a3h4_na_name + 'out/'
 
 a3h3_data = pluto.Pluto(a3h3_dir)
 a3h4_data = pluto.Pluto(a3h4_dir)
 a4h3_data = pluto.Pluto(a4h3_dir)
 a4h4_data = pluto.Pluto(a4h4_dir)
-a3h4_na_data = pluto.Pluto(a3h4_na_dir)
+#a3h4_na_data = pluto.Pluto(a3h4_na_dir)
 
 (
     a3h3_time_dat,
@@ -79,18 +79,18 @@ a3h4_na_data = pluto.Pluto(a3h4_na_dir)
     a4h4_period_dat,
     a4h4_mass_dat
 ) = Data_parser_helper.getNbodyInformation_dat(a4h4_name, 2)
-(
-    a3h4_na_time_dat,
-    a3h4_na_a_dat,
-    a3h4_na_e_dat,
-    a3h4_na_period_dat,
-    a3h4_na_mass_dat
-) = Data_parser_helper.getNbodyInformation_dat(a3h4_na_name, 2)
+# (
+#     a3h4_na_time_dat,
+#     a3h4_na_a_dat,
+#     a3h4_na_e_dat,
+#     a3h4_na_period_dat,
+#     a3h4_na_mass_dat
+# ) = Data_parser_helper.getNbodyInformation_dat(a3h4_na_name, 2)
 
-#a3h3_Nchar_dat = Data_parser_helper.getNbodyInformation_dat(a3h3_name, 2)
-#a3h4_Nchar_dat = Data_parser_helper.getNbodyInformation_dat(a3h4_name, 2)
-#a4h3_Nchar_dat = Data_parser_helper.getNbodyInformation_dat(a4h3_name, 2)
-#a4h4_Nchar_dat = Data_parser_helper.getNbodyInformation_dat(a4h4_name, 2)
+a3h3_Nchar_dat = Data_parser_helper.getNbodyInformation_dat(a3h3_name, 2)
+a3h4_Nchar_dat = Data_parser_helper.getNbodyInformation_dat(a3h4_name, 2)
+a4h3_Nchar_dat = Data_parser_helper.getNbodyInformation_dat(a4h3_name, 2)
+a4h4_Nchar_dat = Data_parser_helper.getNbodyInformation_dat(a4h4_name, 2)
 
 def plot_141122_vs():
     name = '141122_1_restart/'
@@ -385,7 +385,217 @@ def plot_eject():
     fig.savefig(save_path, bbox_inches = 'tight',dpi = 320)
     plt.close(fig)
 
+def plot_141122_Viva():
+    name = 'GROUP_disc_alp1e-3_tests/141122_1_restart/'
+    dir = all_data_dir + name + 'out/'
+    data = pluto.Pluto(dir)
+    (
+        time_dat,
+        a_dat,
+        e_dat,
+        period_dat,
+        mass_dat
+    ) = Data_parser_helper.getNbodyInformation_dat(name, 2)
+    i_min, i_max = tools.time_split(time_dat, t_min, t_max)
+    
+    gap_time = []
+    gap_e = []
+    gap_a = []
+    for j in range(n_min, n_max+1):
+        gap_time.append(j*nts)
+        var_data = data.primitive_variable(var, j)[0,:,:]
+        R, Phi = np.meshgrid(data.grid['faces'][0], data.grid['faces'][1])
+        (
+            a_j,
+            e_j,
+            _, _, _, _, _
+        ) = gap.ellipse_find_alt(R, Phi, var_data)
+        gap_e.append(abs(e_j))
+        gap_a.append(abs(a_j))
+
+    fig, ax1 = plt.subplots(1,1)
+#    ax1.grid(color = '#AAAAFF')
+    l1, = ax1.plot(time_dat[i_min:i_max],a_dat[i_min:i_max], 'b')
+    #ax2 = ax1.twinx()
+    plotp.poster()
+#    ax2.grid(color = '#FFAAAA')
+    ax1.set_ylim(3.0,13.0)
+    ax1.set_ylabel(r'Semi-Major Axis ($a_{bin}$)', size = 14)
+    ax1.set_xlabel(r'Time ($T_{bin}$)', size = 14)
+    #ax2.set_ylabel(r'Eccentricity ($e$)', size = 14, color = 'r')
+    #l2, = ax2.plot(time_dat[i_min:i_max],e_dat[i_min:i_max], 'r')
+    l2, = ax1.plot(gap_time, gap_a, 'r:')
+    #l4, = ax2.plot(gap_time, gap_e, 'r:')
+    l3, = ax1.plot([t_min,t_max], [kepb,kepb], 'g--', linewidth = 2)
+    ax1.legend([l1,l2,l3], [r'$a_P$','disc density peak', r'$a_{kep47b}$'])
+    save_path = '../Poster_plots/Finished_plot_1.png'
+    repeated_plots = 0
+    while (os.path.isfile(save_path)):
+        save_path = '../Poster_plots/Finished_plot_1({}).png'.format(repeated_plots)
+        repeated_plots += 1
+    
+    print('saving plot in {}'.format(save_path))
+    fig.savefig(save_path, bbox_inches = 'tight', dpi = 320)
+    plt.close(fig)
+
+def plot_4_N_dat_Viva():
+    a3h3_i_min, a3h3_i_max = tools.time_split(a3h3_time_dat, t_min, t_max)
+    a4h3_i_min, a4h3_i_max = tools.time_split(a4h3_time_dat, t_min, t_max)
+    a3h4_i_min, a3h4_i_max = tools.time_split(a3h4_time_dat, t_min, t_max)
+    a4h4_i_min, a4h4_i_max = tools.time_split(a4h4_time_dat, t_min, t_max)
+    #a3h4_na_i_min, a3h4_na_i_max = tools.time_split(a3h4_na_time_dat, t_min, t_max)
+    
+    fig = plt.figure()
+    plotp.poster()
+#   plt.title(r'Planet Migration ($M_P = M_J$)')
+    plt.plot(a4h3_time_dat[a4h3_i_min:a4h3_i_max], a4h3_a_dat[a4h3_i_min:a4h3_i_max], label = r'setup 1')
+    plt.plot(a3h3_time_dat[a3h3_i_min:a3h3_i_max], a3h3_a_dat[a3h3_i_min:a3h3_i_max], label = r'setup 2')
+    plt.plot(a4h4_time_dat[a4h4_i_min:a4h4_i_max], a4h4_a_dat[a4h4_i_min:a4h4_i_max], label = r'setup 3')
+    #plt.plot(a3h4_time_dat[a3h4_i_min:a3h4_i_max], a3h4_a_dat[a3h4_i_min:a3h4_i_max], label = r'setup 4')
+    #plt.plot(a3h4_na_time_dat[a3h4_na_i_min:a3h4_na_i_max], a3h4_na_a_dat[a3h4_na_i_min:a3h4_na_i_max], label = r'setup 4 no accretion')
+    plt.xlabel('Time ($T_{bin}$)', size = 14)
+    #plt.xticks(np.arange(0,10001, step = 2500))
+    plt.ylabel('Semi-Major Axis ($a_{bin}$)', size = 14)
+    #plt.grid()
+    plt.legend()
+    fig.tight_layout
+    save_path = '../Poster_plots/Finished_plot_2.png'
+    repeated_plots = 0
+    while (os.path.isfile(save_path)):
+        save_path = '../Poster_plots/Finished_plot_2({}).png'.format(repeated_plots)
+        repeated_plots += 1
+    
+    print('Saving plot in {}'.format(save_path))
+    fig.savefig(save_path,bbox_inches = 'tight', dpi = 320)
+    plt.close(fig)
+
+def Circ_viva():
+    name = 'GROUP_disc_alp1e-3_tests/MJ1.0_aB13.0_Ve-3_restart5/'
+    dir = all_data_dir + name + 'out/'
+    data = pluto.Pluto(dir)
+    (
+        time_dat,
+        a_dat,
+        e_dat,
+        period_dat,
+        mass_dat
+    ) = Data_parser_helper.getNbodyInformation_dat(name, 2)
+    i_min, i_max = tools.time_split(time_dat, t_min, t_max)
+    
+    gap_time = []
+    gap_e = []
+    gap_a = []
+    for j in range(n_min, n_max+1):
+        gap_time.append(j*nts)
+        var_data = data.primitive_variable(var, j)[0,:,:]
+        R, Phi = np.meshgrid(data.grid['faces'][0], data.grid['faces'][1])
+        (
+            a_j,
+            e_j,
+            _, _, _, _, _
+        ) = gap.ellipse_find(R, Phi, var_data)
+        gap_e.append(abs(e_j))
+        gap_a.append(abs(a_j))
+
+    fig, axs = plt.subplots(2, 1, sharex=True)
+#    ax1.grid(color = '#AAAAFF')
+    l1, = axs[0].plot(time_dat[i_min:i_max],a_dat[i_min:i_max], 'b')
+    l4, = axs[1].plot(time_dat[i_min:i_max], e_dat[i_min:i_max], 'b')
+    l5, = axs[1].plot(gap_time, gap_e, 'r:')
+    #ax2 = ax1.twinx()
+    plotp.poster()
+#    ax2.grid(color = '#FFAAAA')
+    #axs[0].set_ylim(3.0,13.0)
+    axs[0].set_ylabel(r'Semi-Major Axis ($a_{bin}$)', size = 14)
+    axs[1].set_ylabel(r'Eccentricity', size = 14)
+    axs[1].set_xlabel(r'Time ($T_{bin}$)', size = 14)
+    #ax2.set_ylabel(r'Eccentricity ($e$)', size = 14, color = 'r')
+    #l2, = ax2.plot(time_dat[i_min:i_max],e_dat[i_min:i_max], 'r')
+    l2, = axs[0].plot(gap_time, gap_a, 'r:')
+    #l4, = ax2.plot(gap_time, gap_e, 'r:')
+    l3, = axs[0].plot([t_min,t_max], [kepb,kepb], 'g--', linewidth = 2)
+    axs[0].legend([l1,l2,l3], [r'$a_P$',r'Disc cavity', r'$a_{kep47b}$'])
+    axs[1].legend([l4,l5], [r'e_P', r'Disc Eccentricity'])
+    save_path = '../Poster_plots/Finished_plot_1.png'
+    repeated_plots = 0
+    while (os.path.isfile(save_path)):
+        save_path = '../Poster_plots/Finished_plot_1({}).png'.format(repeated_plots)
+        repeated_plots += 1
+    
+    print('saving plot in {}'.format(save_path))
+    fig.savefig(save_path, bbox_inches = 'tight', dpi = 320)
+    plt.close(fig)
+
+def sanity_check():
+    
+    #name = 'GROUP_disc_alp1e-3_tests/GROUP_circularized_disc_tests/281122_MJ1.0_MJ0.1/'
+    name = 'GROUP_disc_alp1e-3_tests/MJ1.0_aB13.0_Ve-3_restart5/'
+    dir = all_data_dir + name + 'out/'
+    data = pluto.Pluto(dir)
+
+    object = UI_helper.selectObjectToPlot(dir)
+    
+    (
+        time_dat_2,
+        a_dat_2,
+        e_dat_2,
+        period_dat_2,
+        mass_dat_2,
+    ) = Data_parser_helper.getNbodyInformation_out(name, object)
+    # (
+    #     time_dat_3,
+    #     a_dat_3,
+    #     e_dat_3,
+    #     period_dat_3,
+    #     mass_dat_3,
+    # ) = Data_parser_helper.getNbodyInformation_dat(name, 3)
+    #i_min_2, i_max_2 = tools.time_split(time_dat_2, t_min, t_max)
+    #i_min_3, i_max_3 = tools.time_split(time_dat_3, t_min, t_max)
+    gap_time = []
+    gap_e = []
+    gap_a = []
+    for j in range(n_min, n_max+1):
+        gap_time.append(j*nts)
+        var_data = data.primitive_variable(var, j)[0,:,:]
+        R, Phi = np.meshgrid(data.grid['faces'][0], data.grid['faces'][1])
+        (
+            a_j,
+            e_j,
+            _, _, _, _, _
+        ) = gap.ellipse_find_alt(R, Phi, var_data)
+        gap_e.append(abs(e_j))
+        gap_a.append(abs(a_j))
+    a_rat = gap_a / a_dat_2[n_min:n_max+1]
+    t_rat = a_rat * np.sqrt(a_rat)
+
+    fig, axs = plt.subplots(1, 1,)
+    l1 = axs.plot(gap_time, a_rat, 'b')
+    l2 = axs.plot(gap_time, t_rat, 'r')
+    axs.set_ylabel('ratio')
+    axs.set_xlabel(r'Time ($T_{BIN}$)')
+    axs.legend([l1,l2], ['Radius', 'Period'])
+    save_path = '../Poster_plots/Finished_plot_1.png'
+    repeated_plots = 0
+    while (os.path.isfile(save_path)):
+        save_path = '../Poster_plots/Finished_plot_1({}).png'.format(repeated_plots)
+        repeated_plots += 1
+    
+    print('saving plot in {}'.format(save_path))
+    fig.savefig(save_path, bbox_inches = 'tight', dpi = 320)
+    plt.close(fig)
+
+
 if __name__ == '__main__':
-    plotters = [plot_141122_vs,plot_4_N_dat,plot_4_2ds, plot_4_2ds_kms, plot_eject]
+    plotters = [
+        plot_141122_vs,
+        plot_4_N_dat,
+        plot_4_2ds,
+        plot_4_2ds_kms,
+        plot_eject,
+        plot_141122_Viva,
+        plot_4_N_dat_Viva,
+        Circ_viva,
+        sanity_check,
+        ]
     func_index = UI_helper.selectFunctionsToRun(plotters)
     eval('{}()'.format(plotters[func_index].__name__))

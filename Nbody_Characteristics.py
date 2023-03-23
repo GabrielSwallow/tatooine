@@ -19,6 +19,10 @@ def plot_one_using_dat() -> None:
     data_name = UI_helper.selectDataToPlot()
     plot_using_dat(data_name)
 
+def plot_one_using_dat_alt() -> None:
+    data_name = UI_helper.selectDataToPlot()
+    plot_using_dat_alt(data_name)
+
 def plot_one_using_out() -> None:
     data_name = UI_helper.selectDataToPlot()
     plot_using_out(data_name)
@@ -110,6 +114,55 @@ def plot_using_dat(data_name: str) -> None:
     # axs[2].plot(time, period)
     # axs[2].set_title('period [$\mathrm{Rad}$]')
     axs[1].set(xlabel = 'Time [$\mathrm{T_{bin}}$]')
+    fig.suptitle('Orbital Elements of {}'.format(object.name))
+    
+    fig.tight_layout()
+    
+    save_path = '{}obj{}_orbital_elements_dat_{}-{}.png'.format(directories.plots_dir, object.id, n_min, n_max)
+    repeated_plots = 0
+    while(os.path.isfile(save_path)):
+        save_path = '{}obj{}_orbital_elements_dat_{}-{}({}).png'.format(directories.plots_dir, object.id, n_min, n_max, repeated_plots)
+        repeated_plots += 1
+    
+    print('Saving plot in {0}'.format(save_path))
+    fig.savefig(save_path)
+    plt.close(fig)
+
+def plot_using_dat_alt(data_name: str) -> None:
+    plot_params.square()
+    directories = Navigation_helper.Directories(data_name)
+    
+    object = UI_helper.selectObjectToPlot(directories.out_dir)
+    n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
+    num_avg = UI_helper.select_averaging_length()
+    t_min = n_min * nts
+    t_max = n_max * nts
+    
+    (
+        time,
+        a,
+        e,
+        period,
+        mass,
+    ) = Data_parser_helper.getNbodyInformation_dat(data_name, object.id) 
+
+    i_min, i_max = tools.time_split(time, t_min, t_max)
+    t_split_rolling_average = tools.rolling_average(time[i_min:i_max], num_avg)
+    a_split_rolling_average = tools.rolling_average(a[i_min:i_max], num_avg)
+    e_split_rolling_average = tools.rolling_average(e[i_min:i_max], num_avg)
+
+    fig, axs = plt.subplots(1,1, sharex= 'all')
+
+    fin = len(time) - 1
+    axs.plot(t_split_rolling_average, a_split_rolling_average)
+    axs.set_title(r'Semi-Major Axis [$\mathrm{a_{bin}}$]')
+    
+    # axs[1].plot(t_split_rolling_average, e_split_rolling_average)
+    # axs[1].set_title(r'Eccentricity [$\mathrm{e}$]')
+    
+    # axs[2].plot(time, period)
+    # axs[2].set_title('period [$\mathrm{Rad}$]')
+    axs.set(xlabel = 'Time [$\mathrm{T_{bin}}$]')
     fig.suptitle('Orbital Elements of {}'.format(object.name))
     
     fig.tight_layout()
@@ -307,6 +360,6 @@ def plot_resonance_dat_fit() -> None:
     plt.close(fig)
     
 if __name__ == '__main__':
-    plotters = [plot_one_using_dat, plot_one_using_out, plot_resonance_dat, plot_resonance_dat_fit]
+    plotters = [plot_one_using_dat, plot_one_using_out, plot_resonance_dat, plot_resonance_dat_fit, plot_one_using_dat_alt]
     func_index = UI_helper.selectFunctionsToRun(plotters)
     eval('{}()'.format(plotters[func_index].__name__))
