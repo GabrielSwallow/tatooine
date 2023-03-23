@@ -24,7 +24,7 @@ def plot_multiple_data_sets_overlayed(
         if plotter_args == None:
             plotter(ax, data_to_plot.name, data_to_plot.legend_name)
         else:
-            plotter(ax, data_to_plot.name, data_to_plot.legend_name, plotter_args)
+            plotter(ax, data_to_plot.name, data_to_plot.legend_name, *plotter_args)
     
     plot_name = UI_helper.name_the_plot() + '_'
 
@@ -50,9 +50,9 @@ def plot_multiple_data_sets_overlayed_subplots(
 
     for data_to_plot in many_data_to_plot:
         if plotter_args == None:
-            plotter(fig, axs, data_to_plot.name, data_to_plot.legend_name)
+            plotter(axs, data_to_plot.name, data_to_plot.legend_name)
         else:
-            plotter(fig, axs, data_to_plot.name, data_to_plot.legend_name, plotter_args)
+            plotter(axs, data_to_plot.name, data_to_plot.legend_name, *plotter_args)
 
     
     plot_name = UI_helper.name_the_plot() + '_'

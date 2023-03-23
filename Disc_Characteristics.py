@@ -98,16 +98,20 @@ def plot_gap_parameters_out() -> None:
 
 def plot_one_multiple_data_sets_gap_parameters_out() -> None:
     data_ids = UI_helper.select_many_data_ids_to_overlay(choose_out_file = False)
-    plotter_helper.plot_multiple_data_sets_overlayed_subplots(data_ids, plot_the_data_gap_parameters_out)
+    n_min, n_max = UI_helper.selectPlottingRange()
+    avg_num = UI_helper.select_averaging_length()
+    plotter_args = [n_min, n_max, avg_num]
+    plotter_helper.plot_multiple_data_sets_overlayed(data_ids, plot_the_data_gap_parameters_out, plotter_args)
 
 def plot_the_data_gap_parameters_out(
         ax: plt.Axes, 
         data_name: str, 
-        n_min: int,
-        n_max: int,
-        avg_num: int,
-        legend_name: str = '', 
-        data_to_plot = 'eccentricity') -> tuple[int]:
+        legend_name: str = '',
+        n_min: int = 0,
+        n_max: int = 0,
+        avg_num: int = 1,
+        data_to_plot: str = 'eccentricity'
+    ) -> tuple[int]:
     directories = Navigation_helper.Directories(data_name)
     
     e = []
@@ -133,13 +137,25 @@ def plot_the_data_gap_parameters_out(
 
     return n_min, n_max
 
+def calculate_total_disc_accretion() -> float:
+    data_name = UI_helper.selectDataToPlot()
+    directories = Navigation_helper.Directories(data_name)
+    (time, _, _, _, _, _, _, _, _, accs) = Data_parser_helper.get_averages_data(data_name)
+    total_disc_accretion = [accs[0][i] + accs[1][i] + accs[2][i] for i in range(len(accs[0]))]
+    delta_t_list = [time[i+1] - time[i] for i in range(len(time) - 1)]
+    acc_tot = sum(
+        [(time[i+1] - time[i])*total_disc_accretion[i] for i in range(len(time) - 1)]
+    )
+    print('total accretion onto disc = {}'.format(acc_tot))
+
 
 if __name__ == '__main__':
     plotters = [
         plot_disc_e_avg, 
         plot_one_multiple_data_sets_overlayed_disc_e_avg, 
         plot_gap_parameters_out, 
-        plot_one_multiple_data_sets_gap_parameters_out
+        plot_one_multiple_data_sets_gap_parameters_out,
+        calculate_total_disc_accretion,
     ]
     func_index = UI_helper.selectFunctionsToRun(plotters)
     eval('{}()'.format(plotters[func_index].__name__))
