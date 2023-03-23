@@ -122,12 +122,14 @@ def selectAnimateRange(out_dir: str):
     data_range = data_range_raw.rsplit(',')
     return [int(f) for f in data_range]
 
-def selectPlottingRange(out_dir: str):
+def selectPlottingRange(out_dir: str = None):
     # TODO: change this to be data)name not out_dir
-    max_file_num = Navigation_helper.findMaxFileNumber(out_dir)
-    print(
-        '\nmax file number: {} \nSelect range of plot \neg 0,50 \nDefault is 0,{}'.format(max_file_num,max_file_num)
-    )
+    if out_dir:
+        max_file_num = Navigation_helper.findMaxFileNumber(out_dir)
+        print('\nmax file number: {} \nSelect range of plot \neg 0,50 \nDefault is 0,{}'.format(max_file_num,max_file_num))
+    else:
+        print('Select range of plot \neg 0,50 \n max file is not known')
+    
     data_range_raw = input()
     if data_range_raw == '':
         data_range_raw = '0,{}'.format(max_file_num)
