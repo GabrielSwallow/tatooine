@@ -251,27 +251,27 @@ def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_co
     # Centre of mass
     ax.plot(0,0, '+k', ms=3)
 
-    time_text = ax.text(0.95, 0.95, r't={} yr'.format(n*nts),
-            #0.95, 0.95, r't={}$T_\mathrm{{b}}$'.format(n*nts),
-            color='c',
-            size='x-large',
-            #weight='bold',
-            ha='right',
-            va='top',transform=ax.transAxes)
+    # time_text = ax.text(0.95, 0.95, r'$t={} T_{}$'.format(n*nts,'{BIN}'),
+    #         #0.95, 0.95, r't={}$T_\mathrm{{b}}$'.format(n*nts),
+    #         color='c',
+    #         size='x-large',
+    #         #weight='bold',
+    #         ha='right',
+    #         va='top',transform=ax.transAxes)
 
     # Plot ellipse
     ax.plot(x_ell*a_bin, y_ell*a_bin, '--w', lw=1.5)
 
-    binary_text = ax.text(0.05, 0.15,
-           r'$e_\mathrm{{gap}} = {0:.2f}$'.format(num_e)+'\n'
-           #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
-           +r'$a_\mathrm{{gap}} = {0:.2f}\,a_\mathrm{{b}}$'.format(a),
-           color='w',
-           size='x-large',
-           #weight='bold',
-           ha='left',
-           va='top',
-           transform=ax.transAxes)
+    # binary_text = ax.text(0.05, 0.15,
+    #        r'$e_\mathrm{{gap}} = {0:.2f}$'.format(num_e)+'\n'
+    #        #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
+    #        +r'$a_\mathrm{{gap}} = {0:.2f}\,a_\mathrm{{b}}$'.format(a),
+    #        color='w',
+    #        size='x-large',
+    #        #weight='bold',
+    #        ha='left',
+    #        va='top',
+    #        transform=ax.transAxes)
     nbody_text_list = []
     if nbody:
         # plot the planet evolution here
@@ -295,17 +295,17 @@ def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_co
                 y_ell = r*np.sin(phi)
                 ax.plot(x_ell,y_ell,'w:')
                 
-                nbody_text = ax.text(0.5, 0.15*nn,
-                    r'$e_\mathrm{{p}} = {0:.3e}$'.format(float(e[n]))+'\n'
-                    #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
-                    +r'$a_\mathrm{{p}} = {0:.3e}\,a_\mathrm{{b}}$'.format(float(a[n])),
-                    color='c',
-                    size='x-large',
-                    #weight='bold',
-                    ha='left',
-                    va='top',
-                    transform=ax.transAxes)
-                nbody_text_list.append(nbody_text)
+                # nbody_text = ax.text(0.5, 0.15*nn,
+                #     r'$e_\mathrm{{p}} = {0:.3e}$'.format(float(e[n]))+'\n'
+                #     #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
+                #     +r'$a_\mathrm{{p}} = {0:.3e}\,a_\mathrm{{b}}$'.format(float(a[n])),
+                #     color='c',
+                #     size='x-large',
+                #     #weight='bold',
+                #     ha='left',
+                #     va='top',
+                #     transform=ax.transAxes)
+                # nbody_text_list.append(nbody_text)
     
     return time_text, binary_text, *nbody_text_list
                     
