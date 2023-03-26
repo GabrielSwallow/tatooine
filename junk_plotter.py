@@ -24,7 +24,7 @@ import Data_parser_helper
 import Gap_Finder as gap
 
 plots_dir = '../Poster_plots/'
-n = 1000
+n = 665
 n_min = 0
 n_max = n
 t_min = nts * n_min
@@ -330,7 +330,7 @@ def plot_4_2ds():
     fig.close()
 
 def plot_eject():
-    name = '281122_MJ1.0_MJ0.1/'
+    name = 'GROUP_disc_alp1e-3_tests/GROUP_circularized_disc_tests/281122_MJ1.0_MJ0.1/'
     dir = all_data_dir + name + 'out/'
     data = pluto.Pluto(dir)
     
