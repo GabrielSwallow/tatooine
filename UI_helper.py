@@ -34,6 +34,15 @@ def selectDataFileToPlot(out_dir: str) -> int:
         data_file_to_plot = max_file_num
     return int(data_file_to_plot)
 
+def select_potential_field_to_plot(data_name: str) -> int:
+    directories = Navigation_helper.Directories(data_name)
+    files = os.listdir(directories.extra_data_dir)
+    print('available data:')
+    for i, file in enumerate(files):
+        print('{} : {}'.format(i, file))
+    file_number = int(input())
+    return files[file_number]
+
 def selectManyDataFilesToPlot(out_dir: str):
     # TODO: change this to be data)name not out_dir
     max_file_num = Navigation_helper.findMaxFileNumber(out_dir)
