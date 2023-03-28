@@ -15,6 +15,11 @@ def createPlotsFolderIfAbsent(data_name: str) -> None:
     if not os.path.isdir('{}/Plots'.format(data_parent_dir)):
         os.mkdir('{}/Plots'.format(data_parent_dir))
 
+def createDataFolderIfAbsent(data_name: str) -> None:
+    data_parent_dir = all_data_dir + data_name
+    if not os.path.isdir('{}/data'.format(data_parent_dir)):
+        os.mkdir('{}/data'.format(data_parent_dir))
+
 class Directories():
     def __init__(self, data_name):
         self.all_data_dir = all_data_dir
@@ -22,6 +27,7 @@ class Directories():
         self.data_parent_dir = all_data_dir + data_name
         self.plots_dir = self.data_parent_dir + '/Plots/'
         self.out_dir = self.data_parent_dir + '/out'
+        self.extra_data_dir = self.data_parent_dir + '/data'
 
         self.pluto_log_filename = self.out_dir + '/pluto.log'
         self.nbody_elements_filename = self.out_dir + '/nbody_orbital_elements.out'
