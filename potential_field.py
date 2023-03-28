@@ -5,6 +5,7 @@ from tools import x_coord, y_coord, constants
 from numba import jit 
 import UI_helper
 import Navigation_helper
+import seaborn
 
 import pickle
 import os
@@ -85,5 +86,15 @@ def calculate_potential_field():
         pickle.dump(potential_field, f)
     return potential_field
 
+def plot_potential_field():
+    data_name = UI_helper.selectDataToPlot()
+    directories = Navigation_helper.Directories(data_name)
+    data_file_name = UI_helper.select_potential_field_to_plot(directories.data_name)
+    with open(directories.extra_data_dir + data_file_name, 'rb') as f:
+        potential_field = pickle.load(f)
+        seaborn.heatmap(potential_field)
+
 if __name__ == '__main__':
-    x = calculate_potential_field()
+    functions = [calculate_potential_field, plot_potential_field]
+    func_index = UI_helper.selectFunctionsToRun(functions)
+    eval('{}()'.format(functions[func_index].__name__))

@@ -27,7 +27,7 @@ class Directories():
         self.data_parent_dir = all_data_dir + data_name
         self.plots_dir = self.data_parent_dir + '/Plots/'
         self.out_dir = self.data_parent_dir + '/out'
-        self.extra_data_dir = self.data_parent_dir + '/data'
+        self.extra_data_dir = self.data_parent_dir + '/data/'
 
         self.pluto_log_filename = self.out_dir + '/pluto.log'
         self.nbody_elements_filename = self.out_dir + '/nbody_orbital_elements.out'
