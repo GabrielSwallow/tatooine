@@ -2,7 +2,7 @@ import pluto
 import numpy as np
 import copy
 from tools import x_coord, y_coord, constants
-from numba import jit, cuda 
+from numba import jit 
 import UI_helper
 import Navigation_helper
 
@@ -58,7 +58,7 @@ def calculate_potential_field():
     directories = Navigation_helper.Directories(data_name)
     out_file_number = UI_helper.selectDataFileToPlot(directories.out_dir)
     data = pluto.Pluto(directories.out_dir)
-    pickle_name = directories.data_parent_dir + 'potential_field_{}.pkl'.format(out_file_number)
+    pickle_name = directories.extra_data_dir + 'potential_field_{}.pkl'.format(out_file_number)
 
     if os.path.isfile(pickle_name):
         print('\npickle already exists\n')
