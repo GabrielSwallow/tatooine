@@ -19,6 +19,7 @@ def selectDataToPlot(sub_dir_of_data: str = '', datasets = None) -> str:
         return selectDataToPlot(data_name+'/')
 
     Navigation_helper.createPlotsFolderIfAbsent(data_name)
+    Navigation_helper.createDataFolderIfAbsent(data_name)
     return data_name
 
 def selectDataFileToPlot(out_dir: str) -> int:
