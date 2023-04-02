@@ -135,17 +135,17 @@ def plot_the_data_using_dat(
 
     if data_to_plot == 'eccentricity':
         e_split_rolling_average, t_split_rolling_average = tools.rolling_average(num_avg, e[i_min:i_max], time)
-        ax.plot(t_split_rolling_average, e_split_rolling_average, label = legend_name)
+        ax.plot(Unit_conv.time(t_split_rolling_average), Unit_conv.time(e_split_rolling_average), label = legend_name)
         ax.set_ylabel(r'Eccentricity')
     elif data_to_plot == 'semi major axis':
         a_split_rolling_average, t_split_rolling_average = tools.rolling_average(num_avg, a[i_min:i_max], time)
-        ax.plot(t_split_rolling_average, a_split_rolling_average, label = legend_name)
+        ax.plot(Unit_conv.time(t_split_rolling_average), Unit_conv.distance(a_split_rolling_average), label = legend_name)
         if show_final_data:
             plotter_helper.plot_Kep47b_for_line_plot(ax, t_split_rolling_average[0], t_split_rolling_average[-1])
         if show_instability_limit:
             plotter_helper.plot_instability_zone_for_line_plot(ax, t_split_rolling_average[0], t_split_rolling_average[-1])
-        ax.set_ylabel(r'Semi-Major Axis [$\mathrm{a_{bin}}$]')
-    ax.set_xlabel('Time [$\mathrm{T_{bin}}$]')
+        ax.set_ylabel('Semi-Major Axis [' + Unit_conv.distance_label() + ']')
+    ax.set_xlabel('Time [' + Unit_conv.time_label() + ']')
 
     return object, n_min, n_max
 

@@ -1,3 +1,5 @@
+from tools import Unit_conv
+
 all_data_dir = '../Data/'
 global_plots_dir = '../Plots/'
 cart  = False
@@ -10,7 +12,11 @@ size = 20
 Rmax = 70
 fs = 14 # font size
 C0, C1, C2 = 'k', 'b', 'y'
-size = size*a_bin
+
+size = size * Unit_conv.distance(a_bin)
+
+
+
 
 name = 'Kep-47' #name of the simulation
 

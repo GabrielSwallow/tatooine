@@ -66,10 +66,7 @@ def plot_the_data_disc_e_avg(ax: plt.Axes, data_name: str, legend_name: str = ''
 
     (time, _, e, _, _, _, _, _, _, _) = Data_parser_helper.get_averages_data(data_name)
     i_min, i_max = tools.time_split(time, t_min, t_max)
-    ax.plot(time[i_min:i_max], e[i_min:i_max], label = f'{legend_name} gap eccentricity')
-
-
-
+    ax.plot(Unit_conv.time(time[i_min:i_max]), e[i_min:i_max], label = f'{legend_name} gap eccentricity')
 
 def plot_gap_parameters_out() -> None:
     plot_params.square()
@@ -128,11 +125,11 @@ def plot_the_data_gap_parameters_out(
     
     if data_to_plot == 'eccentricity':
         rolling_avg_e, rolling_avg_time = tools.rolling_average(avg_num, e, t)
-        ax.plot(rolling_avg_time, rolling_avg_e, label=legend_name)
+        ax.plot(Unit_conv.time(rolling_avg_time), rolling_avg_e, label=legend_name)
         ax.set_ylabel('Eccentricity [$\mathrm{e}$]')
     elif data_to_plot == 'semi major axis':
         rolling_avg_a, rolling_avg_time = tools.rolling_average(avg_num, a, t)
-        ax.plot(rolling_avg_time, rolling_avg_a, label=legend_name)
+        ax.plot(Unit_conv.time(rolling_avg_time), Unit_conv.distance(rolling_avg_a), label=legend_name)
         ax.set_xlabel('Semi-Major Axis [$\mathrm{a_{bin}}$]')
 
     return n_min, n_max

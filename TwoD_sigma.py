@@ -17,6 +17,7 @@ from celluloid import Camera
 from Global_variables import *
 import plot_params
 import plotter_helper
+from tools import Unit_conv
 
 def plot_many() -> None:
     plot_params.default()
@@ -146,13 +147,14 @@ def plot_the_data(
         show_Kepler_47_planets = False,
         ):
     var_data = data.primitive_variable(var, n)[0,:,:] #* data.units['density']
+    a_bin_in_distance_unit = Unit_conv.distance(a_bin)
 
     r, phi = data.grid['centers'].X1, data.grid['centers'].X2
 
     # Circle around cylinder, the large central cell
     r_cylinder = data.grid['faces'][0][0]
-    cylinder = patches.Arc((0,0), width=2*r_cylinder,
-                                height=2*r_cylinder)
+    cylinder = patches.Arc((0,0), width=2*Unit_conv.distance(r_cylinder),
+                                height=2*Unit_conv.distance(r_cylinder))
     ax.add_patch(cylinder)
 
     # These are both 2D meshes, but R[φ][r] is the same for all θ, Phi[φ][r] is the same for all r
@@ -211,20 +213,43 @@ def plot_the_data(
     if var=='vx1':
         # TODO: change so the radial velocity isn't scaled to kepler velocity
         if logsc: print('\nWarning: logsc==True, but vx can be -ve. \nplotting not log\n')
-        plot = ax.pcolor(X*a_bin, Y*a_bin, var_data, cmap='bwr') #, vmin=-0.05, vmax=0.05)
+        plot = ax.pcolor(
+            X*a_bin_in_distance_unit, 
+            Y*a_bin_in_distance_unit, 
+            var_data, 
+            cmap='bwr'
+        ) #, vmin=-0.05, vmax=0.05)
         colourbar_label = var
     elif var=='vx2':
         if logsc: print('\nWarning: logsc==True, but vx can be -ve. \nplotting not log\n')
         # plot = ax.pcolor(X*a_bin, Y*a_bin, (var_data*np.sqrt(R[:-1,:-1])/corr), cmap='bwr') #, vmin=-0.05, vmax=0.05)
-        plot = ax.pcolor(X*a_bin, Y*a_bin, np.log(var_data*np.sqrt(R[:-1,:-1])/corr), cmap='bwr', vmin=-0.1, vmax=0.1)
+        plot = ax.pcolor(
+            X*a_bin_in_distance_unit, 
+            Y*a_bin_in_distance_unit, 
+            np.log(var_data*np.sqrt(R[:-1,:-1])/corr), 
+            cmap='bwr', 
+            vmin=-0.1, 
+            vmax=0.1
+        )
         colourbar_label = var
     elif var=='rho':
         if logsc:
-            plot = ax.pcolor(X*a_bin, Y*a_bin, np.log10(var_data/np.max(var_data)), cmap='gist_heat') #, vmin=-3)#, vmin=-2)
-            colourbar_label = r'$log\Sigma\;\left[\mathrm{g}\,/\mathrm{cm}^{-2}\right]$'
+            plot = ax.pcolor(
+                X*a_bin_in_distance_unit, 
+                Y*a_bin_in_distance_unit, 
+                np.log10(Unit_conv.surface_density(var_data, 'grams', 'cm')), # /np.max(var_data) 
+                cmap='gist_heat',
+            ) #, vmin=-3)#, vmin=-2)
+            colourbar_label = r'$log\Sigma$' + ' [' + Unit_conv.surface_density_label('grams', 'cm') + ']'
+            # fr'$log\Sigma\;\left[{{{Unit_conv.surface_density_label()}}}\right]$'
         else:
-            plot = ax.pcolor(X*a_bin, Y*a_bin, var_data/np.max(var_data), cmap='viridis')#, vmin=0.0, vmax=0.1)#, vmin=0.01, vmax=2000)#,
-            colourbar_label = r'$log\Sigma\;\left[\mathrm{g}\,/\mathrm{cm}^{-2}\right]$'
+            plot = ax.pcolor(
+                X*a_bin_in_distance_unit, 
+                Y*a_bin_in_distance_unit, 
+                Unit_conv.surface_density(var_data, 'grams', 'cm'), 
+                cmap='viridis',
+            )#, vmin=0.0, vmax=0.1)#, vmin=0.01, vmax=2000)#,
+            colourbar_label = r'$\Sigma$' + ' [' + Unit_conv.surface_density_label('grams', 'cm') + ']' #fr'$log\Sigma\;\left[{{{Unit_conv.surface_density_label()}}}\right]$'
     else:
         raise Exception('invalid var chosen')
 
@@ -252,14 +277,14 @@ def plot_the_data(
 
     #plot = ax.pcolor(R, phi, sigma, cmap='magma', vmin=1.0, vmax=100.)#, norm=colors.LogNorm(vmin=sigma.min(), vmax=sigma.max()))
 
-    ax.set_ylabel(r'$y\;[a_\mathrm{b}]$',fontsize=fs)
-    ax.set_xlabel(r'$x\;[a_\mathrm{b}]$',fontsize=fs)
+    ax.set_ylabel('y [' + Unit_conv.distance_label() + ']',fontsize=fs)
+    ax.set_xlabel('x [' + Unit_conv.distance_label() + ']',fontsize=fs)
 
     if show_meta_data:
         time_text = ax.text(
             0.95, 
             0.95, 
-            r'time={} $T_{{bin}}$'.format(n*nts),
+            r'time={} {}'.format(Unit_conv.time(n*nts), Unit_conv.time_label()),
             #0.95, 0.95, r't={}$T_\mathrm{{b}}$'.format(n*nts),
             color='w',
             size='x-large',
@@ -276,7 +301,8 @@ def plot_the_data(
             0.15,
             r'$e_\mathrm{{gap}} = {0:.2f}$'.format(num_e)+'\n'
             #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
-            +r'$a_\mathrm{{gap}} = {0:.2f}\,a_\mathrm{{b}}$'.format(a),
+            +r'$a_\mathrm{{gap}} = {0:.2f}\,$'.format(Unit_conv.distance(a))
+            +Unit_conv.distance_label(),
             color='w',
             size='x-large',
             #weight='bold',
@@ -286,7 +312,12 @@ def plot_the_data(
             bbox = dict(facecolor='red', alpha=0.5, edgecolor='red'),
         )
         # Plot ellipse
-        ax.plot(x_ell*a_bin, y_ell*a_bin, '--w', lw=1.5)
+        ax.plot(
+            x_ell*a_bin_in_distance_unit, 
+            y_ell*a_bin_in_distance_unit, 
+            '--w', 
+            lw=1.5
+        )
     # Colorbar
     if show_colorbars:
         cb = plt.colorbar(plot, orientation='vertical')
@@ -314,7 +345,7 @@ def plot_the_data(
         tx = txn[pid ==0]
         for nn in range(N):
             xp, yp = x[pid==nn], y[pid==nn]
-            ax.plot(xp[tx==n]*a_bin, yp[tx==n]*a_bin, '.b', ms=6.0)
+            ax.plot(xp[tx==n]*a_bin_in_distance_unit, yp[tx==n]*a_bin_in_distance_unit, '.b', ms=6.0)
 
             if show_meta_data and nn>1: 
                 # if nn>0:
@@ -326,7 +357,11 @@ def plot_the_data(
                 r = a[n]*(1.0-e[n]**2)/(1.0-e[n]*np.cos(phi-phi_0))
                 x_ell = r*np.cos(phi)
                 y_ell = r*np.sin(phi)
-                ax.plot(x_ell,y_ell,'w:')
+                ax.plot(
+                    Unit_conv.distance(x_ell),
+                    Unit_conv.distance(y_ell),
+                    'w:'
+                )
                 
                 e_id = r'$e_{{{}}}$'.format(objects_in_kep47[nn].shorthand_name)
                 e_num = r'${0:.3f}$'.format(e[n])
@@ -336,7 +371,7 @@ def plot_the_data(
                 nbody_text = ax.text(
                     0.5, 
                     -0.15+0.15*nn,
-                    e_id + r'=' + e_num +'\n' + a_id + r'=' + a_num + r' $a_{b}$',
+                    e_id + r'=' + e_num +'\n' + a_id + r'=' + a_num + Unit_conv.distance_label(),
                     color='w',
                     size='x-large',
                     #weight='bold',
@@ -374,6 +409,6 @@ def plot_the_data(
 
 
 if __name__ == '__main__':
-    plotters = [plot_one, plot_many, plot_one_velocities, animate, plot_many_alt]
+    plotters = [plot_one, plot_many, plot_one_velocities, animate]
     func_index = UI_helper.selectFunctionsToRun(plotters)
     eval('{}()'.format(plotters[func_index].__name__))
