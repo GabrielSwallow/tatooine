@@ -9,8 +9,8 @@ def get_initial_planet_masses(data_name: str):
     with open(directories.planet_ini) as f:
         lines = f.readlines()
         nbodies = lines[21:]
-        masses = [1e-4]
-        # masses = [float(nbody_data.split()[0]) for nbody_data in nbodies]
+        # masses = [1e-4]
+        masses = [float(nbody_data.split()[0]) for nbody_data in nbodies]
     return masses    
 
 def getAnalysisOutMetaInfo(data_name: str):
