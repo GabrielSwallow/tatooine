@@ -145,6 +145,7 @@ def plot_the_data(
         show_meta_data = True,
         show_instability_zone = False,
         show_Kepler_47_planets = False,
+        show_contours = False,
         ):
     var_data = data.primitive_variable(var, n)[0,:,:] #* data.units['density']
     a_bin_in_distance_unit = Unit_conv.distance(a_bin)
@@ -253,6 +254,19 @@ def plot_the_data(
     else:
         raise Exception('invalid var chosen')
 
+    if show_contours:
+        max_density = np.max(Unit_conv.surface_density(var_data, 'grams', 'cm'))
+        min_density = np.min(Unit_conv.surface_density(var_data, 'grams', 'cm'))
+        levels = min_density + ( (np.linspace(0.0, 1.0, num=10)**2) * max_density )
+        contours_plot = plt.contour(
+            [X[i][:-1] for i in range(len(X)-1)]*a_bin_in_distance_unit, 
+            [Y[i][:-1] for i in range(len(X)-1)]*a_bin_in_distance_unit, 
+            Unit_conv.surface_density(var_data, 'grams', 'cm'),
+            colors = 'blue',
+            levels = levels,
+            linewidths=0.5,
+        )
+
     # if logsc:
     #     if var=='rho':
     #         plot = ax.pcolor(X*a_bin, Y*a_bin, np.log10(var_data/np.max(var_data)), cmap='gist_heat')#, vmin=-2)
@@ -322,7 +336,10 @@ def plot_the_data(
     if show_colorbars:
         cb = plt.colorbar(plot, orientation='vertical')
         cb.set_label(colourbar_label, fontsize=fs)
+        if show_contours: 
+            cb.add_lines(contours_plot)
 
+    
     # Centre of mass
     ax.plot(0,0, '+k', ms=3)
 
@@ -385,7 +402,7 @@ def plot_the_data(
                 nbody_text_list.append(nbody_text)
     if show_meta_data:
         return time_text, binary_text, *nbody_text_list
-        
+
 # def plot_one():
 #     n: int
 #     fig = plot
