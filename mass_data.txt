@@ -11,3 +11,20 @@ kep47d_upper 0.00012869701
 kep47d_upper_in_bin_mass = 0.0000990739130706283
 
 Kep47c 0.00000952 0.01 3.17
+
+
+
+Init disc data:
+
+a              e              i              Omega          omega          f              P              E             M             mass      
+gap cleared setup1:
+1.200057e+01   1.545281e-03   0.000000e+00   0.000000e+00   2.161572e+00   
+
+gap cleared setup2:
+1.200057e+01   1.545281e-03   0.000000e+00   0.000000e+00   2.161572e+00 
+
+gap cleared setup3:
+1.200057e+01   1.545281e-03   0.000000e+00   0.000000e+00   2.161572e+00  
+
+gap cleared setup4:
+1.200057e+01   1.545281e-03   0.000000e+00   0.000000e+00   2.161572e+00
