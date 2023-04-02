@@ -145,6 +145,59 @@ def calculate_total_disc_accretion() -> float:
     )
     print('total accretion onto disc = {}'.format(acc_tot))
 
+def plot_difference_between_min_and_max_rho_same_radius():
+    plot_params.square()
+    data_name = UI_helper.selectDataToPlot()
+    directories = Navigation_helper.Directories(data_name)
+    out_file_number = UI_helper.selectDataFileToPlot(directories.out_dir)
+
+    data = pluto.Pluto(directories.out_dir)
+    rho = data.primitive_variable("rho", out_file_number)[0,:,:]
+    num_radii_points = len(rho[0])
+    r_vals = data.grid['centers'].X1
+
+    phi_min = []
+    phi_max = []
+    # phi_diff = []
+    
+    for r_index in range(num_radii_points):
+        data_at_fixed_r = rho[:, r_index]
+        phi_min_val = min(data_at_fixed_r)
+        phi_max_val = max(data_at_fixed_r)
+        phi_min.append(phi_min_val)
+        phi_max.append(phi_max_val)
+        # phi_diff.append(phi_max_val - phi_min_val)
+
+    fig = plt.figure()    
+
+    fig.tight_layout()
+
+    plt.plot(
+        tools.Unit_conv.distance(r_vals), 
+        tools.Unit_conv.surface_density(np.array(phi_min), conv_unit_mass='grams', conv_unit_distance='cm'), 
+        label='min surface density'
+    )
+    plt.plot(
+        tools.Unit_conv.distance(r_vals), 
+        tools.Unit_conv.surface_density(np.array(phi_max), conv_unit_mass='grams', conv_unit_distance='cm'), 
+        label='max surface density'
+    )
+    # plt.plot(r_vals, phi_diff)
+    plt.legend()
+    plt.yscale('log')
+    plt.xlabel('radius [{}]'.format(tools.Unit_conv.distance_label()))
+    plt.ylabel('surface density [{}]'.format(tools.Unit_conv.surface_density_label(conv_unit_mass='grams', conv_unit_distance='cm')))
+
+    save_path = '{}disc_eccentricity_vs_radius_{}.png'.format(directories.plots_dir, out_file_number)
+    repeated_plots = 0
+    while (os.path.isfile(save_path)):
+        save_path = '{}disc_eccentricity_vs_radius_{}({}).png'.format(directories.plots_dir, out_file_number, repeated_plots)
+        repeated_plots += 1
+    
+    print('Saving plot in {0}'.format(save_path))
+    fig.savefig(save_path)
+    plt.close(fig)
+
 
 if __name__ == '__main__':
     plotters = [
@@ -153,6 +206,7 @@ if __name__ == '__main__':
         plot_gap_parameters_out, 
         plot_one_multiple_data_sets_gap_parameters_out,
         calculate_total_disc_accretion,
+        plot_difference_between_min_and_max_rho_same_radius,
     ]
     func_index = UI_helper.selectFunctionsToRun(plotters)
     eval('{}()'.format(plotters[func_index].__name__))
