@@ -1,10 +1,13 @@
 Object mass_in_solar_masses mass_in_jovian_masses mass_in_earth_masses
 Jupiter 0.001 1 317
 Saturn 0.002857 0.299 95.16
-kep47b_upper 0.00007738036
-Kep47b 0.00000621 0.0065 2.07 
+
+Kep47b = 0.00000621 0.0065 2.07 
+kep47b_upper = 0.00007738036
+kep47b_upper_in_bin_mass = 0.00005956917
 
 Kep47d 0.0000571 0.0598 19.02
 kep47d_upper 0.00012869701
+kep47d_upper_in_bin_mass = 0.0000990739130706283
 
 Kep47c 0.00000952 0.01 3.17
