@@ -164,7 +164,7 @@ class Pluto:
             print("Reading grid.out")
             dimensions = 0
             direction = 0
-            number_of_cells = np.ones(3, dtype=np.int)
+            number_of_cells = np.ones(3, dtype=int)
             Cells = collections.namedtuple('Cells', ['X1', 'X2', 'X3'])
 
             # Parse header
