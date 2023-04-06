@@ -71,7 +71,7 @@ class Unit_conv():
             case 'years':
                 days_per_code_time = Kepler_47_constants['period_days']
                 years_per_code_time = (1/365) * days_per_code_time
-                return years_per_code_time
+                return time_in_code_units * years_per_code_time
             case 'code':
                 return time_in_code_units
             case _:
