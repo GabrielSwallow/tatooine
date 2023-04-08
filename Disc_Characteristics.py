@@ -35,7 +35,7 @@ def plot_disc_e_avg() -> None:
 def plot_one_multiple_data_sets_overlayed_disc_e_avg() -> None:
     plot_params.square()
     data_ids = UI_helper.select_many_data_ids_to_overlay(choose_out_file = False)
-    plotter_helper.plot_multiple_data_sets_overlayed(data_ids, plot_the_data_disc_e_avg)
+    plotter_helper.plot_multiple_data_sets_overlayed(data_ids, 'disc_e_avg', plot_the_data_disc_e_avg)
 
 # def plot_multiple_data_sets_overlayed_disc_e_avg(many_data_to_plot: list[data_id]) -> None:
 #     plot_params.square()
@@ -98,7 +98,7 @@ def plot_one_multiple_data_sets_gap_parameters_out() -> None:
     n_min, n_max = UI_helper.selectPlottingRange()
     avg_num = UI_helper.select_averaging_length()
     plotter_args = [n_min, n_max, avg_num]
-    plotter_helper.plot_multiple_data_sets_overlayed(data_ids, plot_the_data_gap_parameters_out, plotter_args)
+    plotter_helper.plot_multiple_data_sets_overlayed(data_ids, 'gap_parameters_out', plot_the_data_gap_parameters_out, plotter_args)
 
 def plot_the_data_gap_parameters_out(
         ax: plt.Axes, 
