@@ -27,22 +27,6 @@ def plot_one_using_dat() -> None:
 
 def plot_one_using_dat_planet_and_cavity() -> None:
     data_name = UI_helper.selectDataToPlot()
-    plot_using_dat_planet_and_cavity(data_name)
-
-def plot_one_using_out() -> None:
-    data_name = UI_helper.selectDataToPlot()
-    plot_using_out(data_name)
-
-def plot_using_dat_planet_and_cavity(data_name: str) -> None:
-    directories = Navigation_helper.Directories(data_name)
-    n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
-    num_avg = UI_helper.select_averaging_length()
-
-    data_to_plot_list = [
-        # possible_data_to_plot.eccentricity,
-        possible_data_to_plot.semi_major_axis,
-    ]
-
     # Jupiter_astrophysical_object.id = 2
     # Kep47b_astrophysical_object.id = 3
 
@@ -54,7 +38,32 @@ def plot_using_dat_planet_and_cavity(data_name: str) -> None:
         # Kep47c_astrophysical_object,
         # Kep47d_astrophysical_object,
         cavity_astrophysical_object,
-    ]   
+    ] 
+    plot_using_dat_planet_and_cavity(data_name, objects_to_plot_list)
+
+def plot_one_using_out() -> None:
+    data_name = UI_helper.selectDataToPlot()
+    plot_using_out(data_name)
+
+def plot_many_data_id_using_dat() -> None:
+    data_ids = UI_helper.select_many_data_ids_to_overlay()
+    directories = Navigation_helper.Directories(data_ids[0].name)
+    object = UI_helper.selectObjectToPlot(directories.out_dir)
+    n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
+    num_avg = UI_helper.select_averaging_length()
+
+    plotter_args = [object, n_min, n_max, num_avg, possible_data_to_plot.semi_major_axis]
+    plotter_helper.plot_multiple_data_sets_overlayed(data_ids, 'gap_parameters_out', plot_the_data_using_dat, plotter_args)
+
+def plot_using_dat_planet_and_cavity(data_name: str, objects_to_plot_list: list[astrophysical_object]) -> None:
+    directories = Navigation_helper.Directories(data_name)
+    n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
+    num_avg = UI_helper.select_averaging_length()
+
+    data_to_plot_list = [
+        # possible_data_to_plot.eccentricity,
+        possible_data_to_plot.semi_major_axis,
+    ]  
 
     num_plots = len(data_to_plot_list)
     plot_params.one_by_N_subplots(num_plots)
@@ -337,6 +346,7 @@ if __name__ == '__main__':
         plot_one_using_dat_planet_and_cavity,
         plot_one_using_out, 
         plot_resonance_dat, 
-        plot_resonance_dat_fit]
+        plot_resonance_dat_fit,
+        plot_many_data_id_using_dat]
     func_index = UI_helper.selectFunctionsToRun(plotters)
     eval('{}()'.format(plotters[func_index].__name__))
