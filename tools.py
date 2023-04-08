@@ -519,10 +519,9 @@ def rolling_average(avg_num: int, data: list = None, x_data: list = None) -> lis
     if isinstance(x_data, (list, tuple, np.ndarray)):
         if isinstance(data, (list, tuple, np.ndarray)):
             return (
-                np.array(
-                    [np.mean(data[i:(i+avg_num)]) for i in range(list_len - avg_num)]
-                    ),
-                np.array(x_data[0:list_len - avg_num])
+                np.array([np.mean(data[i:(i+avg_num)]) for i in range(list_len - avg_num)]),
+                np.linspace(x_data[0], x_data[-1], list_len - avg_num)
+                # np.array(x_data[0:list_len - avg_num])
             )
         else:
             return np.array(x_data[0:list_len - avg_num])
