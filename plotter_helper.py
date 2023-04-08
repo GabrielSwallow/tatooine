@@ -15,6 +15,7 @@ from tools import Unit_conv
 
 def plot_multiple_data_sets_overlayed(
     many_data_to_plot: list[data_id], 
+    file_save_name: str,
     plotter: Callable[[plt.Axes, str, str, list], None], 
     plotter_args: list = None
     ) -> None:
@@ -29,10 +30,10 @@ def plot_multiple_data_sets_overlayed(
     
     plot_name = UI_helper.name_the_plot() + '_'
 
-    save_path = '{}disc_eccentricity_averages_{}.png'.format(global_plots_dir+plot_name, var)
+    save_path = '{}{}.png'.format(global_plots_dir+plot_name, file_save_name)
     repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}disc_eccentricity_averages_{}({}).png'.format(global_plots_dir+plot_name, var, repeated_plots)
+        save_path = '{}{}({}).png'.format(global_plots_dir+plot_name, file_save_name, repeated_plots)
         repeated_plots += 1
     print('Saving plot in {0}'.format(save_path))
     plt.legend()
