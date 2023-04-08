@@ -69,15 +69,15 @@ def plot_the_data_disc_e_avg(ax: plt.Axes, data_name: str, legend_name: str = ''
     ax.plot(Unit_conv.time(time[i_min:i_max]), e[i_min:i_max], label = f'{legend_name} gap eccentricity')
 
 def plot_gap_parameters_out() -> None:
-    plot_params.square()
+    plot_params.two_by_one_subplot()
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
     fig, axs = plt.subplots(2,1, sharex = 'all')
 
     n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
     avg_num = UI_helper.select_averaging_length()
-    plot_the_data_gap_parameters_out(axs[0], data_name, n_min, n_max, avg_num, data_to_plot='semi major axis')
-    plot_the_data_gap_parameters_out(axs[1], data_name, n_min, n_max, avg_num, data_to_plot='eccentricity')
+    plot_the_data_gap_parameters_out(axs[0], data_name, '', n_min, n_max, avg_num, data_to_plot='semi major axis')
+    plot_the_data_gap_parameters_out(axs[1], data_name, '', n_min, n_max, avg_num, data_to_plot='eccentricity')
     axs[1].set(xlabel = 'Time [$\mathrm{T_{bin}}$]')
 
     fig.tight_layout()
