@@ -53,7 +53,7 @@ def plot_many_data_id_using_dat() -> None:
     num_avg = UI_helper.select_averaging_length()
 
     plotter_args = [object, n_min, n_max, num_avg, possible_data_to_plot.semi_major_axis]
-    plotter_helper.plot_multiple_data_sets_overlayed(data_ids, 'gap_parameters_out', plot_the_data_using_dat, plotter_args)
+    plotter_helper.plot_multiple_data_sets_overlayed(data_ids, '{}_a_evolution'.format(object.name), plot_the_data_using_dat, plotter_args)
 
 def plot_using_dat_planet_and_cavity(data_name: str, objects_to_plot_list: list[astrophysical_object]) -> None:
     directories = Navigation_helper.Directories(data_name)
