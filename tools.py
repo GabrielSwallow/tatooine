@@ -119,6 +119,10 @@ class Unit_conv():
             case 'cm':
                 cm_per_code_unit_distance = Kepler_47_constants['a_b_cm']
                 return distance_in_code_units * (cm_per_code_unit_distance**dims)
+            case 'km':
+                cm_per_code_unit_distance = Kepler_47_constants['a_b_cm']
+                km_per_code_unit_distance = 1e-5 * cm_per_code_unit_distance
+                return distance_in_code_units * (km_per_code_unit_distance**dims)
             case 'code':
                 return distance_in_code_units
             case _:
@@ -539,3 +543,11 @@ def roll_avg(data: list, avg_num: int) -> list:
     for i in range(0, new_len):
         new_data.append(np.sum(data[i:i+avg_num])/avg_num)
     return np.array(new_data)
+
+def calculate_hill_sphere_radius(radius_code_units: float, planet_mass_code_units: float, unit: str = 'AU'):
+    hill_sphere_radius = radius_code_units * ((planet_mass_code_units/3)**(1/3))
+    return Unit_conv.distance(hill_sphere_radius, unit)
+
+def calculate_mass_for_given_hill_sphere(radius_code_units: float, hill_sphere_radius_code_units: float, unit: str = 'code'):
+    planet_mass_code_units = 3 * ((hill_sphere_radius_code_units/radius_code_units)**3)
+    return Unit_conv.mass(planet_mass_code_units, unit)
