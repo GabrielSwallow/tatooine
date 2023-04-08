@@ -20,7 +20,7 @@ import plotter_helper
 from tools import Unit_conv
 
 def plot_many() -> None:
-    plot_params.default()
+    plot_params.TwoD_sigma_viva()
     data_name = UI_helper.selectDataToPlot()
     out_dir = all_data_dir + data_name + '/out'
     many_data_files_to_plot = UI_helper.selectManyDataFilesToPlot(out_dir)
