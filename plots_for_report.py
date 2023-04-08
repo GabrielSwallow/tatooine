@@ -65,7 +65,6 @@ class report_plots():
         # mock_selectDataToPlot.return_value = data_name
         mock_select_many_data_ids_to_overlay.return_value = data_ids
         # directories = Navigation_helper.Directories(data_name)
-        mock_select_averaging_length.return_value = 250
         mock_selectDataFileToPlot.return_value = 0
         mock_selectManyDataFilesToPlot.return_value = [0, 100]
         mock_selectPlottingRange.return_value = [0, 100]
@@ -74,8 +73,53 @@ class report_plots():
         mock_define_legend_name.return_value = [data_ids[i].legend_name for i in range(len(data_ids))]
         mock_name_the_plot.return_value = 'result_5_many_setups_a'
 
+        mock_select_averaging_length.return_value = 250
         Nbody_Characteristics.plot_many_data_id_using_dat()
+
+        mock_select_averaging_length.return_value = 250
+        Disc_Characteristics.plot_one_multiple_data_sets_overlayed_disc_e_avg()
+    
+    def result_6(
+        mock_selectDataToPlot,
+        mock_select_many_data_ids_to_overlay,
+        mock_selectDataFileToPlot,
+        mock_selectManyDataFilesToPlot,
+        mock_selectObjectToPlot,
+        mock_selectFunctionsToRun,
+        mock_select_averaging_length,
+        mock_selectPlottingRange,
+        mock_define_legend_name,
+        mock_name_the_plot,
+        ):
+        data_ids= [
+            data_id('GROUP_sustain_circ_accrete/sustain_circ_setup3_final_ab_accrete_00069',   0, 'setup 3, high acc'),
+            data_id('GROUP_sustain_circ_accrete/sustain_circ_setup3_final_ab_accrete_000069',  0, 'setup 3, mid acc'),
+            data_id('GROUP_sustain_circ_accrete/sustain_circ_setup3_final_ab_accrete_0000069', 0, 'setup 3, low acc'),
+            data_id('GROUP_sustain_circ_accrete/sustain_circ_setup4_final_ab_accrete_00069',   0, 'setup 4, high acc'),
+            data_id('GROUP_sustain_circ_accrete/sustain_circ_setup4_final_ab_accrete_000069',  0, 'setup 4, mid acc'),
+            data_id('GROUP_sustain_circ_accrete/sustain_circ_setup4_final_ab_accrete_0000069', 0, 'setup 4, low acc'),
+        ]
+        # mock_selectDataToPlot.return_value = data_name
+        mock_select_many_data_ids_to_overlay.return_value = data_ids
+        # directories = Navigation_helper.Directories(data_name)
+        mock_selectDataFileToPlot.return_value = 0
+        mock_selectManyDataFilesToPlot.return_value = [0, 100]
+        mock_selectPlottingRange.return_value = [0, 100]
+        mock_selectObjectToPlot.return_value = Kep47b_astrophysical_object
+        # mock_selectFunctionsToRun.return_value = 'all'
+        mock_define_legend_name.return_value = [data_ids[i].legend_name for i in range(len(data_ids))]
+        mock_name_the_plot.return_value = 'result_6_many_setups'
+
+        mock_select_averaging_length.return_value = 20
+        Nbody_Characteristics.plot_many_data_id_using_dat()
+
+        mock_select_averaging_length.return_value = 20
+        Disc_Characteristics.plot_one_multiple_data_sets_overlayed_disc_e_avg()
+
+        # mock_select_averaging_length.return_value = 10
+        # Disc_Characteristics.plot_one_multiple_data_sets_gap_parameters_out()
+
 
 
 if __name__ == '__main__':
-    report_plots.result_5()
+    report_plots.result_6()
