@@ -11,6 +11,7 @@ import Data_parser_helper
 from Global_variables import *
 import plot_params
 import Gap_Finder as gap
+import plotter_helper
 
 def trianglewave(n,av):
 
@@ -107,13 +108,8 @@ def migration_with_fourier() -> None:
     plt.grid()
     fig.tight_layout()
 
-    save_path = '{}obj{}_migration_fourier{}.png'.format(directories.plots_dir, object.id, av)
-    repeated_plots = 0
-    while (os.path.isfile(save_path)):
-        save_path = '{}obj{}_migration_fourier{}({}).png'.format(directories.plots_dir, object.id, av, repeated_plots)
-        repeated_plots += 1
-    
-    print('Saving plot in {0}'.format(save_path))
+    fname = '{}obj{}_migration_fourier{}'.format(directories.plots_dir, object.id, av)
+    save_path = plotter_helper.define_save_plot(fname)
     fig.savefig(save_path)
     plt.close(fig)
 

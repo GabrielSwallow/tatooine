@@ -22,13 +22,8 @@ def plot_disc_e_avg() -> None:
     plot_the_data_disc_e_avg(axs, data_name)
     fig.tight_layout()
 
-    save_path = '{}disc_eccentricity_averages.png'.format(directories.plots_dir)
-    repeated_plots = 0
-    while (os.path.isfile(save_path)):
-        save_path = '{}disc_eccentricity_averages({}).png'.format(directories.plots_dir, repeated_plots)
-        repeated_plots += 1
-    
-    print('Saving plot in {0}'.format(save_path))
+    f_name = '{}disc_eccentricity_averages'.format(directories.plots_dir)
+    save_path = plotter_helper.define_save_plot(f_name, 'png')
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -36,27 +31,6 @@ def plot_one_multiple_data_sets_overlayed_disc_e_avg() -> None:
     plot_params.square()
     data_ids = UI_helper.select_many_data_ids_to_overlay(choose_out_file = False)
     plotter_helper.plot_multiple_data_sets_overlayed(data_ids, 'disc_e_avg', plot_the_data_disc_e_avg)
-
-# def plot_multiple_data_sets_overlayed_disc_e_avg(many_data_to_plot: list[data_id]) -> None:
-#     plot_params.square()
-
-#     fig = plt.figure()
-#     for data_to_plot in many_data_to_plot:
-#         plot_the_data_disc_e_avg(fig, data_to_plot.name, data_to_plot.legend_name)
-    
-#     plot_name = UI_helper.name_the_plot() + '_'
-
-#     save_path = '{}disc_eccentricity_averages_{}.png'.format(global_plots_dir+plot_name, var)
-#     repeated_plots = 1
-#     while(os.path.isfile(save_path)):
-#         save_path = '{}disc_eccentricity_averages_{}({}).png'.format(global_plots_dir+plot_name, var, repeated_plots)
-#         repeated_plots += 1
-#     print('Saving plot in {0}'.format(save_path))
-#     plt.legend()
-#     plt.ylabel('gap eccentricity')
-#     plt.xlabel('Time [$\mathrm{T_{bin}}$]')
-#     plt.savefig(save_path)
-#     plt.close()
 
 def plot_the_data_disc_e_avg(ax: plt.Axes, data_name: str, legend_name: str = '') -> None:
     directories = Navigation_helper.Directories(data_name)
@@ -66,7 +40,9 @@ def plot_the_data_disc_e_avg(ax: plt.Axes, data_name: str, legend_name: str = ''
 
     (time, _, e, _, _, _, _, _, _, _) = Data_parser_helper.get_averages_data(data_name)
     i_min, i_max = tools.time_split(time, t_min, t_max)
-    ax.plot(Unit_conv.time(time[i_min:i_max]), e[i_min:i_max], label = f'{legend_name} gap eccentricity')
+    ax.plot(Unit_conv.time(time[i_min:i_max]), e[i_min:i_max], label = f'{legend_name}')
+    ax.set_ylabel('Eccentricity')
+    ax.set(xlabel = 'Time [$\mathrm{T_{bin}}$]')
 
 def plot_gap_parameters_out() -> None:
     plot_params.two_by_one_subplot()
@@ -83,13 +59,8 @@ def plot_gap_parameters_out() -> None:
     fig.tight_layout()
     # fig.suptitle('Disc Parameters of Kepler-47')
 
-    save_path = '{}gap_eccentricity_{}-{}.png'.format(directories.plots_dir, n_min, n_max)
-    repeated_plots = 0
-    while (os.path.isfile(save_path)):
-        save_path = '{}gap_eccentricity_{}-{}({}).png'.format(directories.plots_dir, n_min, n_max, repeated_plots)
-        repeated_plots += 1
-    
-    print('Saving plot in {0}'.format(save_path))
+    fname = '{}gap_eccentricity_{}-{}'.format(directories.plots_dir, n_min, n_max)
+    save_path = plotter_helper.define_save_plot(fname, 'png')
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -97,6 +68,7 @@ def plot_one_multiple_data_sets_gap_parameters_out() -> None:
     data_ids = UI_helper.select_many_data_ids_to_overlay(choose_out_file = False)
     n_min, n_max = UI_helper.selectPlottingRange()
     avg_num = UI_helper.select_averaging_length()
+
     plotter_args = [n_min, n_max, avg_num]
     plotter_helper.plot_multiple_data_sets_overlayed(data_ids, 'gap_parameters_out', plot_the_data_gap_parameters_out, plotter_args)
 
@@ -122,16 +94,16 @@ def plot_the_data_gap_parameters_out(
         (a_n, e_n, _, _, _, _, _) = gap.ellipse_find(R, Phi, var_data)
         e.append(abs(e_n))
         a.append(abs(a_n))
-    
+    pass
     if data_to_plot == 'eccentricity':
-        rolling_avg_e, rolling_avg_time = tools.rolling_average(avg_num, e, t)
+        rolling_avg_e, rolling_avg_time = tools.rolling_average(avg_num, np.array(e), np.array(t))
         ax.plot(Unit_conv.time(rolling_avg_time), rolling_avg_e, label=legend_name)
-        ax.set_ylabel('Eccentricity [$\mathrm{e}$]')
+        ax.set_ylabel('Eccentricity')
     elif data_to_plot == 'semi major axis':
         rolling_avg_a, rolling_avg_time = tools.rolling_average(avg_num, a, t)
         ax.plot(Unit_conv.time(rolling_avg_time), Unit_conv.distance(rolling_avg_a), label=legend_name)
-        ax.set_xlabel('Semi-Major Axis [$\mathrm{a_{bin}}$]')
-
+        ax.set_ylabel('Semi-Major Axis [' + Unit_conv.distance_label() + ']')
+    ax.set_xlabel('Time [' + Unit_conv.time_label() + ']')
     return n_min, n_max
 
 def calculate_total_disc_accretion() -> float:
@@ -188,13 +160,9 @@ def plot_difference_between_min_and_max_rho_same_radius():
     plt.xlabel('radius [{}]'.format(tools.Unit_conv.distance_label()))
     plt.ylabel('surface density [{}]'.format(tools.Unit_conv.surface_density_label(conv_unit_mass='grams', conv_unit_distance='cm')))
 
-    save_path = '{}disc_eccentricity_vs_radius_{}.png'.format(directories.plots_dir, out_file_number)
-    repeated_plots = 0
-    while (os.path.isfile(save_path)):
-        save_path = '{}disc_eccentricity_vs_radius_{}({}).png'.format(directories.plots_dir, out_file_number, repeated_plots)
-        repeated_plots += 1
-    
-    print('Saving plot in {0}'.format(save_path))
+
+    fname = '{}disc_eccentricity_vs_radius_{}'.format(directories.plots_dir, out_file_number)
+    save_path = plotter_helper.define_save_plot(fname, 'png')
     fig.savefig(save_path)
     plt.close(fig)
 

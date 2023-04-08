@@ -10,6 +10,7 @@ import Data_parser_helper
 from Global_variables import *
 import Torque
 import plot_params
+import plotter_helper
 
 def plot_migration_one():
     data_name = UI_helper.selectDataToPlot()
@@ -54,13 +55,8 @@ def calculate_migration(data_name: str, obj_index: int, avg_num: int):
     plt.grid()
     fig.tight_layout()
     
-    save_path = '{}obj{}_migration.png'.format(directories.plots_dir, obj_index)
-    repeated_plots = 0
-    while(os.path.isfile(save_path)):
-        save_path = '{}obj{}_migration({}).png'.format(directories.plots_dir, obj_index, repeated_plots)
-        repeated_plots += 1
-    
-    print('Saving plot in {0}'.format(save_path))
+    fname = '{}obj{}_migration'.format(directories.plots_dir, obj_index)
+    save_path = plotter_helper.define_save_plot(fname)
     fig.savefig(save_path)
     plt.close(fig)
 

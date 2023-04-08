@@ -64,12 +64,8 @@ def plot_velocities(data_name: str, data_file_to_plot: int):
     fig.tight_layout() 
 
     log_str = ''
-    save_path = '{}{}2d_{}_{}.png'.format(directories.plots_dir, log_str, var, n)
-    repeated_plots = 1
-    while(os.path.isfile(save_path)):
-        save_path = '{}{}2d_{}_{}({}).png'.format(directories.plots_dir, log_str, var, n, repeated_plots)
-        repeated_plots += 1
-    print('Saving plot in {0}'.format(save_path))
+    fname = '{}{}2d_{}_{}'.format(directories.plots_dir, log_str, var, n)
+    save_path = plotter_helper.define_save_plot(fname)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -91,12 +87,8 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
 
     if logsc: log_str = 'LOG_'
     else: log_str = ''
-    save_path = '{}{}2d_{}_{}.png'.format(directories.plots_dir, log_str, var, n)
-    repeated_plots = 1
-    while(os.path.isfile(save_path)):
-        save_path = '{}{}2d_{}_{}({}).png'.format(directories.plots_dir, log_str, var, n, repeated_plots)
-        repeated_plots += 1
-    print('Saving plot in {0}'.format(save_path))
+    fname = '{}{}2d_{}_{}'.format(directories.plots_dir, log_str, var, n)
+    save_path = plotter_helper.define_save_plot(fname)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -123,12 +115,8 @@ def animate() -> None:
 
     if logsc: log_str = 'LOG_'
     else: log_str = ''
-    save_path = '{}{}2d_{}_ANIMATION_{}-{}.gif'.format(directories.plots_dir, log_str, var, n_min, n_max)
-
-    repeated_plots = 0
-    while(os.path.isfile(save_path)):
-        save_path = '{}{}2d_{}_ANIMATION_{}-{}({}).gif'.format(directories.plots_dir, log_str, var, n_min, n_max, repeated_plots)
-        repeated_plots += 1
+    fname = '{}{}2d_{}_ANIMATION_{}-{}'.format(directories.plots_dir, log_str, var, n_min, n_max)
+    save_path = plotter_helper.define_save_plot(fname, 'gif')
 
     # animate.save(save_path)
 

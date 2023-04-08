@@ -6,6 +6,7 @@ from numba import jit
 import UI_helper
 import Navigation_helper
 import Data_parser_helper
+import plotter_helper
 
 import seaborn
 import matplotlib.pyplot as plt
@@ -205,12 +206,8 @@ def plot_potential_field():
     # plt.subplot(projection="polar")
     # plt.ylim(1,4)
 
-    save_path = '{}PLOT_{}.png'.format(directories.plots_dir, data_file_name)
-    repeated_plots = 1
-    while(os.path.isfile(save_path)):
-        save_path = '{}PLOT_{}({}).png'.format(directories.plots_dir, data_file_name, repeated_plots)
-        repeated_plots += 1
-    print('Saving plot in {0}'.format(save_path))
+    fname = '{}PLOT_{}'.format(directories.plots_dir, data_file_name)
+    save_path = plotter_helper.define_save_plot(fname)
     fig.savefig(save_path)
     plt.close(fig)
 

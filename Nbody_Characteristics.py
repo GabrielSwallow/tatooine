@@ -84,13 +84,8 @@ def plot_using_dat_planet_and_cavity(data_name: str, objects_to_plot_list: list[
     plt.legend()
     fig.tight_layout()
     
-    save_path = '{}orbital_elements_many_objects_{}-{}.png'.format(directories.plots_dir, n_min, n_max)
-    repeated_plots = 0
-    while(os.path.isfile(save_path)):
-        save_path = '{}orbital_elements_many_objects_{}-{}({}).png'.format(directories.plots_dir, n_min, n_max, repeated_plots)
-        repeated_plots += 1
-    
-    print('Saving plot in {0}'.format(save_path))
+    fname = '{}orbital_elements_many_objects_{}-{}'.format(directories.plots_dir, n_min, n_max)
+    save_path = plotter_helper.define_save_plot(fname)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -107,13 +102,9 @@ def plot_using_dat(data_name: str) -> None:
     plt.legend()
     fig.tight_layout()
     
-    save_path = '{}obj{}_orbital_elements_dat_{}-{}.png'.format(directories.plots_dir, object.id, n_min, n_max)
-    repeated_plots = 0
-    while(os.path.isfile(save_path)):
-        save_path = '{}obj{}_orbital_elements_dat_{}-{}({}).png'.format(directories.plots_dir, object.id, n_min, n_max, repeated_plots)
-        repeated_plots += 1
-    
-    print('Saving plot in {0}'.format(save_path))
+
+    fname = '{}obj{}_orbital_elements_dat_{}-{}'.format(directories.plots_dir, object.id, n_min, n_max)
+    save_path = plotter_helper.define_save_plot(fname)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -191,13 +182,8 @@ def plot_using_out(data_name: str) -> None:
     
     fig.tight_layout()
     
-    save_path = '{}obj{}_orbital_elements_{}-{}.png'.format(directories.plots_dir, object.id, n_min, n_max)
-    repeated_plots = 0
-    while(os.path.isfile(save_path)):
-        save_path = '{}obj{}_orbital_elements_{}-{}({}).png'.format(directories.plots_dir, n_min, n_max, repeated_plots)
-        repeated_plots += 1
-    
-    print('Saving plot in {0}'.format(save_path))
+    fname = '{}obj{}_orbital_elements_{}-{}'.format(directories.plots_dir, object.id, n_min, n_max)
+    save_path = plotter_helper.define_save_plot(fname)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -251,13 +237,8 @@ def plot_resonance_dat() -> None:
 
     fig.tight_layout()
 
-    save_path = '{}obj{}_obj{}_resonances_dat_{}-{}.png'.format(directories.plots_dir, obj_list[0], obj_list[1], n_min, n_max)
-    repeated_plots = 0
-    while(os.path.isfile(save_path)):
-        save_path = '{}obj{}_obj{}_resonances_dat_{}-{}({}).png'.format(directories.plots_dir, obj_list[0], obj_list[1], n_min, n_max, repeated_plots)
-        repeated_plots += 1
-    
-    print('Saving plot in {0}'.format(save_path))
+    fname = '{}obj{}_obj{}_resonances_dat_{}-{}'.format(directories.plots_dir, obj_list[0], obj_list[1], n_min, n_max)
+    save_path = plotter_helper.define_save_plot(fname)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -330,13 +311,8 @@ def plot_resonance_dat_fit() -> None:
 
     fig.tight_layout()
 
-    save_path = '{}obj{}_obj{}_resonances_dat_{}-{}.png'.format(directories.plots_dir, obj_list[0], obj_list[1], n_min, n_max)
-    repeated_plots = 0
-    while(os.path.isfile(save_path)):
-        save_path = '{}obj{}_obj{}_resonances_dat_{}-{}({}).png'.format(directories.plots_dir, obj_list[0], obj_list[1], n_min, n_max, repeated_plots)
-        repeated_plots += 1
-    
-    print('Saving plot in {0}'.format(save_path))
+    fname = '{}obj{}_obj{}_resonances_dat_{}-{}'.format(directories.plots_dir, obj_list[0], obj_list[1], n_min, n_max)
+    save_path = plotter_helper.define_save_plot(fname)
     fig.savefig(save_path)
     plt.close(fig)
     

@@ -12,6 +12,7 @@ size = 20
 Rmax = 70
 fs = 14 # font size
 C0, C1, C2 = 'k', 'b', 'y'
+overwrite_plots = True
 
 size = size * Unit_conv.distance(a_bin)
 

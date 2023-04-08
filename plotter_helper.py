@@ -13,6 +13,16 @@ from tools import Unit_conv
 # from menu import Menu
 # import simple_term_menu as stm
 
+def define_save_plot(file_name: str, extension: str = 'png', overwrite: bool = overwrite_plots):
+    save_path = '{}.{}'.format(file_name, extension)
+    if not overwrite_plots:
+        repeated_plots = 0
+        while(os.path.isfile(save_path)):
+            save_path = '{}({}).{}'.format(file_name, repeated_plots, extension)
+            repeated_plots += 1
+    print('Saving plot in {0}'.format(save_path))
+    return save_path
+
 def plot_multiple_data_sets_overlayed(
     many_data_to_plot: list[data_id], 
     file_save_name: str,
@@ -29,15 +39,11 @@ def plot_multiple_data_sets_overlayed(
             plotter(ax, data_to_plot.name, data_to_plot.legend_name, *plotter_args)
     
     plot_name = UI_helper.name_the_plot() + '_'
-
-    save_path = '{}{}.png'.format(global_plots_dir+plot_name, file_save_name)
-    repeated_plots = 1
-    while(os.path.isfile(save_path)):
-        save_path = '{}{}({}).png'.format(global_plots_dir+plot_name, file_save_name, repeated_plots)
-        repeated_plots += 1
-    print('Saving plot in {0}'.format(save_path))
+    fig.tight_layout()
     plt.legend()
-    plt.xlabel('Time [$\mathrm{T_{bin}}$]')
+
+    f_name = '{}{}'.format(global_plots_dir+plot_name, file_save_name)
+    save_path = define_save_plot(f_name)
     plt.savefig(save_path)
     plt.close()
 
@@ -55,21 +61,15 @@ def plot_multiple_data_sets_overlayed_subplots(
             plotter(axs, data_to_plot.name, data_to_plot.legend_name)
         else:
             plotter(axs, data_to_plot.name, data_to_plot.legend_name, *plotter_args)
-
+    plt.legend()
+    plt.xlabel('Time [$\mathrm{T_{bin}}$]')
     
     plot_name = UI_helper.name_the_plot() + '_'
 
-    save_path = '{}disc_eccentricity_averages_{}.png'.format(global_plots_dir+plot_name, var)
-    repeated_plots = 1
-    while(os.path.isfile(save_path)):
-        save_path = '{}disc_eccentricity_averages_{}({}).png'.format(global_plots_dir+plot_name, var, repeated_plots)
-        repeated_plots += 1
-    print('Saving plot in {0}'.format(save_path))
-    plt.legend()
-    plt.xlabel('Time [$\mathrm{T_{bin}}$]')
+    fname = '{}disc_eccentricity_averages_{}'.format(global_plots_dir+plot_name, var)
+    save_path = define_save_plot(fname)
     plt.savefig(save_path)
     plt.close()
-
 
 def plot_instability_zone_for_line_plot(ax: plt.Axes, t_min: float, t_max: float) -> None:
     radius = Unit_conv.distance(instability_limit_astrophysical_object.radius)

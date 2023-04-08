@@ -10,6 +10,7 @@ import Navigation_helper
 import Data_parser_helper
 from Global_variables import *
 import plot_params
+import plotter_helper
 
 def plot_one_disk_accretion() -> None:
     data_name = UI_helper.selectDataToPlot()
@@ -33,14 +34,9 @@ def plot_disk_accretion(data_name: str) -> None:
     fig = plt.figure()
     plt.plot(time, total_accretion)
     fig.tight_layout()
-    
-    save_path = '{}disk_accretion.png'.format(directories.plots_dir)
-    repeated_plots = 0
-    while(os.path.isfile(save_path)):
-        save_path = '{}disk_accretion({}).png'.format(directories.plots_dir, repeated_plots)
-        repeated_plots += 1
-    
-    print('Saving plot in {0}'.format(save_path))
+
+    f_name = '{}disk_accretion'.format(directories.plots_dir)
+    save_path = plotter_helper.define_save_plot(f_name)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -65,14 +61,9 @@ def plot_planet_accretion(data_name: str) -> None:
     plt.legend()
     plt.grid()
     fig.tight_layout()
-    
-    save_path = '{}obj{}_accretion.png'.format(directories.plots_dir, object.id)
-    repeated_plots = 0
-    while(os.path.isfile(save_path)):
-        save_path = '{}obj{}_accretion({}).png'.format(directories.plots_dir, object.id, repeated_plots)
-        repeated_plots += 1
-    
-    print('Saving plot in {0}'.format(save_path))
+
+    f_name = '{}obj{}_accretion'.format(directories.plots_dir, object.id)
+    save_path = plotter_helper.define_save_plot(f_name, 'png')
     fig.savefig(save_path)
     plt.close(fig)
 

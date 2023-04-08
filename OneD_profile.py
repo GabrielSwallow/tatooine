@@ -11,6 +11,7 @@ import Navigation_helper
 import Data_parser_helper
 from Global_variables import *
 import plot_params
+import plotter_helper
 
 def plot_one() -> None:
     data_name = UI_helper.selectDataToPlot()
@@ -44,11 +45,8 @@ def animate() -> None:
         plot_the_data(fig, n, data_name)
         camera.snap()
 
-    save_path = '{}1d_profile_{}_ANIMATION_{}-{}.gif'.format(directories.plots_dir, var, n_min, n_max)
-    repeated_plots = 1
-    while(os.path.isfile(save_path)):
-        save_path = '{}1d_profile_{}_ANIMATION_{}-{}({}).gif'.format(directories.plots_dir, var, n_min, n_max, repeated_plots)
-        repeated_plots += 1
+    fname = '{}1d_profile_{}_ANIMATION_{}-{}'.format(directories.plots_dir, var, n_min, n_max)
+    save_path = plotter_helper.define_save_plot(fname, 'gif')
     animation = camera.animate()
     animation.save(save_path)
 
@@ -60,12 +58,8 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     fig = plt.figure()
     plot_the_data(fig, n, data_name)
 
-    save_path = '{}1d_profile_{}_{}.png'.format(directories.plots_dir, var, n)
-    repeated_plots = 1
-    while(os.path.isfile(save_path)):
-        save_path = '{}1d_profile_{}_{}({}).png'.format(directories.plots_dir, var, n, repeated_plots)
-        repeated_plots += 1
-    print('Saving plot in {0}'.format(save_path))
+    fname = '{}1d_profile_{}_{}'.format(directories.plots_dir, var, n)
+    save_path = plotter_helper.define_save_plot(fname)
     plt.savefig(save_path)
     plt.close()
 
@@ -78,12 +72,8 @@ def plot_multiple_data_sets_overlayed(many_data_to_plot: list[data_id]) -> None:
     
     plot_name = UI_helper.name_the_plot() + '_'
 
-    save_path = '{}1d_profile_{}.png'.format(global_plots_dir+plot_name, var)
-    repeated_plots = 1
-    while(os.path.isfile(save_path)):
-        save_path = '{}1d_profile_{}({}).png'.format(global_plots_dir+plot_name, var, repeated_plots)
-        repeated_plots += 1
-    print('Saving plot in {0}'.format(save_path))
+    fname = '{}1d_profile_{}'.format(global_plots_dir+plot_name, var)
+    save_path = plotter_helper.define_save_plot(fname)
     plt.savefig(save_path)
     plt.close()
 

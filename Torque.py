@@ -9,6 +9,7 @@ import Navigation_helper
 import Data_parser_helper
 from Global_variables import *
 import plot_params
+import plotter_helper
 
 def print_torque_from_calculation():
     data_name = UI_helper.selectDataToPlot()
@@ -36,13 +37,8 @@ def plot_torque_from_averages():
     plt.legend()
     plt.grid()
 
-    save_path = '{}obj{}_torque.png'.format(directories.plots_dir, object.id)
-    repeated_plots = 0
-    while(os.path.isfile(save_path)):
-        save_path = '{}obj{}_torque({}).png'.format(directories.plots_dir, object.id, repeated_plots)
-        repeated_plots += 1
-    
-    print('Saving plot in {0}'.format(save_path))
+    fname = '{}obj{}_torque'.format(directories.plots_dir, object.id)
+    save_path = plotter_helper.define_save_plot(fname)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -68,13 +64,8 @@ def plot_torque_from_averages_with_inner_and_outer():
     plt.legend()
     plt.grid()
 
-    save_path = '{}obj{}_torque.png'.format(directories.plots_dir, object.id)
-    repeated_plots = 0
-    while(os.path.isfile(save_path)):
-        save_path = '{}obj{}_torque({}).png'.format(directories.plots_dir, object.id, repeated_plots)
-        repeated_plots += 1
-    
-    print('Saving plot in {0}'.format(save_path))
+    fname = '{}obj{}_torque'.format(directories.plots_dir, object.id)
+    save_path = plotter_helper.define_save_plot(fname)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -110,13 +101,8 @@ def plot_torque_from_calculation():
     plt.legend()
     plt.grid()
 
-    save_path = '{}obj{}_torque.png'.format(directories.plots_dir, object.id)
-    repeated_plots = 0
-    while(os.path.isfile(save_path)):
-        save_path = '{}obj{}_torque({}).png'.format(directories.plots_dir, object.id, repeated_plots)
-        repeated_plots += 1
-    
-    print('Saving plot in {0}'.format(save_path))
+    fname = '{}obj{}_torque'.format(directories.plots_dir, object.id)
+    save_path = plotter_helper.define_save_plot(fname)
     fig.savefig(save_path)
     plt.close(fig)
 

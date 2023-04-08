@@ -10,6 +10,7 @@ import Navigation_helper
 import Data_parser_helper
 from Global_variables import *
 import plot_params
+import plotter_helper
 
 def plot_one() -> None:
     data_name = UI_helper.selectDataToPlot()
@@ -44,11 +45,8 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     plt.ylabel(r'$ Vx1 \, [g/cm^2]$')
     plt.title('Kep 47')
 
-    save_path = '{}vx1_profile_{}.png'.format(directories.plots_dir, n)
-    repeated_plots = 1
-    while(os.path.isfile(save_path)):
-        save_path = '{}vx1_profile_{}({}).png'.format(directories.plots_dir, n, repeated_plots)
-        repeated_plots += 1
+    fname = '{}vx1_profile_{}'.format(directories.plots_dir, n)
+    save_path = plotter_helper.define_save_plot(fname)
     plt.savefig(save_path)
     plt.close()
 
@@ -84,14 +82,10 @@ def animate() -> None:
         plt.title('Kep 47')
         camera.snap()
 
-    save_path = '{}vx1_profile_{}.gif'.format(directories.plots_dir, n)
-    repeated_plots = 1
-    while(os.path.isfile(save_path)):
-        save_path = '{}vx1_profile_{}({}).gif'.format(directories.plots_dir, n, repeated_plots)
-        repeated_plots += 1
+    fname = '{}vx1_profile_{}'.format(directories.plots_dir, n)
+    save_path = plotter_helper.define_save_plot(fname, 'gif')
     animation = camera.animate()
     animation.save(save_path)
-
 
 if __name__ == '__main__':
     plotters = [plot_one, animate]
