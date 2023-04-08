@@ -30,9 +30,11 @@ def plot_disc_e_avg() -> None:
 def plot_one_multiple_data_sets_overlayed_disc_e_avg() -> None:
     plot_params.square()
     data_ids = UI_helper.select_many_data_ids_to_overlay(choose_out_file = False)
-    plotter_helper.plot_multiple_data_sets_overlayed(data_ids, 'disc_e_avg', plot_the_data_disc_e_avg)
+    avg_num = UI_helper.select_averaging_length()
+    plotter_args = [avg_num]
+    plotter_helper.plot_multiple_data_sets_overlayed(data_ids, 'disc_e_avg', plot_the_data_disc_e_avg, plotter_args)
 
-def plot_the_data_disc_e_avg(ax: plt.Axes, data_name: str, legend_name: str = '') -> None:
+def plot_the_data_disc_e_avg(ax: plt.Axes, data_name: str, legend_name: str = '', avg_num: int = 1) -> None:
     directories = Navigation_helper.Directories(data_name)
     n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
     t_min = n_min * nts
@@ -40,9 +42,10 @@ def plot_the_data_disc_e_avg(ax: plt.Axes, data_name: str, legend_name: str = ''
 
     (time, _, e, _, _, _, _, _, _, _) = Data_parser_helper.get_averages_data(data_name)
     i_min, i_max = tools.time_split(time, t_min, t_max)
-    ax.plot(Unit_conv.time(time[i_min:i_max]), e[i_min:i_max], label = f'{legend_name}')
+    e_split_rolling_average, t_split_rolling_average = tools.rolling_average(avg_num, e[i_min:i_max], time[i_min:i_max])
+    ax.plot(Unit_conv.time(t_split_rolling_average), e_split_rolling_average, label = f'{legend_name}')
     ax.set_ylabel('Eccentricity')
-    ax.set(xlabel = 'Time [$\mathrm{T_{bin}}$]')
+    ax.set_xlabel('Time [' + Unit_conv.time_label() + ']')
 
 def plot_gap_parameters_out() -> None:
     plot_params.two_by_one_subplot()
