@@ -25,7 +25,7 @@ class Directories():
         self.all_data_dir = all_data_dir
         self.data_name = data_name
         self.data_parent_dir = all_data_dir + data_name
-        self.plots_dir = self.data_parent_dir + '/Plots/'
+        self.plots_dir = global_plots_dir # self.data_parent_dir + '/Plots/'
         self.out_dir = self.data_parent_dir + '/out'
         self.extra_data_dir = self.data_parent_dir + '/data/'
 

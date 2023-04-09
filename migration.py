@@ -55,8 +55,8 @@ def calculate_migration(data_name: str, obj_index: int, avg_num: int):
     plt.grid()
     fig.tight_layout()
     
-    fname = '{}obj{}_migration'.format(directories.plots_dir, obj_index)
-    save_path = plotter_helper.define_save_plot(fname)
+    fname = 'obj{}_migration'.format(obj_index)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
     fig.savefig(save_path)
     plt.close(fig)
 

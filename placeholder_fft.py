@@ -108,8 +108,8 @@ def migration_with_fourier() -> None:
     plt.grid()
     fig.tight_layout()
 
-    fname = '{}obj{}_migration_fourier{}'.format(directories.plots_dir, object.id, av)
-    save_path = plotter_helper.define_save_plot(fname)
+    fname = 'obj{}_migration_fourier{}'.format(object.id, av)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
     fig.savefig(save_path)
     plt.close(fig)
 

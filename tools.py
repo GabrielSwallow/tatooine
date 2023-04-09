@@ -58,7 +58,7 @@ binary = {
 class Unit_conv():
     distance_unit = 'code'
     mass_unit = 'grams'
-    time_unit = 'years'
+    time_unit = 'code'
 
     def time(time_in_code_units: float, conv_unit: str = time_unit):
         match conv_unit:

@@ -206,8 +206,8 @@ def plot_potential_field():
     # plt.subplot(projection="polar")
     # plt.ylim(1,4)
 
-    fname = '{}PLOT_{}'.format(directories.plots_dir, data_file_name)
-    save_path = plotter_helper.define_save_plot(fname)
+    fname = 'PLOT_{}'.format(data_file_name)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
     fig.savefig(save_path)
     plt.close(fig)
 

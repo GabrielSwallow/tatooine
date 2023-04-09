@@ -35,8 +35,8 @@ def plot_disk_accretion(data_name: str) -> None:
     plt.plot(time, total_accretion)
     fig.tight_layout()
 
-    f_name = '{}disk_accretion'.format(directories.plots_dir)
-    save_path = plotter_helper.define_save_plot(f_name)
+    f_name = 'disk_accretion'
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, f_name)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -62,8 +62,8 @@ def plot_planet_accretion(data_name: str) -> None:
     plt.grid()
     fig.tight_layout()
 
-    f_name = '{}obj{}_accretion'.format(directories.plots_dir, object.id)
-    save_path = plotter_helper.define_save_plot(f_name, 'png')
+    f_name = 'obj{}_accretion'.format(directories.plots_dir, object.id)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, f_name)
     fig.savefig(save_path)
     plt.close(fig)
 

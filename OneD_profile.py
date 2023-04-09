@@ -45,8 +45,8 @@ def animate() -> None:
         plot_the_data(fig, n, data_name)
         camera.snap()
 
-    fname = '{}1d_profile_{}_ANIMATION_{}-{}'.format(directories.plots_dir, var, n_min, n_max)
-    save_path = plotter_helper.define_save_plot(fname, 'gif')
+    fname = '1d_profile_{}_ANIMATION_{}-{}'.format(var, n_min, n_max)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname, 'gif')
     animation = camera.animate()
     animation.save(save_path)
 
@@ -58,8 +58,8 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     fig = plt.figure()
     plot_the_data(fig, n, data_name)
 
-    fname = '{}1d_profile_{}_{}'.format(directories.plots_dir, var, n)
-    save_path = plotter_helper.define_save_plot(fname)
+    fname = '1d_profile_{}_{}'.format(var, n)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
     plt.savefig(save_path)
     plt.close()
 
@@ -72,8 +72,8 @@ def plot_multiple_data_sets_overlayed(many_data_to_plot: list[data_id]) -> None:
     
     plot_name = UI_helper.name_the_plot() + '_'
 
-    fname = '{}1d_profile_{}'.format(global_plots_dir+plot_name, var)
-    save_path = plotter_helper.define_save_plot(fname)
+    fname = '{}1d_profile_{}'.format(plot_name, var)
+    save_path = plotter_helper.define_save_plot(global_plots_dir, fname)
     plt.savefig(save_path)
     plt.close()
 

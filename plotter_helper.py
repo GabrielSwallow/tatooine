@@ -13,12 +13,12 @@ from tools import Unit_conv
 # from menu import Menu
 # import simple_term_menu as stm
 
-def define_save_plot(file_name: str, extension: str = 'png', overwrite: bool = overwrite_plots):
-    save_path = '{}.{}'.format(file_name, extension)
+def define_save_plot(plots_dir: str, file_name: str, extension: str = 'png', overwrite: bool = overwrite_plots):
+    save_path = '{}{}.{}'.format(plots_dir, file_name, extension)
     if not overwrite_plots:
         repeated_plots = 0
         while(os.path.isfile(save_path)):
-            save_path = '{}({}).{}'.format(file_name, repeated_plots, extension)
+            save_path = '{}{}({}).{}'.format(plots_dir, file_name, repeated_plots, extension)
             repeated_plots += 1
     print('Saving plot in {0}'.format(save_path))
     return save_path
@@ -42,8 +42,8 @@ def plot_multiple_data_sets_overlayed(
     fig.tight_layout()
     plt.legend()
 
-    f_name = '{}{}'.format(global_plots_dir+plot_name, file_save_name)
-    save_path = define_save_plot(f_name)
+    f_name = '{}{}'.format(plot_name, file_save_name)
+    save_path = define_save_plot(global_plots_dir, f_name)
     plt.savefig(save_path)
     plt.close()
 
@@ -66,8 +66,8 @@ def plot_multiple_data_sets_overlayed_subplots(
     
     plot_name = UI_helper.name_the_plot() + '_'
 
-    fname = '{}disc_eccentricity_averages_{}'.format(global_plots_dir+plot_name, var)
-    save_path = define_save_plot(fname)
+    fname = '{}disc_eccentricity_averages_{}'.format(plot_name, var)
+    save_path = define_save_plot(global_plots_dir, fname)
     plt.savefig(save_path)
     plt.close()
 

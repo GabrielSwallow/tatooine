@@ -22,8 +22,8 @@ def plot_disc_e_avg() -> None:
     plot_the_data_disc_e_avg(axs, data_name)
     fig.tight_layout()
 
-    f_name = '{}disc_eccentricity_averages'.format(directories.plots_dir)
-    save_path = plotter_helper.define_save_plot(f_name, 'png')
+    f_name = 'disc_eccentricity_averages'
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, f_name)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -62,8 +62,8 @@ def plot_gap_parameters_out() -> None:
     fig.tight_layout()
     # fig.suptitle('Disc Parameters of Kepler-47')
 
-    fname = '{}gap_eccentricity_{}-{}'.format(directories.plots_dir, n_min, n_max)
-    save_path = plotter_helper.define_save_plot(fname, 'png')
+    fname = 'gap_eccentricity_{}-{}'.format(n_min, n_max)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -168,8 +168,8 @@ def plot_difference_between_min_and_max_rho_same_radius():
     plt.ylabel('surface density [{}]'.format(tools.Unit_conv.surface_density_label(conv_unit_mass='grams', conv_unit_distance='cm')))
 
 
-    fname = '{}disc_eccentricity_vs_radius_{}'.format(directories.plots_dir, out_file_number)
-    save_path = plotter_helper.define_save_plot(fname, 'png')
+    fname = 'disc_eccentricity_vs_radius_{}'.format(out_file_number)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname, 'png')
     fig.savefig(save_path)
     plt.close(fig)
 

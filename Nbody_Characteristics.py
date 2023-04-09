@@ -27,17 +27,17 @@ def plot_one_using_dat() -> None:
 
 def plot_one_using_dat_planet_and_cavity() -> None:
     data_name = UI_helper.selectDataToPlot()
-    # Jupiter_astrophysical_object.id = 2
-    # Kep47b_astrophysical_object.id = 3
+    Jupiter_astrophysical_object.id = 2
+    Kep47b_astrophysical_object.id = 3
 
     objects_to_plot_list = [
-        # Jupiter_astrophysical_object,
+        Jupiter_astrophysical_object,
         # KepStar1_astrophysical_object,
         # KepStar2_astrophysical_object,
         Kep47b_astrophysical_object,
         # Kep47c_astrophysical_object,
         # Kep47d_astrophysical_object,
-        cavity_astrophysical_object,
+        # cavity_astrophysical_object,
     ] 
     plot_using_dat_planet_and_cavity(data_name, objects_to_plot_list)
 
@@ -84,8 +84,8 @@ def plot_using_dat_planet_and_cavity(data_name: str, objects_to_plot_list: list[
     plt.legend()
     fig.tight_layout()
     
-    fname = '{}orbital_elements_many_objects_{}-{}'.format(directories.plots_dir, n_min, n_max)
-    save_path = plotter_helper.define_save_plot(fname)
+    fname = 'orbital_elements_many_objects_{}-{}'.format(n_min, n_max)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -103,8 +103,8 @@ def plot_using_dat(data_name: str) -> None:
     fig.tight_layout()
     
 
-    fname = '{}obj{}_orbital_elements_dat_{}-{}'.format(directories.plots_dir, object.id, n_min, n_max)
-    save_path = plotter_helper.define_save_plot(fname)
+    fname = 'obj{}_orbital_elements_dat_{}-{}'.format(object.id, n_min, n_max)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -182,8 +182,8 @@ def plot_using_out(data_name: str) -> None:
     
     fig.tight_layout()
     
-    fname = '{}obj{}_orbital_elements_{}-{}'.format(directories.plots_dir, object.id, n_min, n_max)
-    save_path = plotter_helper.define_save_plot(fname)
+    fname = 'obj{}_orbital_elements_{}-{}'.format(object.id, n_min, n_max)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -315,8 +315,8 @@ def plot_resonance_dat_fit() -> None:
 
     fig.tight_layout()
 
-    fname = '{}obj{}_obj{}_resonances_dat_{}-{}'.format(directories.plots_dir, obj_list[0], obj_list[1], n_min, n_max)
-    save_path = plotter_helper.define_save_plot(fname)
+    fname = 'obj{}_obj{}_resonances_dat_{}-{}'.format(obj_list[0], obj_list[1], n_min, n_max)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
     fig.savefig(save_path)
     plt.close(fig)
     
