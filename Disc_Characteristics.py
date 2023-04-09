@@ -114,11 +114,15 @@ def calculate_total_disc_accretion() -> float:
     directories = Navigation_helper.Directories(data_name)
     (time, _, _, _, _, _, _, _, _, accs) = Data_parser_helper.get_averages_data(data_name)
     total_disc_accretion = [accs[0][i] + accs[1][i] + accs[2][i] for i in range(len(accs[0]))]
-    delta_t_list = [time[i+1] - time[i] for i in range(len(time) - 1)]
-    acc_tot = sum(
-        [(time[i+1] - time[i])*total_disc_accretion[i] for i in range(len(time) - 1)]
-    )
-    print('total accretion onto disc = {}'.format(acc_tot))
+    acc_tot = np.trapz(total_disc_accretion, time)
+    # print('total accretion onto disc = {}'.format(acc_tot))
+    print('average accretion rate for {} = {} {} / {}'.format(
+        data_name,
+        Unit_conv.mass(acc_tot, 'Earth') / Unit_conv.time(time[-1], 'years'), 
+        Unit_conv.mass_label('Earth'),
+        Unit_conv.time_label('years')
+        ))
+    return acc_tot
 
 def plot_difference_between_min_and_max_rho_same_radius():
     plot_params.square()
