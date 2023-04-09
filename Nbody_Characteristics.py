@@ -191,56 +191,60 @@ def plot_resonance_dat() -> None:
     plot_params.square()
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
-
     obj_list, obj_des_list = UI_helper.selectObjectsToPlot(directories.out_dir)
     n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
+    avg_num = UI_helper.select_averaging_length()
+
+    fig, ax = plt.subplots(1,1, sharex = 'all')
+    plot_the_data_resonance_dat(ax, data_name, '', obj_list[0], obj_list[1], n_min, n_max, avg_num)
+    fig.tight_layout()
+    fname = 'obj{}_obj{}_resonances_dat_{}-{}'.format(obj_list[0], obj_list[1], n_min, n_max)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
+    fig.savefig(save_path)
+    plt.close(fig) 
+
+def plot_the_data_resonance_dat(
+    ax: plt.Axes, 
+    data_name: str, 
+    legend_name: str = '', 
+    obj_id_1: int = 2, 
+    obj_id_2: int = 3, 
+    n_min: int = 0, 
+    n_max: int = 0,
+    avg_num: int = 1
+    ) -> None:
+    directories = Navigation_helper.Directories(data_name)
     t_min = n_min * nts
     t_max = n_max * nts
 
     (
         time_0,
         a_0,
-        e_0,
-        period_0,
-        mass_0,
-    ) = Data_parser_helper.getNbodyInformation_dat(data_name, obj_list[0])
+        _,
+        _,
+        _,
+    ) = Data_parser_helper.getNbodyInformation_dat(data_name, obj_id_1)
     
     (
         time_1,
         a_1,
-        e_1,
-        period_1,
-        mass_1,
-    ) = Data_parser_helper.getNbodyInformation_dat(data_name, obj_list[1])
+        _,
+        _,
+        _,
+    ) = Data_parser_helper.getNbodyInformation_dat(data_name, obj_id_2)
 
     a_norm = a_1/a_0
+    a_norm, time_norm = tools.rolling_average(avg_num, a_norm, time_0)
     period_norm = a_norm ** 3/2
-    e_norm = e_1/e_0
 
-    i_min, i_max = tools.time_split(time_0, t_min, t_max)
+    period_norm = [p if p>1 else 1/p for p in period_norm]
 
-    fig, axs = plt.subplots(2,1, sharex = 'all')
+    i_min, i_max = tools.time_split(time_norm, t_min, t_max)
 
-    axs[0].plot(time_0[i_min:i_max], period_norm[i_min:i_max])
-    axs[0].set_title(r'Period ratio')
+    ax.plot(time_0[i_min:i_max], period_norm[i_min:i_max])
+    ax.set_ylabel('ratio of periods')
+    ax.set_xlabel('Time [' + Unit_conv.time_label() + ']')
 
-    axs[1].plot(time_0[i_min:i_max], a_norm[i_min:i_max])
-    axs[1].set_title(r'Semi-Major Axis ratio')
-
-    axs[0].grid()
-    axs[1].grid()
-
-    #axs[1].plot(time_0[i_min:i_max], e_norm[i_min:i_max])
-    #axs[1].set_title(r'Eccentricity ratio [$\mathrm{e}$]')
-    axs[1].set(xlabel = r'Time [$\mathrm{T_{bin}}$]')
-    fig.suptitle('Resonances of kepler-47{}'.format(obj_des_list[1]))
-
-    fig.tight_layout()
-
-    fname = '{}obj{}_obj{}_resonances_dat_{}-{}'.format(directories.plots_dir, obj_list[0], obj_list[1], n_min, n_max)
-    save_path = plotter_helper.define_save_plot(fname)
-    fig.savefig(save_path)
-    plt.close(fig)
 
 def plot_resonance_dat_fit() -> None:
     plot_params.square()
