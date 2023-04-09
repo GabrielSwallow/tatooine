@@ -97,6 +97,9 @@ class Unit_conv():
                 grams_per_solar_mass = 1.989e+33
                 grams_per_code_unit_mass = grams_per_solar_mass * solar_masses_per_code_unit_mass 
                 return mass_in_code_units * grams_per_code_unit_mass
+            case 'Earth':
+                earth_mass_per_code_unit = 411783
+                return mass_in_code_units * earth_mass_per_code_unit
             case 'code':
                 return mass_in_code_units
             case _:
@@ -106,6 +109,8 @@ class Unit_conv():
         match conv_unit:
             case 'grams':
                 return 'g'
+            case 'Earth':
+                return r'$M_{\oplus}$'
             case 'code':
                 return r'$M_\mathrm{*}$'
             case _:
