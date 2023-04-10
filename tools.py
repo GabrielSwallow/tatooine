@@ -61,88 +61,82 @@ class Unit_conv():
     time_unit = 'years'
 
     def time(time_in_code_units: float, conv_unit: str = time_unit):
-        match conv_unit:
-            case 'seconds':
-                seconds_per_code_time = Kepler_47_constants['period_s']
-                return time_in_code_units * seconds_per_code_time
-            case 'days':
-                days_per_code_time = Kepler_47_constants['period_days']
-                return time_in_code_units * days_per_code_time
-            case 'years':
-                days_per_code_time = Kepler_47_constants['period_days']
-                years_per_code_time = (1/365) * days_per_code_time
-                return time_in_code_units * years_per_code_time
-            case 'code':
-                return time_in_code_units
-            case _:
-                raise Exception('invalid unit selected, ', conv_unit)
+        if conv_unit == 'seconds':
+            seconds_per_code_time = Kepler_47_constants['period_s']
+            return time_in_code_units * seconds_per_code_time
+        elif conv_unit == 'days':
+            days_per_code_time = Kepler_47_constants['period_days']
+            return time_in_code_units * days_per_code_time
+        elif conv_unit ==  'years':
+            days_per_code_time = Kepler_47_constants['period_days']
+            years_per_code_time = (1/365) * days_per_code_time
+            return time_in_code_units * years_per_code_time
+        elif conv_unit ==  'code':
+            return time_in_code_units
+        elif conv_unit ==  _:
+            raise Exception('invalid unit selected, ', conv_unit)
 
     def time_label(conv_unit: str = time_unit):
-        match conv_unit:
-            case 'seconds':
-                return 's'
-            case 'days':
-                return 'days'
-            case 'years':
-                return 'years'
-            case 'code':
-                return '$\mathrm{T_{bin}}$'
-            case _:
-                raise Exception('invalid unit selected, ', conv_unit)
+        if conv_unit ==  'seconds':
+            return 's'
+        elif conv_unit ==  'days':
+            return 'days'
+        elif conv_unit ==  'years':
+            return 'years'
+        elif conv_unit ==  'code':
+            return '$\mathrm{T_{bin}}$'
+        elif conv_unit ==  _:
+            raise Exception('invalid unit selected, ', conv_unit)
 
     def mass(mass_in_code_units: float, conv_unit: str = mass_unit):
         solar_masses_per_code_unit_mass = binary['m1'] + binary['m2']
-        match conv_unit:
-            case 'grams':
-                grams_per_solar_mass = 1.989e+33
-                grams_per_code_unit_mass = grams_per_solar_mass * solar_masses_per_code_unit_mass 
-                return mass_in_code_units * grams_per_code_unit_mass
-            case 'Earth':
-                earth_mass_per_code_unit = 411783
-                return mass_in_code_units * earth_mass_per_code_unit
-            case 'code':
-                return mass_in_code_units
-            case _:
-                raise Exception('invalid unit selected, ', conv_unit)
+        if conv_unit ==  'grams':
+            grams_per_solar_mass = 1.989e+33
+            grams_per_code_unit_mass = grams_per_solar_mass * solar_masses_per_code_unit_mass 
+            return mass_in_code_units * grams_per_code_unit_mass
+        elif conv_unit ==  'Earth':
+            earth_mass_per_code_unit = 411783
+            return mass_in_code_units * earth_mass_per_code_unit
+        elif conv_unit ==  'code':
+            return mass_in_code_units
+        elif conv_unit ==  _:
+            raise Exception('invalid unit selected, ', conv_unit)
     
     def mass_label(conv_unit: str = mass_unit):
-        match conv_unit:
-            case 'grams':
-                return 'g'
-            case 'Earth':
-                return r'$M_{\oplus}$'
-            case 'code':
-                return r'$M_\mathrm{*}$'
-            case _:
-                raise Exception('invalid unit selected, ', conv_unit)
+        if conv_unit ==  'grams':
+            return 'g'
+        elif conv_unit ==  'Earth':
+            return r'$M_{\oplus}$'
+        elif conv_unit ==  'code':
+            return r'$M_\mathrm{*}$'
+        elif conv_unit ==  _:
+            raise Exception('invalid unit selected, ', conv_unit)
 
     def distance(distance_in_code_units: float, conv_unit: str = distance_unit, dims: int = 1):
-        match conv_unit:
-            case 'AU':
-                AU_per_code_unit_distance = Kepler_47_constants['a_b_AU']
-                return distance_in_code_units * (AU_per_code_unit_distance**dims)
-            case 'cm':
-                cm_per_code_unit_distance = Kepler_47_constants['a_b_cm']
-                return distance_in_code_units * (cm_per_code_unit_distance**dims)
-            case 'km':
-                cm_per_code_unit_distance = Kepler_47_constants['a_b_cm']
-                km_per_code_unit_distance = 1e-5 * cm_per_code_unit_distance
-                return distance_in_code_units * (km_per_code_unit_distance**dims)
-            case 'code':
-                return distance_in_code_units
-            case _:
-                raise Exception('invalid unit selected, ', conv_unit)
+        if conv_unit ==  'AU':
+            AU_per_code_unit_distance = Kepler_47_constants['a_b_AU']
+            return distance_in_code_units * (AU_per_code_unit_distance**dims)
+        elif conv_unit ==  'cm':
+            cm_per_code_unit_distance = Kepler_47_constants['a_b_cm']
+            return distance_in_code_units * (cm_per_code_unit_distance**dims)
+        elif conv_unit ==  'km':
+            cm_per_code_unit_distance = Kepler_47_constants['a_b_cm']
+            km_per_code_unit_distance = 1e-5 * cm_per_code_unit_distance
+            return distance_in_code_units * (km_per_code_unit_distance**dims)
+        elif conv_unit ==  'code':
+            return distance_in_code_units
+        elif conv_unit ==  _:
+            raise Exception('invalid unit selected, ', conv_unit)
 
     def distance_label(conv_unit: str = distance_unit):
-        match conv_unit:
-            case 'AU':
-                return 'AU'
-            case 'cm':
-                return 'cm'
-            case'code':
-                return r'$a_\mathrm{b}$'
-            case _:
-                raise Exception('invalid unit selected, ', conv_unit)
+        if conv_unit ==  'AU':
+            return 'AU'
+        elif conv_unit ==  'cm':
+            return 'cm'
+        elif conv_unit == 'code':
+            return r'$a_\mathrm{b}$'
+        elif conv_unit ==  _:
+            raise Exception('invalid unit selected, ', conv_unit)
         
 
     def surface_density(
