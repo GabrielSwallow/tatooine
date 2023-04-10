@@ -2,6 +2,7 @@ import os
 from typing import Tuple
 import Navigation_helper
 import Data_parser_helper
+import Nbody_Characteristics
 from Global_variables import *
 
 # from menu import Menu
@@ -161,6 +162,51 @@ def name_the_plot() -> str:
 def define_legend_name() -> str:
     print('Define the name of the data for the legend:')
     return input()
+
+def select_a_or_e_to_plot() -> list[str]:
+    print('select data to plot: \n 0: eccentricity \n 1: semi major axis \n both')
+    inp = input()
+
+    data_to_plot_list = [
+        Nbody_Characteristics.possible_data_to_plot.eccentricity,
+        Nbody_Characteristics.possible_data_to_plot.semi_major_axis,
+    ] 
+    if int(inp) == 0:
+        return [data_to_plot_list[0]]
+    elif int (inp) == 1:
+        return [data_to_plot_list[1]]
+    elif int(inp) == 2:
+        return data_to_plot_list
+
+def select_object_config_to_plot() -> list[astrophysical_object]:
+    objects_to_plot_list = [
+        # Jupiter_astrophysical_object,
+        # KepStar1_astrophysical_object,
+        # KepStar2_astrophysical_object,
+        Kep47b_astrophysical_object,
+        # Kep47c_astrophysical_object,
+        # Kep47d_astrophysical_object,
+        cavity_astrophysical_object,
+    ] 
+    print('select object config to plot:')
+    print('0: [Kep47b_astrophysical_object]')
+    print('1: [Kep47b_astrophysical_object, cavity_astrophysical_object]')
+    print('2: [Kep47b_astrophysical_object, Kep47d_astrophysical_object]')
+    print('3: [Jupiter_astrophysical_object, Kep47b_astrophysical_object]')
+
+    choice = int(input())
+    if choice == 0:
+        return [Kep47b_astrophysical_object]
+    if choice == 1:
+        return [Kep47b_astrophysical_object, cavity_astrophysical_object]
+    if choice == 2:
+        return [Kep47b_astrophysical_object, Kep47d_astrophysical_object]
+    if choice == 3:
+        Jupiter_astrophysical_object.id = 2
+        Kep47b_astrophysical_object.id = 3
+        return [Jupiter_astrophysical_object, Kep47b_astrophysical_object] 
+
+        
 
 
     
