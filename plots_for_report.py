@@ -153,7 +153,7 @@ class report_plots():
         directories = Navigation_helper.Directories(data_ids[0].name, save_plots_local_to_data=True)
         mock_selectDataFileToPlot.return_value = 0
         mock_selectManyDataFilesToPlot.return_value = [0, 50, 100]
-        mock_selectPlottingRange.return_value = [0, 100]
+        mock_selectPlottingRange.return_value = [0, 1145]
         mock_selectObjectToPlot.return_value = Kep47b_astrophysical_object
         # mock_selectFunctionsToRun.return_value = 'all'
         mock_define_legend_name.return_value = [data_ids[i].legend_name for i in range(len(data_ids))]
@@ -163,15 +163,14 @@ class report_plots():
         mock_define_save_plot.side_effect = define_new_define_save_plot_fn('{}'.format(result_name))
 
         mock_select_averaging_length.return_value = 250
-        mock_select_a_or_e_to_plot.return_value = [Nbody_Characteristics.possible_data_to_plot.semi_major_axis]
-        Nbody_Characteristics.plot_one_using_dat_planet_and_cavity()
-        mock_select_a_or_e_to_plot.return_value = [Nbody_Characteristics.possible_data_to_plot.eccentricity]
-        Nbody_Characteristics.plot_one_using_dat_planet_and_cavity()
+        # mock_select_a_or_e_to_plot.return_value = [Nbody_Characteristics.possible_data_to_plot.semi_major_axis]
+        # Nbody_Characteristics.plot_one_using_dat_planet_and_cavity()
+        # mock_select_a_or_e_to_plot.return_value = [Nbody_Characteristics.possible_data_to_plot.eccentricity]
+        # Nbody_Characteristics.plot_one_using_dat_planet_and_cavity()
 
         mock_selectDataFileToPlot.return_value = 0
-        TwoD_sigma.plot_one()
-        mock_selectDataFileToPlot.return_value = Navigation_helper.findMaxFileNumber(directories.out_dir)
-        TwoD_sigma.plot_one()
+        mock_selectManyDataFilesToPlot.return_value = [0, 500, Navigation_helper.findMaxFileNumber(directories.out_dir)]
+        TwoD_sigma.plot_many()
 
     def result_type_2_migration(
         mock_selectDataToPlot,
