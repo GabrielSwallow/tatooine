@@ -130,7 +130,7 @@ def plot_the_data(
         data: pluto.Pluto, 
         ax: plt.Axes, 
         show_colorbars: bool = True, 
-        show_meta_data = True,
+        show_meta_data = False,
         show_instability_zone = False,
         show_Kepler_47_planets = False,
         show_contours = False,
@@ -228,7 +228,8 @@ def plot_the_data(
                 Y*a_bin_in_distance_unit, 
                 np.log10(Unit_conv.surface_density(var_data, 'grams', 'cm')), # /np.max(var_data) 
                 cmap='gist_heat',
-            ) #, vmin=-3)#, vmin=-2)
+                # vmin=3.4, vmax= 4,
+                )
             colourbar_label = r'$log\Sigma$' + ' [' + Unit_conv.surface_density_label('grams', 'cm') + ']'
             # fr'$log\Sigma\;\left[{{{Unit_conv.surface_density_label()}}}\right]$'
         else:

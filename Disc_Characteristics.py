@@ -116,13 +116,14 @@ def calculate_total_disc_accretion() -> float:
     total_disc_accretion = [accs[0][i] + accs[1][i] + accs[2][i] for i in range(len(accs[0]))]
     acc_tot = np.trapz(total_disc_accretion, time)
     # print('total accretion onto disc = {}'.format(acc_tot))
-    print('average accretion rate for {} = {} {} / {}'.format(
+    print_statement = 'average accretion rate for {} = {} {} / {}'.format(
         data_name,
         Unit_conv.mass(acc_tot, 'Earth') / Unit_conv.time(time[-1], 'years'), 
         Unit_conv.mass_label('Earth'),
         Unit_conv.time_label('years')
-        ))
-    return acc_tot
+        )
+    print(print_statement)
+    return acc_tot, print_statement
 
 def plot_difference_between_min_and_max_rho_same_radius():
     plot_params.square()

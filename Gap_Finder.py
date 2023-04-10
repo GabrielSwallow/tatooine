@@ -37,7 +37,7 @@ def ellipse_find(R, Phi, Sigma):
         r = R[i,:]
         sigma_max = np.amax(sigma)
         for j in range(0, r_range - 1):
-            if sigma[j] < 0.1 * sigma_max:
+            if sigma[j] < 0.05 * sigma_max:
                 continue
             else:
                 break

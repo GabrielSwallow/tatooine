@@ -70,7 +70,7 @@ def plot_multiple_data_sets_overlayed(many_data_to_plot: list[data_id]) -> None:
     for data_to_plot in many_data_to_plot:
         plot_the_data(fig, data_to_plot.out_file, data_to_plot.name, data_to_plot.legend_name)
     
-    plot_name = UI_helper.name_the_plot() + '_'
+    plot_name = UI_helper.name_the_plot()
 
     fname = '{}1d_profile_{}'.format(plot_name, var)
     save_path = plotter_helper.define_save_plot(global_plots_dir, fname)
