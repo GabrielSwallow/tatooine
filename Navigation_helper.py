@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from Global_variables import *
+import sys
 
 def findMaxFileNumber(out_dir: str) -> int:
     #TODO: change this to take in data_name
@@ -21,11 +22,14 @@ def createDataFolderIfAbsent(data_name: str) -> None:
         os.mkdir('{}/data'.format(data_parent_dir))
 
 class Directories():
-    def __init__(self, data_name):
+    def __init__(self, data_name, save_plots_local_to_data: bool = False):
         self.all_data_dir = all_data_dir
         self.data_name = data_name
         self.data_parent_dir = all_data_dir + data_name
-        self.plots_dir = global_plots_dir # self.data_parent_dir + '/Plots/'
+        if 'plots_for_report.py' in sys.argv[0] and not save_plots_local_to_data:
+            self.plots_dir = global_plots_dir
+        else: 
+            self.plots_dir = self.data_parent_dir + '/Plots/'
         self.out_dir = self.data_parent_dir + '/out'
         self.extra_data_dir = self.data_parent_dir + '/data/'
 
