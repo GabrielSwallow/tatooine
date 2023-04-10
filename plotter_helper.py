@@ -13,12 +13,12 @@ from tools import Unit_conv
 # from menu import Menu
 # import simple_term_menu as stm
 
-def define_save_plot(file_name: str, extension: str = 'png', overwrite: bool = overwrite_plots):
-    save_path = '{}.{}'.format(file_name, extension)
+def define_save_plot(plots_dir: str, file_name: str, extension: str = 'png', overwrite: bool = overwrite_plots):
+    save_path = '{}{}.{}'.format(plots_dir, file_name, extension)
     if not overwrite_plots:
         repeated_plots = 0
         while(os.path.isfile(save_path)):
-            save_path = '{}({}).{}'.format(file_name, repeated_plots, extension)
+            save_path = '{}{}({}).{}'.format(plots_dir, file_name, repeated_plots, extension)
             repeated_plots += 1
     print('Saving plot in {0}'.format(save_path))
     return save_path
@@ -27,7 +27,9 @@ def plot_multiple_data_sets_overlayed(
     many_data_to_plot: list[data_id], 
     file_save_name: str,
     plotter: Callable[[plt.Axes, str, str, list], None], 
-    plotter_args: list = None
+    plotter_args: list = None,
+    one_time_plotter: Callable[[plt.Axes, str, str], None] = None,
+    one_time_plotter_args: list = None
     ) -> None:
     plot_params.square()
 
@@ -38,12 +40,18 @@ def plot_multiple_data_sets_overlayed(
         else:
             plotter(ax, data_to_plot.name, data_to_plot.legend_name, *plotter_args)
     
-    plot_name = UI_helper.name_the_plot() + '_'
+    if one_time_plotter != None:
+        if plotter_args == None:
+            one_time_plotter(ax, data_to_plot.name)
+        else:
+            one_time_plotter(ax, data_to_plot.name, *one_time_plotter_args)
+
+    plot_name = UI_helper.name_the_plot()
     fig.tight_layout()
     plt.legend()
 
-    f_name = '{}{}'.format(global_plots_dir+plot_name, file_save_name)
-    save_path = define_save_plot(f_name)
+    f_name = '{}{}'.format(plot_name, file_save_name)
+    save_path = define_save_plot(global_plots_dir, f_name)
     plt.savefig(save_path)
     plt.close()
 
@@ -64,10 +72,10 @@ def plot_multiple_data_sets_overlayed_subplots(
     plt.legend()
     plt.xlabel('Time [$\mathrm{T_{bin}}$]')
     
-    plot_name = UI_helper.name_the_plot() + '_'
+    plot_name = UI_helper.name_the_plot()
 
-    fname = '{}disc_eccentricity_averages_{}'.format(global_plots_dir+plot_name, var)
-    save_path = define_save_plot(fname)
+    fname = '{}disc_eccentricity_averages_{}'.format(plot_name, var)
+    save_path = define_save_plot(global_plots_dir, fname)
     plt.savefig(save_path)
     plt.close()
 
@@ -75,7 +83,10 @@ def plot_instability_zone_for_line_plot(ax: plt.Axes, t_min: float, t_max: float
     radius = Unit_conv.distance(instability_limit_astrophysical_object.radius)
     ax.plot([Unit_conv.time(t_min), Unit_conv.time(t_max)], [radius, radius], 'b--', linewidth = 2, label='instability limit')
 
-def plot_Kep47b_for_line_plot(ax: plt.Axes, t_min: float, t_max: float) -> None:
+def plot_Kep47b_for_line_plot(ax: plt.Axes, data_name: str, n_min, n_max) -> None:
+    t_min = n_min * nts
+    t_max = n_max * nts
+
     radius = Unit_conv.distance(Kep47b_astrophysical_object.radius)
     ax.plot([Unit_conv.time(t_min), Unit_conv.time(t_max)], [radius, radius], 'g--', linewidth = 2, label='kep47b final orbit')
 

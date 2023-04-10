@@ -64,8 +64,8 @@ def plot_velocities(data_name: str, data_file_to_plot: int):
     fig.tight_layout() 
 
     log_str = ''
-    fname = '{}{}2d_{}_{}'.format(directories.plots_dir, log_str, var, n)
-    save_path = plotter_helper.define_save_plot(fname)
+    fname = '{}2d_{}_{}'.format(log_str, var, n)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -87,8 +87,8 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
 
     if logsc: log_str = 'LOG_'
     else: log_str = ''
-    fname = '{}{}2d_{}_{}'.format(directories.plots_dir, log_str, var, n)
-    save_path = plotter_helper.define_save_plot(fname)
+    fname = '{}2d_{}_{}'.format(log_str, var, n)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -115,8 +115,8 @@ def animate() -> None:
 
     if logsc: log_str = 'LOG_'
     else: log_str = ''
-    fname = '{}{}2d_{}_ANIMATION_{}-{}'.format(directories.plots_dir, log_str, var, n_min, n_max)
-    save_path = plotter_helper.define_save_plot(fname, 'gif')
+    fname = '{}2d_{}_ANIMATION_{}-{}'.format(log_str, var, n_min, n_max)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname, 'gif')
 
     # animate.save(save_path)
 
@@ -130,7 +130,7 @@ def plot_the_data(
         data: pluto.Pluto, 
         ax: plt.Axes, 
         show_colorbars: bool = True, 
-        show_meta_data = True,
+        show_meta_data = False,
         show_instability_zone = False,
         show_Kepler_47_planets = False,
         show_contours = False,
@@ -228,7 +228,8 @@ def plot_the_data(
                 Y*a_bin_in_distance_unit, 
                 np.log10(Unit_conv.surface_density(var_data, 'grams', 'cm')), # /np.max(var_data) 
                 cmap='gist_heat',
-            ) #, vmin=-3)#, vmin=-2)
+                # vmin=3.4, vmax= 4,
+                )
             colourbar_label = r'$log\Sigma$' + ' [' + Unit_conv.surface_density_label('grams', 'cm') + ']'
             # fr'$log\Sigma\;\left[{{{Unit_conv.surface_density_label()}}}\right]$'
         else:

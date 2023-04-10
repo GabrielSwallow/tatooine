@@ -45,8 +45,8 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     plt.ylabel(r'$ Vx1 \, [g/cm^2]$')
     plt.title('Kep 47')
 
-    fname = '{}vx1_profile_{}'.format(directories.plots_dir, n)
-    save_path = plotter_helper.define_save_plot(fname)
+    fname = 'vx1_profile_{}'.format(n)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
     plt.savefig(save_path)
     plt.close()
 
@@ -82,8 +82,8 @@ def animate() -> None:
         plt.title('Kep 47')
         camera.snap()
 
-    fname = '{}vx1_profile_{}'.format(directories.plots_dir, n)
-    save_path = plotter_helper.define_save_plot(fname, 'gif')
+    fname = 'vx1_profile_{}'.format(n)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname, 'gif')
     animation = camera.animate()
     animation.save(save_path)
 

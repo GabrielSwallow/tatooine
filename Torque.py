@@ -37,8 +37,8 @@ def plot_torque_from_averages():
     plt.legend()
     plt.grid()
 
-    fname = '{}obj{}_torque'.format(directories.plots_dir, object.id)
-    save_path = plotter_helper.define_save_plot(fname)
+    fname = 'obj{}_torque'.format(object.id)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -64,8 +64,8 @@ def plot_torque_from_averages_with_inner_and_outer():
     plt.legend()
     plt.grid()
 
-    fname = '{}obj{}_torque'.format(directories.plots_dir, object.id)
-    save_path = plotter_helper.define_save_plot(fname)
+    fname = 'obj{}_torque'.format(object.id)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
     fig.savefig(save_path)
     plt.close(fig)
 
@@ -101,8 +101,8 @@ def plot_torque_from_calculation():
     plt.legend()
     plt.grid()
 
-    fname = '{}obj{}_torque'.format(directories.plots_dir, object.id)
-    save_path = plotter_helper.define_save_plot(fname)
+    fname = 'obj{}_torque'.format(object.id)
+    save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
     fig.savefig(save_path)
     plt.close(fig)
 
