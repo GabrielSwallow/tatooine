@@ -27,19 +27,9 @@ def plot_one_using_dat() -> None:
 
 def plot_one_using_dat_planet_and_cavity() -> None:
     data_name = UI_helper.selectDataToPlot()
-    Jupiter_astrophysical_object.id = 2
-    Kep47b_astrophysical_object.id = 3
-
-    objects_to_plot_list = [
-        Jupiter_astrophysical_object,
-        # KepStar1_astrophysical_object,
-        # KepStar2_astrophysical_object,
-        Kep47b_astrophysical_object,
-        # Kep47c_astrophysical_object,
-        # Kep47d_astrophysical_object,
-        # cavity_astrophysical_object,
-    ] 
-    plot_using_dat_planet_and_cavity(data_name, objects_to_plot_list)
+    objects_to_plot_list = UI_helper.select_object_config_to_plot() 
+    data_to_plot_list = UI_helper.select_a_or_e_to_plot()
+    plot_using_dat_planet_and_cavity(data_name, objects_to_plot_list, data_to_plot_list)
 
 def plot_one_using_out() -> None:
     data_name = UI_helper.selectDataToPlot()
@@ -52,18 +42,35 @@ def plot_many_data_id_using_dat() -> None:
     n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
     num_avg = UI_helper.select_averaging_length()
 
-    plotter_args = [object, n_min, n_max, num_avg, possible_data_to_plot.semi_major_axis]
-    plotter_helper.plot_multiple_data_sets_overlayed(data_ids, '{}_a_evolution'.format(object.name), plot_the_data_using_dat, plotter_args)
+    data_to_plot_list = UI_helper.select_a_or_e_to_plot()
+    if len(data_to_plot_list) == 2: raise Exception('plot_many_data_id_using_dat only takes a or e, not both at the moment')
+    if data_to_plot_list[0] == possible_data_to_plot.eccentricity: data_name_short = 'e'
+    elif data_to_plot_list[0] == possible_data_to_plot.semi_major_axis: data_name_short = 'a'
 
-def plot_using_dat_planet_and_cavity(data_name: str, objects_to_plot_list: list[astrophysical_object]) -> None:
+    plotter_args = [object, n_min, n_max, num_avg, data_to_plot_list[0]]
+    Kep47b_for_line_plot_args = [n_min, n_max]
+    
+    if data_to_plot_list[0] == possible_data_to_plot.eccentricity:
+        plotter_helper.plot_multiple_data_sets_overlayed(
+            data_ids, 
+            '{}_{}_evolution'.format(object.name, data_name_short), 
+            plot_the_data_using_dat, 
+            plotter_args, 
+        )
+    else:
+        plotter_helper.plot_multiple_data_sets_overlayed(
+            data_ids, 
+            '{}_{}_evolution'.format(object.name, data_name_short), 
+            plot_the_data_using_dat, 
+            plotter_args, 
+            plotter_helper.plot_Kep47b_for_line_plot,
+            Kep47b_for_line_plot_args,
+        )
+
+def plot_using_dat_planet_and_cavity(data_name: str, objects_to_plot_list: list[astrophysical_object], data_to_plot_list: list[str]) -> None:
     directories = Navigation_helper.Directories(data_name)
     n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
     num_avg = UI_helper.select_averaging_length()
-
-    data_to_plot_list = [
-        # possible_data_to_plot.eccentricity,
-        possible_data_to_plot.semi_major_axis,
-    ]  
 
     num_plots = len(data_to_plot_list)
     plot_params.one_by_N_subplots(num_plots)
@@ -83,8 +90,13 @@ def plot_using_dat_planet_and_cavity(data_name: str, objects_to_plot_list: list[
 
     plt.legend()
     fig.tight_layout()
+
+    if len(data_to_plot_list) == 2: suffix = 'a_and_e'
+    if data_to_plot_list[0] == possible_data_to_plot.eccentricity: suffix = 'e'
+    elif data_to_plot_list[0] == possible_data_to_plot.semi_major_axis: suffix = 'a'
+
     
-    fname = 'orbital_elements_many_objects_{}-{}'.format(n_min, n_max)
+    fname = '{}_many_objects_{}-{}'.format(suffix, n_min, n_max)
     save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
     fig.savefig(save_path)
     plt.close(fig)
@@ -141,7 +153,7 @@ def plot_the_data_using_dat(
         a_split_rolling_average, t_split_rolling_average = tools.rolling_average(num_avg, a[i_min:i_max], time[i_min:i_max])
         ax.plot(Unit_conv.time(t_split_rolling_average), Unit_conv.distance(a_split_rolling_average), label = legend_name)
         if show_final_data:
-            plotter_helper.plot_Kep47b_for_line_plot(ax, t_split_rolling_average[0], t_split_rolling_average[-1])
+            plotter_helper.plot_Kep47b_for_line_plot(ax, data_name, n_min, n_max)
         if show_instability_limit:
             plotter_helper.plot_instability_zone_for_line_plot(ax, t_split_rolling_average[0], t_split_rolling_average[-1])
         ax.set_ylabel('Semi-Major Axis [' + Unit_conv.distance_label() + ']')
