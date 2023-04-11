@@ -135,6 +135,7 @@ def plot_the_data(
         show_Kepler_47_planets = False,
         show_contours = False,
         ):
+    # show_Kepler_47_planets = UI_helper.show_part_of_plot('final Kepler-47 planet positions')
     var_data = data.primitive_variable(var, n)[0,:,:] #* data.units['density']
     a_bin_in_distance_unit = Unit_conv.distance(a_bin)
 

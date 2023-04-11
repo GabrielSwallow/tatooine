@@ -147,7 +147,7 @@ def plot_the_data_using_dat(
 
     if data_to_plot == 'eccentricity':
         e_split_rolling_average, t_split_rolling_average = tools.rolling_average(num_avg, e[i_min:i_max], time[i_min:i_max])
-        ax.plot(Unit_conv.time(t_split_rolling_average), Unit_conv.time(e_split_rolling_average), label = legend_name)
+        ax.plot(Unit_conv.time(t_split_rolling_average), e_split_rolling_average, label = legend_name)
         ax.set_ylabel(r'Eccentricity')
     elif data_to_plot == 'semi major axis':
         a_split_rolling_average, t_split_rolling_average = tools.rolling_average(num_avg, a[i_min:i_max], time[i_min:i_max])
@@ -223,7 +223,7 @@ def plot_the_data_resonance_dat(
     obj_id_2: int = 3, 
     n_min: int = 0, 
     n_max: int = 0,
-    avg_num: int = 1
+    avg_num: int = 1,
     ) -> None:
     directories = Navigation_helper.Directories(data_name)
     t_min = n_min * nts
@@ -246,14 +246,13 @@ def plot_the_data_resonance_dat(
     ) = Data_parser_helper.getNbodyInformation_dat(data_name, obj_id_2)
 
     a_norm = a_1/a_0
-    a_norm, time_norm = tools.rolling_average(avg_num, a_norm, time_0)
+    i_min, i_max = tools.time_split(time_0, t_min, t_max)
+    a_norm, time_norm = tools.rolling_average(avg_num, a_norm[i_min:i_max], time_0[i_min:i_max])
     period_norm = a_norm ** 3/2
 
     period_norm = [p if p>1 else 1/p for p in period_norm]
 
-    i_min, i_max = tools.time_split(time_norm, t_min, t_max)
-
-    ax.plot(time_0[i_min:i_max], period_norm[i_min:i_max])
+    ax.plot(Unit_conv.time(time_norm), period_norm)
     ax.set_ylabel('ratio of periods')
     ax.set_xlabel('Time [' + Unit_conv.time_label() + ']')
 
