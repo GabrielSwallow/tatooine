@@ -134,7 +134,7 @@ class Unit_conv():
         elif conv_unit ==  'cm':
             return 'cm'
         elif conv_unit == 'code':
-            return r'$a_\mathrm{b}$'
+            return r'$a_\mathrm{bin}$'
         elif conv_unit ==  _:
             raise Exception('invalid unit selected, ', conv_unit)
         
