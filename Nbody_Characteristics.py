@@ -71,14 +71,14 @@ def plot_using_dat_planet_and_cavity(data_name: str, objects_to_plot_list: list[
     directories = Navigation_helper.Directories(data_name)
     n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
     num_avg = UI_helper.select_averaging_length()
+    show_instability_limit = UI_helper.show_instability_limit()
+    show_instability_limit = UI_helper.show_47b_final_orbit()
 
     num_plots = len(data_to_plot_list)
     plot_params.one_by_N_subplots(num_plots)
     fig, axs = plt.subplots(1, num_plots, sharex= 'all')
     if num_plots == 1: axs = [axs]
 
-    show_final_data = True
-    show_instability_limit = False
     for object_to_plot in objects_to_plot_list:
         for j, data_to_plot in enumerate(data_to_plot_list):
             if object_to_plot == cavity_astrophysical_object:

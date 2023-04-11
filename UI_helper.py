@@ -170,6 +170,10 @@ def show_part_of_plot(thing_to_show: str) -> bool:
     else:
         return False
 
+def show_instability_limit() -> bool: return show_part_of_plot('instability limit')
+def show_47b_final_orbit() -> bool: return show_part_of_plot('47b final orbit')
+
+
 def define_size_of_plot_in_abin() -> float:
     return int(input('define size of plot in a_bin \n'))
 
