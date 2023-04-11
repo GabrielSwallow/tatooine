@@ -182,7 +182,7 @@ class report_plots():
         ):
         result_name = 'LUKE_result_1'
         data_ids= [
-            data_id('GROUP_planets_start_at_final_inner_orbit/planet_start_at_final_orbit_kep47b_4', 0, ''),
+            data_id('GROUP_disc_alp1e-3_tests/141122_1_restart', 0, ''),
         ]
         mock_select_many_data_ids_to_overlay.return_value = data_ids
         directories = Navigation_helper.Directories(data_ids[0].name, save_plots_local_to_data=True)
@@ -220,7 +220,7 @@ class report_plots():
         ):
         result_name = 'LUKE_result_2'
         data_ids= [
-            data_id('GROUP_planets_start_at_final_inner_orbit/planet_start_at_final_orbit_kep47b_4', 0, ''),
+            data_id('GROUP_disc_alp1e-3_tests/MJ1.0_aB13.0_Ve-3_restart5', 0, ''),
         ]
         mock_select_many_data_ids_to_overlay.return_value = data_ids
         directories = Navigation_helper.Directories(data_ids[0].name, save_plots_local_to_data=True)
@@ -238,17 +238,16 @@ class report_plots():
 
         ###
         # Don't want to plot max in Luke's data, as it includes ejection
-        mock_selectPlottingRange.return_value = [0, Navigation_helper.findMaxFileNumber(directories.out_dir)]
-        mock_selectDataFileToPlot.return_value = Navigation_helper.findMaxFileNumber(directories.out_dir)
+        mock_selectPlottingRange.return_value = [0, 1145]
+        mock_selectDataFileToPlot.return_value = 1145
         ###
         mock_select_averaging_length.return_value = 250
-        # mock_select_a_or_e_to_plot.return_value = [Nbody_Characteristics.possible_data_to_plot.semi_major_axis]
-        # Nbody_Characteristics.plot_one_using_dat_planet_and_cavity()
-        # mock_select_a_or_e_to_plot.return_value = [Nbody_Characteristics.possible_data_to_plot.eccentricity]
-        # Nbody_Characteristics.plot_one_using_dat_planet_and_cavity()
+        mock_select_a_or_e_to_plot.return_value = [Nbody_Characteristics.possible_data_to_plot.semi_major_axis]
+        Nbody_Characteristics.plot_one_using_dat_planet_and_cavity()
+        mock_select_a_or_e_to_plot.return_value = [Nbody_Characteristics.possible_data_to_plot.eccentricity]
+        Nbody_Characteristics.plot_one_using_dat_planet_and_cavity()
 
 
-        mock_selectDataFileToPlot.return_value = Navigation_helper.findMaxFileNumber(directories.out_dir)
         TwoD_sigma.plot_one()
 
         mock_define_size_of_plot_in_abin.return_value = 12.
@@ -383,7 +382,7 @@ class report_plots():
         ):
         result_name = 'LUKE_result_3_and_4'
         data_ids= [
-            data_id('GROUP_can_47d_keep_47b_stable_BETTER/setup1', 0, ''),
+            data_id('GROUP_disc_alp1e-3_tests/GROUP_circularized_disc_tests/281122_MJ1.0_MJ0.1', 0, ''),
         ]
         mock_select_many_data_ids_to_overlay.return_value = data_ids
         mock_selectDataToPlot.return_value = data_ids[0].name
@@ -396,14 +395,14 @@ class report_plots():
         mock_define_save_plot.side_effect = define_new_define_save_plot_fn(result_name)
         mock_select_a_or_e_to_plot.return_value = [Nbody_Characteristics.possible_data_to_plot.semi_major_axis]
 
-        Jupiter_astrophysical_object.id = 3
-        Kep47b_astrophysical_object.id = 2
-        mock_select_object_config_to_plot.return_value = [Kep47b_astrophysical_object, Jupiter_astrophysical_object] 
-        mock_selectObjectsToPlot.return_value = [3, 2], [Kep47b_astrophysical_object, Jupiter_astrophysical_object]
+        Jupiter_astrophysical_object.id = 2
+        Kep47b_astrophysical_object.id = 3
+        mock_select_object_config_to_plot.return_value = [Jupiter_astrophysical_object, Kep47b_astrophysical_object] 
+        mock_selectObjectsToPlot.return_value = [2, 3], [Jupiter_astrophysical_object, Kep47b_astrophysical_object]
 
         ###
         # Don't want to plot max in Luke's data, as it includes ejection
-        mock_selectPlottingRange.return_value = [0, Navigation_helper.findMaxFileNumber(directories.out_dir)]
+        mock_selectPlottingRange.return_value = [0, 665]
         ###
         mock_select_averaging_length.return_value = 250
         Nbody_Characteristics.plot_resonance_dat()
@@ -688,7 +687,7 @@ class report_plots():
 
 if __name__ == '__main__':
     # report_plots.result_3_and_4()
-    report_plots.result_1_LUKE()
-    report_plots.result_2_LUKE()
+    # report_plots.result_1_LUKE()
+    # report_plots.result_2_LUKE()
     report_plots.result_3_and_4_LUKE()
     # generate_all_plots()

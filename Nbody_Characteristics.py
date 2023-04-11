@@ -248,7 +248,7 @@ def plot_the_data_resonance_dat(
     a_norm = a_1/a_0
     i_min, i_max = tools.time_split(time_0, t_min, t_max)
     a_norm, time_norm = tools.rolling_average(avg_num, a_norm[i_min:i_max], time_0[i_min:i_max])
-    period_norm = a_norm ** 3/2
+    period_norm = np.power(a_norm, 3/2)
 
     period_norm = [p if p>1 else 1/p for p in period_norm]
 
