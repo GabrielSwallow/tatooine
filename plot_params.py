@@ -17,7 +17,7 @@ def nice_params():
 def square():
     nice_params()
     plt.rcParams.update(
-        {"figure.figsize": [9,8]}
+        {"figure.figsize": [7,6]} # [9,8]}
     )
 
 def one_by_two_subplot():
@@ -28,9 +28,9 @@ def one_by_two_subplot():
 
 def one_by_N_subplots(N: int):
     nice_params()
-    horizontal_size = 6 * N
+    horizontal_size = 7 * N
     plt.rcParams.update(
-        {"figure.figsize": [horizontal_size,5]}
+        {"figure.figsize": [horizontal_size,6]}
     )
 
 def two_by_one_subplot():
