@@ -130,11 +130,14 @@ def plot_difference_between_min_and_max_rho_same_radius():
     data_name = UI_helper.selectDataToPlot()
     directories = Navigation_helper.Directories(data_name)
     out_file_number = UI_helper.selectDataFileToPlot(directories.out_dir)
+    range_to_plot_in_abin = UI_helper.define_size_of_plot_in_abin()
 
     data = pluto.Pluto(directories.out_dir)
     rho = data.primitive_variable("rho", out_file_number)[0,:,:]
-    num_radii_points = len(rho[0])
-    r_vals = data.grid['centers'].X1
+    r_vals_full = data.grid['centers'].X1
+
+    r_vals = np.array(list(filter(lambda r: r<=range_to_plot_in_abin, r_vals_full)))
+    num_radii_points = len(r_vals)
 
     phi_min = []
     phi_max = []
@@ -168,7 +171,7 @@ def plot_difference_between_min_and_max_rho_same_radius():
     plt.xlabel('radius [{}]'.format(tools.Unit_conv.distance_label()))
     plt.ylabel('surface density [{}]'.format(tools.Unit_conv.surface_density_label(conv_unit_mass='grams', conv_unit_distance='cm')))
 
-
+    fig.tight_layout()
     fname = 'disc_eccentricity_vs_radius_{}'.format(out_file_number)
     save_path = plotter_helper.define_save_plot(directories.plots_dir, fname, 'png')
     fig.savefig(save_path)

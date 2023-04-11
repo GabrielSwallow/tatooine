@@ -163,6 +163,16 @@ def define_legend_name() -> str:
     print('Define the name of the data for the legend:')
     return input()
 
+def show_part_of_plot(thing_to_show: str) -> bool:
+    decision = input('show {}? \ny for yes \n'.format(thing_to_show))
+    if decision == 'y':
+        return True
+    else:
+        return False
+
+def define_size_of_plot_in_abin() -> float:
+    return int(input('define size of plot in a_bin \n'))
+
 def select_a_or_e_to_plot() -> list[str]:
     print('select data to plot: \n 0: eccentricity \n 1: semi major axis \n both')
     inp = input()
