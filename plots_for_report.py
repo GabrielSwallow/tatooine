@@ -60,6 +60,8 @@ data_to_plot_list = [
     Nbody_Characteristics.possible_data_to_plot.eccentricity,
     Nbody_Characteristics.possible_data_to_plot.semi_major_axis,
 ]   
+@for_all_methods(patch('UUI_helper.show_instability_limit'))
+@for_all_methods(patch('UI_helper.show_47b_final_orbit'))
 @for_all_methods(patch('UI_helper.define_size_of_plot_in_abin'))
 @for_all_methods(patch('UI_helper.select_object_config_to_plot'))
 @for_all_methods(patch('UI_helper.select_a_or_e_to_plot'))
@@ -92,6 +94,8 @@ class report_plots():
         mock_select_a_or_e_to_plot,
         mock_select_object_config_to_plot,
         mock_define_size_of_plot_in_abin,
+        mock_show_47b_final_orbit,
+        mock_show_instability_limit,
         ):
         result_name = 'intro_disc_distribution'
         data_ids= [
@@ -124,6 +128,8 @@ class report_plots():
         mock_select_a_or_e_to_plot,
         mock_select_object_config_to_plot,
         mock_define_size_of_plot_in_abin,
+        mock_show_47b_final_orbit,
+        mock_show_instability_limit,
         ):
         result_name = 'result_1'
         data_ids= [
@@ -179,6 +185,8 @@ class report_plots():
         mock_select_a_or_e_to_plot,
         mock_select_object_config_to_plot,
         mock_define_size_of_plot_in_abin,
+        mock_show_47b_final_orbit,
+        mock_show_instability_limit,
         ):
         result_name = 'LUKE_result_1'
         data_ids= [
@@ -187,19 +195,27 @@ class report_plots():
         mock_select_many_data_ids_to_overlay.return_value = data_ids
         directories = Navigation_helper.Directories(data_ids[0].name, save_plots_local_to_data=True)
         mock_selectDataFileToPlot.return_value = 0
-        mock_selectManyDataFilesToPlot.return_value = [0, 50, 100]
         mock_selectPlottingRange.return_value = [0, Navigation_helper.findMaxFileNumber(directories.out_dir)]
-        mock_selectObjectToPlot.return_value = Kep47b_astrophysical_object
+
+        heavy_planet_object = astrophysical_object(3, 'heavy type I', 'heavy type I', 0.)
+
+        mock_selectObjectToPlot.return_value = heavy_planet_object
         mock_define_legend_name.return_value = [data_ids[i].legend_name for i in range(len(data_ids))]
         mock_name_the_plot.return_value = ''
-        mock_select_object_config_to_plot.return_value = [Kep47b_astrophysical_object, cavity_astrophysical_object]
+        mock_select_object_config_to_plot.return_value = [heavy_planet_object, cavity_astrophysical_object]
         mock_select_averaging_length.return_value = 250
+
+        mock_show_47b_final_orbit.return_value = True
+        mock_show_instability_limit.return_value = False
 
         for data_to_plot in data_to_plot_list:
             mock_selectDataToPlot.return_value = data_ids[0].name
             mock_define_save_plot.side_effect = define_new_define_save_plot_fn('{}'.format(result_name))
             mock_select_a_or_e_to_plot.return_value = [data_to_plot]
             Nbody_Characteristics.plot_one_using_dat_planet_and_cavity()
+        
+        mock_selectManyDataFilesToPlot.return_value = [0, Navigation_helper.findMaxFileNumber(directories.out_dir)]
+        TwoD_sigma.plot_many()
     
     def result_2_LUKE(
         mock_selectDataToPlot,
@@ -217,6 +233,8 @@ class report_plots():
         mock_select_a_or_e_to_plot,
         mock_select_object_config_to_plot,
         mock_define_size_of_plot_in_abin,
+        mock_show_47b_final_orbit,
+        mock_show_instability_limit,
         ):
         result_name = 'LUKE_result_2'
         data_ids= [
@@ -235,6 +253,9 @@ class report_plots():
         mock_select_object_config_to_plot.return_value = [Jupiter_astrophysical_object, cavity_astrophysical_object]
         mock_selectDataToPlot.return_value = data_ids[0].name
         mock_define_save_plot.side_effect = define_new_define_save_plot_fn('{}'.format(result_name))
+
+        mock_show_47b_final_orbit.return_value = False
+        mock_show_instability_limit.return_value = True
 
         ###
         # Don't want to plot max in Luke's data, as it includes ejection
@@ -273,6 +294,8 @@ class report_plots():
         mock_select_a_or_e_to_plot,
         mock_select_object_config_to_plot,
         mock_define_size_of_plot_in_abin,
+        mock_show_47b_final_orbit,
+        mock_show_instability_limit,
         ):
         result_name = 'result_type_2_migration'
         data_ids= [
@@ -330,6 +353,8 @@ class report_plots():
         mock_select_a_or_e_to_plot,
         mock_select_object_config_to_plot,
         mock_define_size_of_plot_in_abin,
+        mock_show_47b_final_orbit,
+        mock_show_instability_limit,
         ):
         result_name = 'result_3_and_4'
         data_ids= [
@@ -379,6 +404,8 @@ class report_plots():
         mock_select_a_or_e_to_plot,
         mock_select_object_config_to_plot,
         mock_define_size_of_plot_in_abin,
+        mock_show_47b_final_orbit,
+        mock_show_instability_limit,
         ):
         result_name = 'LUKE_result_3_and_4'
         data_ids= [
@@ -399,6 +426,9 @@ class report_plots():
         Kep47b_astrophysical_object.id = 3
         mock_select_object_config_to_plot.return_value = [Jupiter_astrophysical_object, Kep47b_astrophysical_object] 
         mock_selectObjectsToPlot.return_value = [2, 3], [Jupiter_astrophysical_object, Kep47b_astrophysical_object]
+
+        mock_show_47b_final_orbit.return_value = False
+        mock_show_instability_limit.return_value = True
 
         ###
         # Don't want to plot max in Luke's data, as it includes ejection
@@ -428,6 +458,8 @@ class report_plots():
         mock_select_a_or_e_to_plot,
         mock_select_object_config_to_plot,
         mock_define_size_of_plot_in_abin,
+        mock_show_47b_final_orbit,
+        mock_show_instability_limit,
         ):
         result_name = 'result_5'
         data_ids= [
@@ -476,6 +508,8 @@ class report_plots():
         mock_select_a_or_e_to_plot,
         mock_select_object_config_to_plot,
         mock_define_size_of_plot_in_abin,
+        mock_show_47b_final_orbit,
+        mock_show_instability_limit,
         ):
         result_name = 'result_6'
 
@@ -534,6 +568,8 @@ class report_plots():
         mock_select_a_or_e_to_plot,
         mock_select_object_config_to_plot,
         mock_define_size_of_plot_in_abin,
+        mock_show_47b_final_orbit,
+        mock_show_instability_limit,
         ):
         result_name = 'result_7a'
 
@@ -582,6 +618,8 @@ class report_plots():
         mock_select_a_or_e_to_plot,
         mock_select_object_config_to_plot,
         mock_define_size_of_plot_in_abin,
+        mock_show_47b_final_orbit,
+        mock_show_instability_limit,
         ):
         result_name = 'result_7b'
 
@@ -634,6 +672,8 @@ class report_plots():
         mock_select_a_or_e_to_plot,
         mock_select_object_config_to_plot,
         mock_define_size_of_plot_in_abin,
+        mock_show_47b_final_orbit,
+        mock_show_instability_limit,
         ):
         result_name = 'result_8'
 
@@ -687,7 +727,8 @@ class report_plots():
 
 if __name__ == '__main__':
     # report_plots.result_3_and_4()
-    # report_plots.result_1_LUKE()
-    # report_plots.result_2_LUKE()
+    report_plots.result_1_LUKE()
+    report_plots.result_2_LUKE()
     report_plots.result_3_and_4_LUKE()
     # generate_all_plots()
+    # report_plots.intro_disc_distribution()
