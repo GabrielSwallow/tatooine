@@ -56,8 +56,8 @@ objects_in_kep47 = [
     KepStar1_astrophysical_object,
     KepStar2_astrophysical_object,
     Kep47b_astrophysical_object,
-    Kep47c_astrophysical_object,
     Kep47d_astrophysical_object,
+    Kep47c_astrophysical_object,
     cavity_astrophysical_object,
     instability_limit_astrophysical_object,
 ]
