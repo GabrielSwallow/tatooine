@@ -48,9 +48,13 @@ def plot_many_data_id_using_dat() -> None:
     elif data_to_plot_list[0] == possible_data_to_plot.semi_major_axis: data_name_short = 'a'
 
     plotter_args = [object, n_min, n_max, num_avg, data_to_plot_list[0]]
+
+    show_instability_limit = UI_helper.show_instability_limit()
+    show_47b_final_orbit = UI_helper.show_47b_final_orbit()
+    
     Kep47b_for_line_plot_args = [n_min, n_max]
     
-    if data_to_plot_list[0] == possible_data_to_plot.eccentricity:
+    if data_to_plot_list[0] == possible_data_to_plot.eccentricity or not show_47b_final_orbit:
         plotter_helper.plot_multiple_data_sets_overlayed(
             data_ids, 
             '{}_{}_evolution'.format(object.name, data_name_short), 
@@ -72,7 +76,7 @@ def plot_using_dat_planet_and_cavity(data_name: str, objects_to_plot_list: list[
     n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
     num_avg = UI_helper.select_averaging_length()
     show_instability_limit = UI_helper.show_instability_limit()
-    show_instability_limit = UI_helper.show_47b_final_orbit()
+    show_47b_final_orbit = UI_helper.show_47b_final_orbit()
 
     num_plots = len(data_to_plot_list)
     plot_params.one_by_N_subplots(num_plots)
@@ -84,8 +88,8 @@ def plot_using_dat_planet_and_cavity(data_name: str, objects_to_plot_list: list[
             if object_to_plot == cavity_astrophysical_object:
                 Disc_Characteristics.plot_the_data_gap_parameters_out(axs[j], data_name, 'cavity', n_min, n_max, 10, data_to_plot)
             else:
-                plot_the_data_using_dat(axs[j], data_name, object_to_plot.name, object_to_plot, n_min, n_max, num_avg, data_to_plot, show_final_data, show_instability_limit)
-                show_final_data = False
+                plot_the_data_using_dat(axs[j], data_name, object_to_plot.name, object_to_plot, n_min, n_max, num_avg, data_to_plot, show_47b_final_orbit, show_instability_limit)
+                show_47b_final_orbit = False
                 show_instability_limit = False
 
     plt.legend()
