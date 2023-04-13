@@ -60,7 +60,7 @@ data_to_plot_list = [
     Nbody_Characteristics.possible_data_to_plot.eccentricity,
     Nbody_Characteristics.possible_data_to_plot.semi_major_axis,
 ]   
-@for_all_methods(patch('UUI_helper.show_instability_limit'))
+@for_all_methods(patch('UI_helper.show_instability_limit'))
 @for_all_methods(patch('UI_helper.show_47b_final_orbit'))
 @for_all_methods(patch('UI_helper.define_size_of_plot_in_abin'))
 @for_all_methods(patch('UI_helper.select_object_config_to_plot'))
@@ -97,7 +97,7 @@ class report_plots():
         mock_show_47b_final_orbit,
         mock_show_instability_limit,
         ):
-        result_name = 'intro_disc_distribution'
+        plot_name = 'intro_disc_distribution'
         data_ids= [
             data_id('GROUP_init_disc/init_disc_setup1', 0, 'setup 1'),
             data_id('GROUP_init_disc/init_disc_setup2', 0, 'setup 2'),
@@ -109,8 +109,52 @@ class report_plots():
         for dat in data_ids:
             mock_selectDataToPlot.return_value = dat.name
             # mock_name_the_plot.return_value = ''
-            mock_define_save_plot.side_effect = define_new_define_save_plot_fn('{}_{}_with_planets'.format(result_name, dat.legend_name))
+            mock_define_save_plot.side_effect = define_new_define_save_plot_fn('{}_{}_with_planets'.format(plot_name, dat.legend_name))
             TwoD_sigma.plot_one()
+
+    def theory(
+        mock_selectDataToPlot,
+        mock_select_many_data_ids_to_overlay,
+        mock_selectDataFileToPlot,
+        mock_selectManyDataFilesToPlot,
+        mock_selectObjectToPlot,
+        mock_selectObjectsToPlot,
+        mock_selectFunctionsToRun,
+        mock_select_averaging_length,
+        mock_selectPlottingRange,
+        mock_define_legend_name,
+        mock_name_the_plot,
+        mock_define_save_plot,
+        mock_select_a_or_e_to_plot,
+        mock_select_object_config_to_plot,
+        mock_define_size_of_plot_in_abin,
+        mock_show_47b_final_orbit,
+        mock_show_instability_limit,
+        ):
+        plot_name = 'theory'
+        data_ids= [
+            data_id('GROUP_init_disc/init_disc_setup4', 0, 'init_disc_s4'),
+        ]
+        mock_select_many_data_ids_to_overlay.return_value = data_ids
+        mock_selectDataFileToPlot.return_value = 0
+        mock_selectDataToPlot.return_value = data_ids[0].name
+        mock_define_save_plot.side_effect = define_new_define_save_plot_fn('{}_{}'.format(plot_name, data_ids[0].legend_name))
+        mock_define_size_of_plot_in_abin.return_value = 40.
+        Disc_Characteristics.plot_difference_between_min_and_max_rho_same_radius()
+
+        data_ids= [
+            data_id('GROUP_types_of_migration/Earth', 0, 'Earth'),
+            data_id('GROUP_types_of_migration/Jupiter', 0, 'Jupiter'),
+            data_id('GROUP_types_of_migration/Neptune', 0, 'Neptune'),
+        ]
+        mock_define_size_of_plot_in_abin.return_value = 18.
+        for dat in data_ids:
+            mock_selectDataToPlot.return_value = dat.name
+            mock_define_save_plot.side_effect = define_new_define_save_plot_fn('{}_{}'.format(plot_name, dat.legend_name))
+            directories = Navigation_helper.Directories(dat.name, save_plots_local_to_data=True)
+            mock_selectDataFileToPlot.return_value = Navigation_helper.findMaxFileNumber(directories.out_dir)
+            TwoD_sigma.plot_one()
+
 
     def result_1(
         mock_selectDataToPlot,
@@ -168,6 +212,7 @@ class report_plots():
         mock_selectDataToPlot.return_value = data_ids[0].name
         mock_define_save_plot.side_effect = define_new_define_save_plot_fn('{}_{}'.format(result_name, data_ids[0].legend_name))
         Nbody_Characteristics.plot_one_using_dat_planet_and_cavity()
+    
     
     def result_1_LUKE(
         mock_selectDataToPlot,
@@ -465,7 +510,7 @@ class report_plots():
         data_ids= [
             data_id('GROUP_sustain_circ/sustain_circ_setup1_final_ab', 0, 'setup 1'),
             data_id('GROUP_sustain_circ/sustain_circ_setup2_final_ab', 0, 'setup 2'),
-            # data_id('GROUP_sustain_circ/sustain_circ_setup3_final_ab', 0, 'setup 3'),
+            data_id('GROUP_sustain_circ/sustain_circ_setup3_final_ab', 0, 'setup 3'),
             data_id('GROUP_sustain_circ/sustain_circ_setup4_final_ab', 0, 'setup 4'),
         ]
         # mock_selectDataToPlot.return_value = data_name
@@ -482,10 +527,13 @@ class report_plots():
         mock_select_a_or_e_to_plot.return_value = [Nbody_Characteristics.possible_data_to_plot.semi_major_axis]
         mock_select_object_config_to_plot.return_value = [Kep47b_astrophysical_object] 
 
+        mock_show_47b_final_orbit.return_value = False
+        mock_show_instability_limit.return_value = False
+
         mock_select_averaging_length.return_value = 250
         Nbody_Characteristics.plot_many_data_id_using_dat()
 
-        data_ids.append(data_id('GROUP_planets_start_at_final_inner_orbit/no_planet_4', 0, 'no planet'))
+        data_ids.append(data_id('GROUP_planets_start_at_final_inner_orbit/no_planet_4', 0, 'setup 4, no planet'))
         mock_select_averaging_length.return_value = 50
         Disc_Characteristics.plot_one_multiple_data_sets_overlayed_disc_e_avg()
 
@@ -534,6 +582,9 @@ class report_plots():
         mock_define_save_plot.side_effect = define_new_define_save_plot_fn(result_name)
         mock_select_a_or_e_to_plot.return_value = [Nbody_Characteristics.possible_data_to_plot.semi_major_axis]
         mock_select_object_config_to_plot.return_value = [Kep47b_astrophysical_object] 
+
+        mock_show_47b_final_orbit.return_value = False
+        mock_show_instability_limit.return_value = False
 
         mock_select_averaging_length.return_value = 200
         Nbody_Characteristics.plot_many_data_id_using_dat()
@@ -589,6 +640,9 @@ class report_plots():
         mock_select_a_or_e_to_plot.return_value = [Nbody_Characteristics.possible_data_to_plot.semi_major_axis]
         mock_select_object_config_to_plot.return_value = [Kep47b_astrophysical_object, Kep47d_astrophysical_object] 
         mock_selectObjectsToPlot.return_value = [2, 3], [Kep47b_astrophysical_object, Kep47d_astrophysical_object] 
+
+        mock_show_47b_final_orbit.return_value = False
+        mock_show_instability_limit.return_value = False
 
 
         for dat in data_ids:
@@ -727,8 +781,10 @@ class report_plots():
 
 if __name__ == '__main__':
     # report_plots.result_3_and_4()
-    report_plots.result_1_LUKE()
-    report_plots.result_2_LUKE()
-    report_plots.result_3_and_4_LUKE()
+    # report_plots.result_1_LUKE()
+    # report_plots.result_2_LUKE()
+    # report_plots.result_3_and_4_LUKE()
     # generate_all_plots()
     # report_plots.intro_disc_distribution()
+    # report_plots.theory()
+    report_plots.result_7a()
