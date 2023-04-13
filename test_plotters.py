@@ -62,7 +62,27 @@ data_name = UI_helper.selectDataToPlot()
 avg_num = UI_helper.select_averaging_length()
 directories = Navigation_helper.Directories(data_name)
 n_max = Navigation_helper.findMaxFileNumber(directories.out_dir)
+size_of_plot = UI_helper.define_size_of_plot_in_abin()
 
+# @for_all_methods(patch('UI_helper.show_instability_limit'))
+# @for_all_methods(patch('UI_helper.show_47b_final_orbit'))
+# @for_all_methods(patch('UI_helper.define_size_of_plot_in_abin'))
+# @for_all_methods(patch('UI_helper.select_object_config_to_plot'))
+# @for_all_methods(patch('UI_helper.select_a_or_e_to_plot'))
+# @for_all_methods(patch('plotter_helper.define_save_plot'))
+# @for_all_methods(patch('UI_helper.name_the_plot'))
+# @for_all_methods(patch('UI_helper.define_legend_name'))
+# @for_all_methods(patch('UI_helper.selectPlottingRange'))
+# @for_all_methods(patch('UI_helper.select_averaging_length'))
+# @for_all_methods(patch('UI_helper.selectFunctionsToRun'))
+# @for_all_methods(patch('UI_helper.selectObjectsToPlot'))
+# @for_all_methods(patch('UI_helper.selectObjectToPlot'))
+# @for_all_methods(patch('UI_helper.selectManyDataFilesToPlot'))
+# @for_all_methods(patch('UI_helper.selectDataFileToPlot'))
+# @for_all_methods(patch('UI_helper.select_many_data_ids_to_overlay'))
+# @for_all_methods(patch('UI_helper.selectDataToPlot'))
+
+@patch('UI_helper.define_size_of_plot_in_abin')
 @patch('UI_helper.selectPlottingRange')
 @patch('UI_helper.select_averaging_length')
 @patch('UI_helper.selectFunctionsToRun')
@@ -78,7 +98,9 @@ def plot_disk_properties(
     mock_selectFunctionsToRun,
     mock_select_averaging_length,
     mock_selectPlottingRange,
+    mock_define_size_of_plot_in_abin,
     ):
+    directories = Navigation_helper.Directories(data_name)
     mock_selectDataToPlot.return_value = data_name
     mock_select_averaging_length.return_value = avg_num
     mock_selectDataFileToPlot.return_value = 0
@@ -86,6 +108,7 @@ def plot_disk_properties(
     mock_selectPlottingRange.return_value = [0, Navigation_helper.findMaxFileNumber(directories.out_dir)]
     # mock_selectObjectToPlot.return_value = body_to_plot
     # mock_selectFunctionsToRun.return_value = 'all'
+    mock_define_size_of_plot_in_abin.return_value = size_of_plot
 
     failed_plots = []
     for f in disk_properties_plotters:
@@ -95,6 +118,7 @@ def plot_disk_properties(
             failed_plots.append('{}.{}'.format(f.__module__, f.__name__))
     return failed_plots
 
+@patch('UI_helper.define_size_of_plot_in_abin')
 @patch('UI_helper.selectPlottingRange')
 @patch('UI_helper.select_averaging_length')
 @patch('UI_helper.selectFunctionsToRun')
@@ -111,6 +135,7 @@ def plot_planet_properties(
     mock_selectFunctionsToRun,
     mock_select_averaging_length,
     mock_selectPlottingRange,
+    mock_define_size_of_plot_in_abin,
     ):
     mock_selectDataToPlot.return_value = data_name
     mock_select_averaging_length.return_value = 5
@@ -119,6 +144,8 @@ def plot_planet_properties(
     mock_selectObjectToPlot.return_value = object_id
     mock_selectPlottingRange.return_value = [0, Navigation_helper.findMaxFileNumber(directories.out_dir)]
     # mock_selectFunctionsToRun.return_value = 'all'
+    mock_define_size_of_plot_in_abin.return_value = size_of_plot
+
 
     failed_plots = []
     for f in planet_properties_plotters:
