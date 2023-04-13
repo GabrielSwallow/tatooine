@@ -42,6 +42,7 @@ def plot_one_velocities() -> None:
 
 def plot_velocities(data_name: str, data_file_to_plot: int):
     n = data_file_to_plot
+    size = UI_helper.define_size_of_plot_in_abin()
     fig, ax = plt.subplots(1, 2, subplot_kw=dict(aspect='equal',
                                                 xlim=[-size,size],
                                                 ylim=[-size,size]
@@ -74,6 +75,7 @@ def plot_velocities(data_name: str, data_file_to_plot: int):
 
 def plot(data_name: str, data_file_to_plot: int) -> None:
     n = data_file_to_plot
+    size = UI_helper.define_size_of_plot_in_abin()
     fig, ax = plt.subplots(1, 1, subplot_kw=dict(aspect='equal',
                                                 xlim=[-size,size],
                                                 ylim=[-size,size]
@@ -97,6 +99,7 @@ def animate() -> None:
     directories = Navigation_helper.Directories(data_name)
     data = pluto.Pluto(directories.out_dir)
     n_min, n_max = UI_helper.selectAnimateRange(directories.out_dir)
+    size = UI_helper.define_size_of_plot_in_abin()
 
     fig, ax = plt.subplots(1, 1, subplot_kw=dict(aspect='equal',
                                                 xlim=[-size,size],
@@ -229,7 +232,7 @@ def plot_the_data(
                 Y*a_bin_in_distance_unit, 
                 np.log10(Unit_conv.surface_density(var_data, 'grams', 'cm')), # /np.max(var_data) 
                 cmap='gist_heat',
-                # vmin=3.4, vmax= 4,
+                vmin=0.2, vmax= 5.1,
                 )
             colourbar_label = r'$log\Sigma$' + ' [' + Unit_conv.surface_density_label('grams', 'cm') + ']'
             # fr'$log\Sigma\;\left[{{{Unit_conv.surface_density_label()}}}\right]$'
