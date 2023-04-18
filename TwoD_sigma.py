@@ -76,9 +76,10 @@ def plot_velocities(data_name: str, data_file_to_plot: int):
 def plot(data_name: str, data_file_to_plot: int) -> None:
     n = data_file_to_plot
     size = UI_helper.define_size_of_plot_in_abin()
+    size_in_conv_units = tools.Unit_conv.distance(size)
     fig, ax = plt.subplots(1, 1, subplot_kw=dict(aspect='equal',
-                                                xlim=[-size,size],
-                                                ylim=[-size,size]
+                                                xlim=[-size_in_conv_units,size_in_conv_units],
+                                                ylim=[-size_in_conv_units,size_in_conv_units]
                                                 ))
 
     directories = Navigation_helper.Directories(data_name)
