@@ -191,13 +191,14 @@ class report_plots():
         mock_selectDataFileToPlot.return_value = 0
         mock_selectPlottingRange.return_value = [0, Navigation_helper.findMaxFileNumber(directories.out_dir)]
 
-        heavy_planet_object = astrophysical_object(3, 'heavy type I', 'heavy type I', 0.)
+        heavy_planet_object = astrophysical_object(2, 'heavy type I', 'heavy type I', 0.)
 
         mock_selectObjectToPlot.return_value = heavy_planet_object
         mock_define_legend_name.return_value = [data_ids[i].legend_name for i in range(len(data_ids))]
         mock_name_the_plot.return_value = ''
         mock_select_object_config_to_plot.return_value = [heavy_planet_object, cavity_astrophysical_object]
         mock_select_averaging_length.return_value = 250
+        mock_define_size_of_plot_in_abin.return_value = 12.
 
         mock_show_47b_final_orbit.return_value = True
         mock_show_instability_limit.return_value = False
@@ -250,6 +251,7 @@ class report_plots():
 
         mock_show_47b_final_orbit.return_value = False
         mock_show_instability_limit.return_value = True
+        mock_define_size_of_plot_in_abin.return_value = 12.
 
         ###
         # Don't want to plot max in Luke's data, as it includes ejection
@@ -311,6 +313,7 @@ class report_plots():
 
         mock_show_47b_final_orbit.return_value = False
         mock_show_instability_limit.return_value = True
+        mock_define_size_of_plot_in_abin.return_value = 12.
 
         ###
         # Don't want to plot max in Luke's data, as it includes ejection
@@ -877,8 +880,8 @@ if __name__ == '__main__':
     # report_plots.intro_disc_distribution()
     # report_plots.theory()
 
-    report_plots.result_1_LUKE()
-    report_plots.result_2_LUKE()
+    # report_plots.result_1_LUKE()
+    # report_plots.result_2_LUKE()
     report_plots.result_3_LUKE()
 
     # report_plots.result_3()
