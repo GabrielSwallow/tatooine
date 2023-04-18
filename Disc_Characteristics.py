@@ -97,7 +97,6 @@ def plot_the_data_gap_parameters_out(
         (a_n, e_n, _, _, _, _, _) = gap.ellipse_find(R, Phi, var_data)
         e.append(abs(e_n))
         a.append(abs(a_n))
-    pass
     if data_to_plot == 'eccentricity':
         rolling_avg_e, rolling_avg_time = tools.rolling_average(avg_num, np.array(e), np.array(t))
         ax.plot(Unit_conv.time(rolling_avg_time), rolling_avg_e, label=legend_name)
@@ -150,26 +149,30 @@ def plot_difference_between_min_and_max_rho_same_radius():
         phi_min.append(phi_min_val)
         phi_max.append(phi_max_val)
         # phi_diff.append(phi_max_val - phi_min_val)
+    
+    phi_min_conv_units = tools.Unit_conv.surface_density(np.array(phi_min), conv_unit_mass='grams', conv_unit_distance='cm')
+    log_phi_min_conv_units = np.log10(np.array(phi_min_conv_units)) 
+    phi_max_conv_units = tools.Unit_conv.surface_density(np.array(phi_max), conv_unit_mass='grams', conv_unit_distance='cm') 
+    log_phi_max_conv_units = np.log10(np.array(phi_max_conv_units)) 
+
 
     fig = plt.figure()    
-
     fig.tight_layout()
 
     plt.plot(
         tools.Unit_conv.distance(r_vals), 
-        tools.Unit_conv.surface_density(np.array(phi_min), conv_unit_mass='grams', conv_unit_distance='cm'), 
+        log_phi_min_conv_units,
         label='min surface density'
     )
     plt.plot(
         tools.Unit_conv.distance(r_vals), 
-        tools.Unit_conv.surface_density(np.array(phi_max), conv_unit_mass='grams', conv_unit_distance='cm'), 
+        log_phi_max_conv_units,
         label='max surface density'
     )
     # plt.plot(r_vals, phi_diff)
     plt.legend()
-    plt.yscale('log')
     plt.xlabel('radius [{}]'.format(tools.Unit_conv.distance_label()))
-    plt.ylabel('surface density [{}]'.format(tools.Unit_conv.surface_density_label(conv_unit_mass='grams', conv_unit_distance='cm')))
+    plt.ylabel(r'log$\Sigma$ [{}]'.format(tools.Unit_conv.surface_density_label(conv_unit_mass='grams', conv_unit_distance='cm')))
 
     fig.tight_layout()
     fname = 'disc_eccentricity_vs_radius_{}'.format(out_file_number)
