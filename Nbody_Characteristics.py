@@ -161,6 +161,7 @@ def plot_the_data_using_dat(
         if show_instability_limit:
             plotter_helper.plot_instability_zone_for_line_plot(ax, t_split_rolling_average[0], t_split_rolling_average[-1])
         ax.set_ylabel('Semi-Major Axis [' + Unit_conv.distance_label() + ']')
+        # ax.set_ylim([0,15])
     ax.set_xlabel('Time [' + Unit_conv.time_label() + ']')
 
     return object, n_min, n_max
@@ -259,6 +260,8 @@ def plot_the_data_resonance_dat(
     ax.plot(Unit_conv.time(time_norm), period_norm)
     ax.set_ylabel('ratio of periods')
     ax.set_xlabel('Time [' + Unit_conv.time_label() + ']')
+    # ax.set_xlim([200, 240])
+    # ax.set_ylim([0,3])
 
 
 def plot_resonance_dat_fit() -> None:
