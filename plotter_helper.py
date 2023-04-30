@@ -81,7 +81,9 @@ def plot_multiple_data_sets_overlayed_subplots(
     plt.savefig(save_path)
     plt.close()
 
-def plot_instability_zone_for_line_plot(ax: plt.Axes, t_min: float, t_max: float) -> None:
+def plot_instability_zone_for_line_plot(ax: plt.Axes, n_min: float, n_max: float) -> None:
+    t_min = n_min * nts
+    t_max = n_max * nts
     radius = Unit_conv.distance(instability_limit_astrophysical_object.radius)
     ax.plot([Unit_conv.time(t_min), Unit_conv.time(t_max)], [radius, radius], 'b--', linewidth = 2, label='instability limit')
 
