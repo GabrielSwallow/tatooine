@@ -87,14 +87,17 @@ def plot_using_dat_planet_and_cavity(data_name: str, objects_to_plot_list: list[
     fig, axs = plt.subplots(1, num_plots, sharex= 'all')
     if num_plots == 1: axs = [axs]
 
-    for object_to_plot in objects_to_plot_list:
-        for j, data_to_plot in enumerate(data_to_plot_list):
+    for j, data_to_plot in enumerate(data_to_plot_list):
+        for object_to_plot in objects_to_plot_list:
             if object_to_plot == cavity_astrophysical_object:
                 Disc_Characteristics.plot_the_data_gap_parameters_out(axs[j], data_name, 'cavity', n_min, n_max, 10, data_to_plot)
             else:
-                plot_the_data_using_dat(axs[j], data_name, object_to_plot.name, object_to_plot, n_min, n_max, num_avg, data_to_plot, show_47b_final_orbit, show_instability_limit)
-                show_47b_final_orbit = False
-                show_instability_limit = False
+                plot_the_data_using_dat(axs[j], data_name, object_to_plot.name, object_to_plot, n_min, n_max, num_avg, data_to_plot, False, False)
+        if data_to_plot == 'semi major axis':
+            if show_47b_final_orbit:
+                plotter_helper.plot_Kep47b_for_line_plot(axs[j], data_name, n_min, n_max)
+            if show_instability_limit:
+                plotter_helper.plot_instability_zone_for_line_plot(axs[j], n_min, n_max)
 
     plt.legend()
     fig.tight_layout()
@@ -139,6 +142,7 @@ def plot_the_data_using_dat(
         data_to_plot: str,
         show_final_data: bool = False,
         show_instability_limit: bool = False,
+        plot_colour: str = None,
     ):
 
     t_min = n_min * nts
@@ -155,15 +159,15 @@ def plot_the_data_using_dat(
 
     if data_to_plot == 'eccentricity':
         e_split_rolling_average, t_split_rolling_average = tools.rolling_average(num_avg, e[i_min:i_max], time[i_min:i_max])
-        ax.plot(Unit_conv.time(t_split_rolling_average), e_split_rolling_average, label = legend_name)
+        ax.plot(Unit_conv.time(t_split_rolling_average), e_split_rolling_average, label = legend_name, color = plot_colour)
         ax.set_ylabel(r'Eccentricity')
     elif data_to_plot == 'semi major axis':
         a_split_rolling_average, t_split_rolling_average = tools.rolling_average(num_avg, a[i_min:i_max], time[i_min:i_max])
-        ax.plot(Unit_conv.time(t_split_rolling_average), Unit_conv.distance(a_split_rolling_average), label = legend_name)
-        if show_final_data:
-            plotter_helper.plot_Kep47b_for_line_plot(ax, data_name, n_min, n_max)
-        if show_instability_limit:
-            plotter_helper.plot_instability_zone_for_line_plot(ax, t_split_rolling_average[0], t_split_rolling_average[-1])
+        ax.plot(Unit_conv.time(t_split_rolling_average), Unit_conv.distance(a_split_rolling_average), label = legend_name, color = plot_colour)
+        # if show_final_data:
+        #     plotter_helper.plot_Kep47b_for_line_plot(ax, data_name, n_min, n_max)
+        # if show_instability_limit:
+        #     plotter_helper.plot_instability_zone_for_line_plot(ax, n_min, n_max)
         ax.set_ylabel('Semi-Major Axis [' + Unit_conv.distance_label() + ']')
         # ax.set_ylim([0,15])
     ax.set_xlabel('Time [' + Unit_conv.time_label() + ']')
