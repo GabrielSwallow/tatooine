@@ -22,10 +22,11 @@ size = size * Unit_conv.distance(a_bin)
 name = 'Kep-47' #name of the simulation
 
 class data_id():
-    def __init__(self, name: str, out_file: int, legend_name: str) -> None:
+    def __init__(self, name: str, out_file: int, legend_name: str, plot_colour: str = None) -> None:
         self.name = name
         self.out_file = out_file
         self.legend_name = legend_name
+        self.plot_colour = plot_colour
 
 class astrophysical_object():
     def __init__(self, id: int, name: str, shorthand_name: str, radius: float) -> None:
