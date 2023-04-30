@@ -251,27 +251,27 @@ def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_co
     # Centre of mass
     ax.plot(0,0, '+k', ms=3)
 
-    # time_text = ax.text(0.95, 0.95, r'$t={} T_{}$'.format(n*nts,'{BIN}'),
-    #         #0.95, 0.95, r't={}$T_\mathrm{{b}}$'.format(n*nts),
-    #         color='c',
-    #         size='x-large',
-    #         #weight='bold',
-    #         ha='right',
-    #         va='top',transform=ax.transAxes)
+    time_text = ax.text(0.95, 0.95, r'$t={} $ years'.format(int(n*nts * 0.02039)),
+            #0.95, 0.95, r't={}$T_\mathrm{{b}}$'.format(n*nts),
+            color='b',
+            size='x-large',
+            #weight='bold',
+            ha='right',
+            va='top',transform=ax.transAxes)
 
     # Plot ellipse
     ax.plot(x_ell*a_bin, y_ell*a_bin, '--w', lw=1.5)
 
-    # binary_text = ax.text(0.05, 0.15,
-    #        r'$e_\mathrm{{gap}} = {0:.2f}$'.format(num_e)+'\n'
-    #        #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
-    #        +r'$a_\mathrm{{gap}} = {0:.2f}\,a_\mathrm{{b}}$'.format(a),
-    #        color='w',
-    #        size='x-large',
-    #        #weight='bold',
-    #        ha='left',
-    #        va='top',
-    #        transform=ax.transAxes)
+    binary_text = ax.text(0.05, 0.15,
+           r'$e_\mathrm{{cavity}} = {0:.2f}$'.format(num_e)+'\n'
+           #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
+           +r'$a_\mathrm{{cavity}} = {0:.2f}\,a_\mathrm{{b}}$'.format(a),
+           color='b',
+           size='x-large',
+           #weight='bold',
+           ha='left',
+           va='top',
+           transform=ax.transAxes)
     nbody_text_list = []
     if nbody:
         # plot the planet evolution here
@@ -281,31 +281,41 @@ def plot_the_data(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_co
         N=len(np.unique(pid))
         ti = tim[pid2==1]
         tx = txn[pid ==0]
-        for nn in range(N):
+        for nn in range(N-2):
+            nn += 2
             xp, yp = x[pid==nn], y[pid==nn]
             ax.plot(xp[tx==n]*a_bin, yp[tx==n]*a_bin, '.b', ms=6.0)
             if nn>0:
                 #print(e[pid2==1], pid2[pid2==nn])
                 a = aa[pid2==nn]
                 e = ee[pid2==nn]
+                phip = np.arctan(yp[n]/xp[n])
+                rp = np.sqrt(xp[n]*xp[n] + yp[n]*yp[n])
+                r1 = a[n]*(1.0-e[n]**2)/(1.0-e[n]*np.cos(phip-(phi_0)))
+                r2 = a[n]*(1.0-e[n]**2)/(1.0-e[n]*np.cos(phip-(phi_0+np.pi)))
+                dr1 = abs(rp-r1)
+                dr2 = abs(rp-r2)
+                dr = dr1-dr2 
+                sign = dr/abs(dr)
+                phi_error = np.pi * (1-sign)/2
                 #varpi = varpi[pid2==2][n]
                 phi = np.arange(0.0, 2.0*np.pi, 0.01)
-                r = a[n]*(1.0-e[n]**2)/(1.0-e[n]*np.cos(phi-phi_0))
+                r = a[n]*(1.0-e[n]**2)/(1.0-e[n]*np.cos(phi-(phi_0+phi_error)))
                 x_ell = r*np.cos(phi)
                 y_ell = r*np.sin(phi)
                 ax.plot(x_ell,y_ell,'w:')
                 
-                # nbody_text = ax.text(0.5, 0.15*nn,
-                #     r'$e_\mathrm{{p}} = {0:.3e}$'.format(float(e[n]))+'\n'
-                #     #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
-                #     +r'$a_\mathrm{{p}} = {0:.3e}\,a_\mathrm{{b}}$'.format(float(a[n])),
-                #     color='c',
-                #     size='x-large',
-                #     #weight='bold',
-                #     ha='left',
-                #     va='top',
-                #     transform=ax.transAxes)
-                # nbody_text_list.append(nbody_text)
+                nbody_text = ax.text(0.5, 0.15*(nn-1),
+                    r'$e_\mathrm{{p}} = {0:.3e}$'.format(float(e[n]))+'\n'
+                    #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
+                    +r'$a_\mathrm{{p}} = {0:.3e}\,a_\mathrm{{b}}$'.format(float(a[n])),
+                    color='b',
+                    size='x-large',
+                    #weight='bold',
+                    ha='left',
+                    va='top',
+                    transform=ax.transAxes)
+                nbody_text_list.append(nbody_text)
     
     return time_text, binary_text, *nbody_text_list
                     
@@ -334,13 +344,13 @@ def plot_alt(data_name: str, data_file_to_plot: int) -> None:
 
     if logsc: log_str = 'LOG_'
     else: log_str = ''
-    save_path = '{}{}2d_{}_{}.png'.format(directories.plots_dir, log_str, var, n)
+    save_path = '{}report/{}2d_{}_{}.png'.format(directories.plots_dir, log_str, var, n)
     repeated_plots = 1
     while(os.path.isfile(save_path)):
-        save_path = '{}{}2d_{}_{}({}).png'.format(directories.plots_dir, log_str, var, n, repeated_plots)
+        save_path = '{}report/{}2d_{}_{}({}).png'.format(directories.plots_dir, log_str, var, n, repeated_plots)
         repeated_plots += 1
     print('Saving plot in {0}'.format(save_path))
-    fig.savefig(save_path, bbox_inches = 'tight', dpi = 160)
+    fig.savefig(save_path, bbox_inches = 'tight', dpi = 640)
     plt.close(fig)
 
 def plot_the_data_alt(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plot_colorbars: bool = True):
@@ -348,8 +358,8 @@ def plot_the_data_alt(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plo
 
     r, phi = data.grid['centers'].X1, data.grid['centers'].X2
 
-    #ax.set_ylabel(r'$y\;[a_\mathrm{b}]$',fontsize=20)
-    #ax.set_xlabel(r'$x\;[a_\mathrm{b}]$',fontsize=20)
+    ax.set_ylabel(r'$y\;[a_\mathrm{b}]$',fontsize=20)
+    ax.set_xlabel(r'$x\;[a_\mathrm{b}]$',fontsize=20)
 
     # Circle around cylinder, the large central cell
     r_cylinder = data.grid['faces'][0][0]
@@ -420,7 +430,7 @@ def plot_the_data_alt(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plo
         colourbar_label = var
     elif var=='rho':
         if logsc:
-            plot = ax.pcolor(X*a_bin, Y*a_bin, np.log10(var_data/np.max(var_data)), cmap='gist_heat', vmin=-3)
+            plot = ax.pcolor(X*a_bin, Y*a_bin, np.log10(var_data/np.max(var_data)), cmap='gist_heat', vmin=-5)
             colourbar_label = r'$log\Sigma\;\left[\mathrm{g}\,/\mathrm{cm}^{-2}\right]$'
         else:
             plot = ax.pcolor(X*a_bin, Y*a_bin, var_data/np.max(var_data), cmap='viridis')#, vmin=0.0, vmax=0.1)#, vmin=0.01, vmax=2000)#,
@@ -453,34 +463,45 @@ def plot_the_data_alt(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plo
     #plot = ax.pcolor(R, phi, sigma, cmap='magma', vmin=1.0, vmax=100.)#, norm=colors.LogNorm(vmin=sigma.min(), vmax=sigma.max()))
 
     # Colorbar
-    # if plot_colorbars:
-    #     cb = plt.colorbar(plot, orientation='vertical')
-    #     cb.set_label(colourbar_label, fontsize=fs)
+    if plot_colorbars:
+        cb = plt.colorbar(plot, orientation='vertical')
+        cb.set_label(colourbar_label, fontsize=fs)
 
     # Centre of mass
-    #ax.plot(0,0, '+k', ms=3)
+    ax.plot(0,0, '+k', ms=3)
 
-    # time_text = ax.text(0.95, 0.98, r't={} yr'.format(n*nts),
-    #         #0.95, 0.95, r't={}$T_\mathrm{{b}}$'.format(n*nts),
-    #         color='b',
-    #         size=20,
-    #         #weight='bold',
-    #         ha='right',
-    #         va='top',transform=ax.transAxes)
-
-    # Plot ellipse
-    ax.plot(x_ell*a_bin, y_ell*a_bin, '--w', lw=1.5)
-
-    # binary_text = ax.text(0.05, 0.20,
-    #         r'$e_\mathrm{{gap}} = {0:.2f}$'.format(num_e)+'\n'
+    time_text = ax.text(0.95, 0.98, r't={} yr'.format(int(n*nts * 0.02039)),
+            #0.95, 0.95, r't={}$T_\mathrm{{b}}$'.format(n*nts),
+            color='b',
+            size=20,
+            #weight='bold',
+            ha='right',
+            va='top',transform=ax.transAxes)
+    
+    # setup_text = ax.text(0.05, 0.17,
+    #         r'$\alpha = 10^{-4}$'+'\n'
     #         #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
-    #         +r'$a_\mathrm{{gap}} = {0:.2f}\,a_\mathrm{{b}}$'.format(a),
-    #         color='w',
+    #         +r'$h = 0.03$',
+    #         color='b',
     #         size=20,
     #         #weight='bold',
     #         ha='left',
     #         va='top',
     #         transform=ax.transAxes)
+
+    # Plot ellipse
+    ax.plot(x_ell*a_bin, y_ell*a_bin, '--w', lw=1.5)
+
+    binary_text = ax.text(0.05, 0.98,
+            r'$e_\mathrm{{cav}} = {0:.2f}$'.format(num_e)+'\n'
+            #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
+            +r'$a_\mathrm{{cav}} = {0:.2f}\,a_\mathrm{{b}}$'.format(a),
+            color='b',
+            size=20,
+            #weight='bold',
+            ha='left',
+            va='top',
+            transform=ax.transAxes)
     nbody_text_list = []
     if nbody:
         # plot the planet evolution here
@@ -490,26 +511,39 @@ def plot_the_data_alt(n: int, out_dir: str, data: pluto.Pluto, ax: plt.Axes, plo
         N=len(np.unique(pid))
         ti = tim[pid2==1]
         tx = txn[pid ==0]
-        for nn in range(N):
+        for nn in range(N-0):
+            nn += 0
             xp, yp = x[pid==nn], y[pid==nn]
             ax.plot(xp[tx==n]*a_bin, yp[tx==n]*a_bin, '.b', ms=6.0)
             if nn>0:
                 #print(e[pid2==1], pid2[pid2==nn])
                 a = aa[pid2==nn]
                 e = ee[pid2==nn]
+                phip = np.arctan(yp[n]/xp[n])
+                rp = np.sqrt(xp[n]*xp[n] + yp[n]*yp[n])
+                r1 = a[n]*(1.0-e[n]**2)/(1.0-e[n]*np.cos(phip-(phi_0)))
+                r2 = a[n]*(1.0-e[n]**2)/(1.0-e[n]*np.cos(phip-(phi_0+np.pi)))
+                dr1 = abs(rp-r1)
+                dr2 = abs(rp-r2)
+                dr = dr1-dr2
+                if dr == 0:
+                    phi_error = 0.0
+                else: 
+                    sign = dr/abs(dr)
+                    phi_error = np.pi * (1-sign)/2
                 #varpi = varpi[pid2==2][n]
                 phi = np.arange(0.0, 2.0*np.pi, 0.01)
-                r = a[n]*(1.0-e[n]**2)/(1.0-e[n]*np.cos(phi-phi_0))
+                r = a[n]*(1.0-e[n]**2)/(1.0-e[n]*np.cos(phi-(phi_0+phi_error)))
                 x_ell = r*np.cos(phi)
                 y_ell = r*np.sin(phi)
                 ax.plot(x_ell,y_ell,'w:')
                 
-                # nbody_text = ax.text(0.5, 0.15*nn,
+                # nbody_text = ax.text(0.30, 0.10*nn,
                 #     r'$e_\mathrm{{p}} = {0:.3e}$'.format(float(e[n]))+'\n'
                 #     #+r'$a_\mathrm{{gap}} = {0:.2f}\,au$'.format(a*a_bin),
                 #     +r'$a_\mathrm{{p}} = {0:.3e}\,a_\mathrm{{b}}$'.format(float(a[n])),
-                #     color='c',
-                #     size='x-large',
+                #     color='b',
+                #     size=20,
                 #     #weight='bold',
                 #     ha='left',
                 #     va='top',
