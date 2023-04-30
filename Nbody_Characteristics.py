@@ -37,20 +37,24 @@ def plot_one_using_out() -> None:
 
 def plot_many_data_id_using_dat() -> None:
     data_ids = UI_helper.select_many_data_ids_to_overlay()
-    directories = Navigation_helper.Directories(data_ids[0].name)
-    object = UI_helper.selectObjectToPlot(directories.out_dir)
-    n_min, n_max = UI_helper.selectPlottingRange(directories.out_dir)
+    first_data_point_directories = Navigation_helper.Directories(data_ids[0].name)
+    object = UI_helper.selectObjectToPlot(first_data_point_directories.out_dir)
     num_avg = UI_helper.select_averaging_length()
+
+    show_instability_limit = UI_helper.show_instability_limit()
+    show_47b_final_orbit = UI_helper.show_47b_final_orbit()
 
     data_to_plot_list = UI_helper.select_a_or_e_to_plot()
     if len(data_to_plot_list) == 2: raise Exception('plot_many_data_id_using_dat only takes a or e, not both at the moment')
     if data_to_plot_list[0] == possible_data_to_plot.eccentricity: data_name_short = 'e'
     elif data_to_plot_list[0] == possible_data_to_plot.semi_major_axis: data_name_short = 'a'
 
-    plotter_args = [object, n_min, n_max, num_avg, data_to_plot_list[0]]
+    plotter_args = []
+    for data in data_ids:
+        directories = Navigation_helper.Directories(data.name)
+        n_min, n_max = 0, Navigation_helper.findMaxFileNumber(directories.out_dir)
+        plotter_args.append([object, n_min, n_max, num_avg, data_to_plot_list[0], show_47b_final_orbit, show_instability_limit, data.plot_colour])
 
-    show_instability_limit = UI_helper.show_instability_limit()
-    show_47b_final_orbit = UI_helper.show_47b_final_orbit()
     
     Kep47b_for_line_plot_args = [n_min, n_max]
     
