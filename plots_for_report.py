@@ -300,7 +300,8 @@ class report_plots():
 
         Jupiter_astrophysical_object.id = 2
         Kep47b_astrophysical_object.id = 3
-        mock_select_object_config_to_plot.return_value = [Jupiter_astrophysical_object, Kep47b_astrophysical_object] 
+        heavy_planet_object = astrophysical_object(3, 'heavy type I', 'heavy type I', 0.)
+        mock_select_object_config_to_plot.return_value = [heavy_planet_object, Jupiter_astrophysical_object] 
         mock_selectObjectsToPlot.return_value = [2, 3], [Jupiter_astrophysical_object, Kep47b_astrophysical_object]
 
         mock_show_47b_final_orbit.return_value = False
@@ -312,7 +313,7 @@ class report_plots():
         mock_selectPlottingRange.return_value = [0, 665]
         ###
         mock_select_averaging_length.return_value = 250
-        Nbody_Characteristics.plot_resonance_dat()
+        # Nbody_Characteristics.plot_resonance_dat()
         mock_select_a_or_e_to_plot.return_value = [Nbody_Characteristics.possible_data_to_plot.semi_major_axis]
         Nbody_Characteristics.plot_one_using_dat_planet_and_cavity()
 
@@ -1018,8 +1019,8 @@ if __name__ == '__main__':
     # report_plots.intro_disc_distribution()
     # report_plots.theory()
 
-    report_plots.result_1_LUKE()
-    report_plots.result_2_LUKE()
+    # report_plots.result_1_LUKE()
+    # report_plots.result_2_LUKE()
     report_plots.result_3_LUKE()
 
     # report_plots.result_3()
@@ -1027,7 +1028,7 @@ if __name__ == '__main__':
     # report_plots.result_5b()
     # report_plots.result_6a()
     # report_plots.result_6b()
-    report_plots.result_7()
+    # report_plots.result_7()
     # report_plots.result_8()
 
     # generate_all_plots()
