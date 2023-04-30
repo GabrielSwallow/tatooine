@@ -47,10 +47,13 @@ def plot_multiple_data_sets_overlayed(
             one_time_plotter(ax, data_to_plot.name)
         else:
             one_time_plotter(ax, data_to_plot.name, *one_time_plotter_args)
-
+    
     plot_name = UI_helper.name_the_plot()
     fig.tight_layout()
-    plt.legend()
+    plt.legend(
+        bbox_to_anchor = [0.45, 0.5], 
+        loc='upper left',
+    )
 
     f_name = '{}{}'.format(plot_name, file_save_name)
     save_path = define_save_plot(global_plots_dir, f_name)
