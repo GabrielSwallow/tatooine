@@ -549,3 +549,12 @@ def calculate_hill_sphere_radius(radius_code_units: float, planet_mass_code_unit
 def calculate_mass_for_given_hill_sphere(radius_code_units: float, hill_sphere_radius_code_units: float, unit: str = 'code'):
     planet_mass_code_units = 3 * ((hill_sphere_radius_code_units/radius_code_units)**3)
     return Unit_conv.mass(planet_mass_code_units, unit)
+
+if __name__ == '__main__':
+    radius_code_units = 3.53
+    Earth_mass_in_code_units = 0.00000231157
+    planet_mass_code_units_1 = 2 * Earth_mass_in_code_units
+    planet_mass_code_units_2 = 40 * Earth_mass_in_code_units
+    print(calculate_hill_sphere_radius(10, Earth_mass_in_code_units))
+    print(calculate_hill_sphere_radius(radius_code_units, planet_mass_code_units_1))
+    print(calculate_hill_sphere_radius(radius_code_units, planet_mass_code_units_2))
