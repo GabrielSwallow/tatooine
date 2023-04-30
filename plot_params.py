@@ -51,6 +51,18 @@ def poster():
     }
     plt.rcParams.update(params)
 
+def TwoD_sigma():
+    nice_params()
+    scale = 0.7
+    figsize = [7*scale, 6*scale]
+    params = {
+        "xtick.labelsize":17*scale,
+        "ytick.labelsize":17*scale,
+        "figure.figsize":figsize,
+        "legend.fontsize":0,
+    }
+    plt.rcParams.update(params)
+
 def TwoD_sigma_viva():
     params = {
         "axes.labelsize":10,
