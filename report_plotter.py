@@ -25,7 +25,7 @@ import mass as m
 
 a_crit = 2.31
 kepb = 3.53
-yrs = m.t['yr']['kep47']
+yrs = 0.02039#m.t['yr']['kep47']
 
 def small_planet_typeI_blocked():
 
@@ -813,39 +813,57 @@ def several_planets():
     fig, ax = plt.subplots(1,1)
     leg = []
     n_maxes = []
+    i = 0
+    nts = 100
+    n_planet = 2
+    fmts = ['b-', 'r-', 'm-', 'y-', 'b--', 'r--', 'm--', 'y--']
     while keep_plotting:
         name_data = UI_helper.selectDataToPlot()
         dir = all_data_dir + name_data + '/out'
-        planet = UI_helper.selectObjectToPlot(dir)
+        # planet = UI_helper.selectObjectToPlot(dir)
         (
             time_dat,
             a_dat,
             e_dat,
             period_dat,
             mass_dat
-        ) = Data_parser_helper.getNbodyInformation_dat(name_data, planet.id)
-        _ = UI_helper.selectPlottingRange(dir)
-        n_min, n_max = _[0],_[1]
+        ) = Data_parser_helper.getNbodyInformation_dat(name_data, n_planet)
+        # _ = UI_helper.selectPlottingRange(dir)
+        # n_min, n_max = _[0],_[1]
         legend_name = str(input('Name this line: \n'))
         leg.append(legend_name)
-        fmt = str(input('fmt: \n'))
-        nts = int(input('nts \n'))
-        t_min, t_max = nts * n_min, nts * n_max
-        i_min, i_max = tools.time_split(time_dat, t_min, t_max)
-        ax.plot(time_dat[i_min:i_max]*yrs, a_dat[i_min:i_max], fmt)
+        a_dat_fix, time_dat_fix = tools.rolling_average(a_dat, 500, time_dat)
+        # fmt = str(input('fmt: \n'))
+        # nts = int(input('nts \n'))
+        # t_min, t_max = nts * n_min, nts * n_max
+        # i_min, i_max = tools.time_split(time_dat, t_min, t_max)
+        ax.plot(time_dat_fix*yrs, a_dat_fix, fmts[i])
         plot_check = input('Keep Plotting (y/n)? \n')
-        n_maxes.append(n_max)
+        # n_maxes.append(n_max)
+        i+=1
         if plot_check == 'y': keep_plotting = True
         elif plot_check == 'n': keep_plotting = False
     ax.grid()
-    n_max = np.max(n_maxes)
+    # n_max = np.max(n_maxes)
     n_min = 0
-    n_max *= nts * yrs
-    ax.plot([n_min,n_max], [kepb, kepb])
+    n_max = 250 * nts * yrs
+    # n_max *= nts * yrs
+    ax.plot([n_min,n_max], [kepb, kepb], 'g:')
     leg.append('Kepler 47 b')
     ax.legend(leg)
     ax.set_ylabel(r'Semi-major axis ($a_{KEP47}$)')
     ax.set_xlabel(r'Time (years)')
+
+    save_path = '../Plots/Report_Plot/accretion_comparison.png'
+    repeated_plots = 0
+    while (os.path.isfile(save_path)):
+        save_path = '../Plots/Report_Plot/accretion_comparison({}).png'.format(repeated_plots)
+        repeated_plots += 1
+    print('saving plot in {}'.format(save_path))
+    plt.savefig(save_path, bbox_inches = 'tight', dpi = 320)
+    plt.close()
+    # print(len(time))
+    # print(len(time_dat))
 
 if __name__ == '__main__':
     plotters = [
