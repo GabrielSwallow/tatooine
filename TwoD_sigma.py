@@ -20,7 +20,7 @@ import plotter_helper
 from tools import Unit_conv
 
 def plot_many() -> None:
-    plot_params.TwoD_sigma_viva()
+    plot_params.TwoD_sigma()
     data_name = UI_helper.selectDataToPlot()
     out_dir = all_data_dir + data_name + '/out'
     many_data_files_to_plot = UI_helper.selectManyDataFilesToPlot(out_dir)
@@ -28,7 +28,7 @@ def plot_many() -> None:
         plot(data_name, data_file_to_plot)
 
 def plot_one() -> None:
-    plot_params.TwoD_sigma_viva()
+    plot_params.TwoD_sigma()
     data_name = UI_helper.selectDataToPlot()
     out_dir = all_data_dir + data_name + '/out'
     data_file_to_plot = UI_helper.selectDataFileToPlot(out_dir)
@@ -67,7 +67,7 @@ def plot_velocities(data_name: str, data_file_to_plot: int):
     log_str = ''
     fname = '{}2d_{}_{}'.format(log_str, var, n)
     save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
-    fig.savefig(save_path)
+    fig.savefig(save_path, bbox_inches='tight')
     plt.close(fig)
 
     logsc = logsc_temp
@@ -92,7 +92,7 @@ def plot(data_name: str, data_file_to_plot: int) -> None:
     else: log_str = ''
     fname = '{}2d_{}_{}'.format(log_str, var, n)
     save_path = plotter_helper.define_save_plot(directories.plots_dir, fname)
-    fig.savefig(save_path)
+    fig.savefig(save_path, bbox_inches='tight')
     plt.close(fig)
 
 def animate() -> None:
