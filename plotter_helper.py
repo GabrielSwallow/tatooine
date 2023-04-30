@@ -34,9 +34,11 @@ def plot_multiple_data_sets_overlayed(
     plot_params.square()
 
     fig, ax = plt.subplots(1,1)
-    for data_to_plot in many_data_to_plot:
+    for index, data_to_plot in enumerate(many_data_to_plot):
         if plotter_args == None:
             plotter(ax, data_to_plot.name, data_to_plot.legend_name)
+        elif type(plotter_args[0]) == list:
+            plotter(ax, data_to_plot.name, data_to_plot.legend_name, *plotter_args[index])
         else:
             plotter(ax, data_to_plot.name, data_to_plot.legend_name, *plotter_args)
     
