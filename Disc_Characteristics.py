@@ -71,8 +71,11 @@ def plot_one_multiple_data_sets_gap_parameters_out() -> None:
     data_ids = UI_helper.select_many_data_ids_to_overlay(choose_out_file = False)
     n_min, n_max = UI_helper.selectPlottingRange()
     avg_num = UI_helper.select_averaging_length()
+    data_to_plot = UI_helper.select_a_or_e_to_plot()
 
-    plotter_args = [n_min, n_max, avg_num]
+    plotter_args = []
+    for data in data_ids:
+        plotter_args.append([n_min, n_max, avg_num, data_to_plot, data.plot_colour])
     plotter_helper.plot_multiple_data_sets_overlayed(data_ids, 'gap_parameters_out', plot_the_data_gap_parameters_out, plotter_args)
 
 def plot_the_data_gap_parameters_out(
@@ -82,7 +85,8 @@ def plot_the_data_gap_parameters_out(
         n_min: int = 0,
         n_max: int = 0,
         avg_num: int = 1,
-        data_to_plot: str = 'eccentricity'
+        data_to_plot: str = 'eccentricity',
+        plot_colour: str = None,
     ) -> tuple[int]:
     directories = Navigation_helper.Directories(data_name)
     
@@ -97,13 +101,13 @@ def plot_the_data_gap_parameters_out(
         (a_n, e_n, _, _, _, _, _) = gap.ellipse_find(R, Phi, var_data)
         e.append(abs(e_n))
         a.append(abs(a_n))
-    if data_to_plot == 'eccentricity':
+    if data_to_plot == 'eccentricity' or data_to_plot == ['eccentricity']:
         rolling_avg_e, rolling_avg_time = tools.rolling_average(avg_num, np.array(e), np.array(t))
-        ax.plot(Unit_conv.time(rolling_avg_time), rolling_avg_e, label=legend_name)
+        ax.plot(Unit_conv.time(rolling_avg_time), rolling_avg_e, label=legend_name, color=plot_colour)
         ax.set_ylabel('Eccentricity')
-    elif data_to_plot == 'semi major axis':
+    elif data_to_plot == 'semi major axis' or data_to_plot == ['semi major axis']:
         rolling_avg_a, rolling_avg_time = tools.rolling_average(avg_num, a, t)
-        ax.plot(Unit_conv.time(rolling_avg_time), Unit_conv.distance(rolling_avg_a), label=legend_name)
+        ax.plot(Unit_conv.time(rolling_avg_time), Unit_conv.distance(rolling_avg_a), label=legend_name, color=plot_colour)
         ax.set_ylabel('Semi-Major Axis [' + Unit_conv.distance_label() + ']')
     ax.set_xlabel('Time [' + Unit_conv.time_label() + ']')
     return n_min, n_max
@@ -161,17 +165,17 @@ def plot_difference_between_min_and_max_rho_same_radius():
 
     plt.plot(
         tools.Unit_conv.distance(r_vals), 
-        log_phi_min_conv_units,
-        label='min surface density'
-    )
-    plt.plot(
-        tools.Unit_conv.distance(r_vals), 
         log_phi_max_conv_units,
         label='max surface density'
     )
+    plt.plot(
+        tools.Unit_conv.distance(r_vals), 
+        log_phi_min_conv_units,
+        label='min surface density'
+    )
     # plt.plot(r_vals, phi_diff)
     plt.legend()
-    plt.xlabel('radius [{}]'.format(tools.Unit_conv.distance_label()))
+    plt.xlabel('Radius [{}]'.format(tools.Unit_conv.distance_label()))
     plt.ylabel(r'log$\Sigma$ [{}]'.format(tools.Unit_conv.surface_density_label(conv_unit_mass='grams', conv_unit_distance='cm')))
 
     fig.tight_layout()
